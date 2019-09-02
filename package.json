@@ -1,0 +1,40 @@
+{
+  "name": "imagekit-javascript",
+  "version": "1.0.0",
+  "description": "Javascript SDK for using ImageKit.io in the browser",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "url-polyfill": "^1.1.7"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "grunt-browserify": "^5.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imagekit-developer/imagekit-javascript.git"
+  },
+  "keywords": [
+    "imagekit",
+    "javascript",
+    "sdk",
+    "js",
+    "sdk",
+    "image",
+    "optimization",
+    "image",
+    "transformation",
+    "image",
+    "resize"
+  ],
+  "author": "ImageKit Developer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imagekit-developer/imagekit-javascript/issues"
+  },
+  "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme"
+}
