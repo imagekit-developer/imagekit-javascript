@@ -8,7 +8,13 @@ This SDK required jQuery, or more specifically the `$.ajax()`, method to be acce
 
 ## Installation
 
-Download the `imagekit.js` file from the dist directory and load it using a `<script>` tag after loading jQuery.
+Download the `imagekit.js` file from the dist directory or using the following command. Use the optional `--save` parameter if you wish to save the dependency in your `package.json` file.
+
+```
+npm install imagekit-javascript
+```
+
+Load it using a `<script>` tag after loading jQuery.
 
 ```
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
