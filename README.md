@@ -4,7 +4,7 @@ Javascript SDK for [ImageKit.io](https://imagekit.io) that implements the client
 
 ImageKit is a complete image optimization and transformation solution that comes with an [image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your existing infrastructure - storages like AWS S3, web servers, your CDN and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
-This SDK required jQuery, or more specifically the `$.ajax()`, method to be accessible globally.
+This SDK has no dependency.
 
 ## Installation
 
@@ -14,10 +14,9 @@ Download the `imagekit.js` file from the dist directory or using the following c
 npm install imagekit-javascript
 ```
 
-Load it using a `<script>` tag after loading jQuery.
+Load it using a `<script>` tag.
 
 ```
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="imagekit.js"></script>
 ```
 
