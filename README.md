@@ -43,7 +43,7 @@ You can use this SDK for URL generation and client-side file uploads.
 
 **1. Using image path and image hostname or endpoint**
 
-This method allows you to create a URL using the `path` where the image exists and the URL endpoint (`urlEndpoint`) you want to use to access the image. You can refer to the documentation [here](https://docs.imagekit.io/imagekit-docs/url-endpoints) to read more about URL endpoints in ImageKit and the section about [image origins](https://docs.imagekit.io/imagekit-docs/configure-origin) to understand about paths with different kinds of origins.
+This method allows you to create a URL using the `path` where the image exists and the URL endpoint (`urlEndpoint`) you want to use to access the image. You can refer to the documentation [here](https://docs.imagekit.io/integration/url-endpoints) to read more about URL endpoints in ImageKit and the section about [image origins](https://docs.imagekit.io/integration/configure-origin) to understand about paths with different kinds of origins.
 
 ```
 var imageURL = imagekit.url({
@@ -91,7 +91,7 @@ The `.url()` method accepts the following parameters
 | urlEndpoint      | Optional. The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/endpoint/ |
 | path             | Conditional. This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter need to be specified for URL generation. |
 | src              | Conditional. This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter need to be specified for URL generation. |
-| transformation   | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name  and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/imagekit-docs/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
+| transformation   | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name  and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
 | transformationPostion | Optional. Default value is `path` that places the transformation string as a path parameter in the URL. Can also be specified as `query` which adds the transformation string as the query parameter `tr` in the URL. If you use `src` parameter to create the URL, then the transformation string is always added as a query parameter. |
 | queryParameters  | Optional. These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful, if you want to add some versioning parameter to your URLs. |
 
@@ -117,7 +117,7 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=h-300%2Cw-
 
 **2. Sharpening and contrast transforms and a progressive JPG image**
 
-There are some transforms like [Sharpening](https://docs.imagekit.io/imagekit-docs/image-enhancement---color-manipulation) that can be added to the URL with or without any other value. To use such transforms without specifying a value, specify the value as "-" in the transformation object, otherwise, specify the value that you want to be added to this transformation.
+There are some transforms like [Sharpening](https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation) that can be added to the URL with or without any other value. To use such transforms without specifying a value, specify the value as "-" in the transformation object, otherwise, specify the value that you want to be added to this transformation.
 
 ```
 var imageURL = imagekit.url({
@@ -137,7 +137,7 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=f-jpg%2Cpr
 
 #### List of supported transformations
 
-The complete list of transformations supported and their usage in ImageKit can be found [here](https://docs.imagekit.io/imagekit-docs/image-transformations). The SDK gives a name to each transformation parameter, making the code simpler and readable. If a transformation is supported in ImageKit, but a name for it cannot be found in the table below, then use the transformation code from ImageKit docs as the name when using in the `url` function.
+The complete list of transformations supported and their usage in ImageKit can be found [here](https://docs.imagekit.io/features/image-transformations). The SDK gives a name to each transformation parameter, making the code simpler and readable. If a transformation is supported in ImageKit, but a name for it cannot be found in the table below, then use the transformation code from ImageKit docs as the name when using in the `url` function.
 
 | Supported Transformation Name | Translates to parameter |
 |-------------------------------|-------------------------|
@@ -187,7 +187,7 @@ The complete list of transformations supported and their usage in ImageKit can b
 
 ### File Upload
 
-The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. It accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/imagekit-docs/client-side-file-upload).
+The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. It accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
 The `upload()` method requires at least the `file` and the `fileName` parameter as an input from the user. The `publicKey` parameter is added automatically. Additionally, this method uses the `authenticationEndpoint` that is specified at the time of SDK initialization. Client-side file upload requires a token, expiry timestamp and signature, and these values can be safely generated on the server-side using your ImageKit account's private key. 
 
@@ -203,32 +203,39 @@ app.get('/auth', function(req, res) {
 
 This method returns a callback with the `error` and `result` as arguments. 
 
-You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/imagekit-docs/client-side-file-upload).
+You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
 Sample usage
 ```
 <form action="#" onsubmit="upload()">
-    <input type="file" id="my-file" />
-    <input type="submit" />
+	<input type="file" id="file1" />
+	<input type="submit" />
 </form>
+<script type="text/javascript" src="../dist/imagekit.js"></script>
 
 <script>
+    // SDK initilization
+    // authenticationEndpoint should be implemented on your server
+    var imagekit = new ImageKit({
+        publicKey : "your_public_api_key",
+        urlEndpoint : "https://ik.imagekit.io/your_imagekit_id",
+        authenticationEndpoint : "http://www.yourserver.com/auth"
+    });
+    
+    // Upload function internally uses the ImageKit.io javascript SDK
     function upload(data) {
-        var file = document.getElementById("my-file");
+        var file = document.getElementById("file1");
         imagekit.upload({
             file : file.files[0],
-            fileName : "abc.jpg",
+            fileName : "abc1.jpg",
             tags : ["tag1"]
         }, function(err, result) {
             console.log(arguments);
             console.log(imagekit.url({
                 src: result.url,
-                transformation : [{
-                    height: 300,
-                    width: 400
-                }]
+                transformation : [{ HEIGHT: 300, WIDTH: 400}]
             }));
-        });
+        })
     }
 </script>
 ```
