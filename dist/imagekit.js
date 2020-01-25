@@ -74,6 +74,7 @@ var errorMessages = require("./constants/errorMessages");
 var ImageKit = function(opts) {
     opts = opts || {};
     this.options = {
+        sdkVersion : "javascript-1.0.3",
         publicKey : "",
         urlEndpoint : "",
         transformationPosition : transformationUtils.getDefault()
@@ -188,6 +189,9 @@ module.exports.buildURL = function(opts) {
     }
 
     var queryParameters = new URLSearchParams(parsedURL.query || "");
+    if(opts.sdkVersion && opts.sdkVersion.trim() != "") {
+        queryParameters.set("sdk-version", opts.sdkVersion.trim());
+    }
     for(var i in opts.queryParameters) {
         queryParameters.set(i, opts.queryParameters[i]);
     }
@@ -3692,7 +3696,7 @@ module.exports = function(formData, defaultOptions, callback) {
                 formData.append("token", body.token);
 
                 var uploadFileXHR= new XMLHttpRequest();
-                uploadFileXHR.open('POST', 'https://api.imagekit.io/v1/files/upload');
+                uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
                 uploadFileXHR.onload = function() {
                     if (uploadFileXHR.status === 200) {
                         if(typeof callback != "function") return;
@@ -3771,7 +3775,7 @@ module.exports.getSupportedTransforms = function() {
 module.exports.getTransformKey = function(transform) {
     if(!transform) { return ""; }
 
-    return supportedTransforms[transform] || "";
+    return supportedTransforms[transform.toLowerCase()] || "";
 }
 
 module.exports.getChainTransformDelimiter = function() {

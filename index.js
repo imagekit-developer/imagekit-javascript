@@ -18,6 +18,7 @@ var errorMessages = require("./constants/errorMessages");
 var ImageKit = function(opts) {
     opts = opts || {};
     this.options = {
+        sdkVersion : "javascript-1.0.3",
         publicKey : "",
         urlEndpoint : "",
         transformationPosition : transformationUtils.getDefault()

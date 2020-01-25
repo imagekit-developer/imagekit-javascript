@@ -12,7 +12,7 @@ module.exports = function(formData, defaultOptions, callback) {
                 formData.append("token", body.token);
 
                 var uploadFileXHR= new XMLHttpRequest();
-                uploadFileXHR.open('POST', 'https://api.imagekit.io/v1/files/upload');
+                uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
                 uploadFileXHR.onload = function() {
                     if (uploadFileXHR.status === 200) {
                         if(typeof callback != "function") return;
