@@ -31,7 +31,7 @@ module.exports.buildURL = function(opts) {
 
     var queryParameters = new URLSearchParams(parsedURL.query || "");
     if(opts.sdkVersion && opts.sdkVersion.trim() != "") {
-        queryParameters.set("sdk-version", opts.sdkVersion.trim());
+        queryParameters.set("ik-sdk-version", opts.sdkVersion.trim());
     }
     for(var i in opts.queryParameters) {
         queryParameters.set(i, opts.queryParameters[i]);
