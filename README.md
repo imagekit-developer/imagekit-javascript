@@ -193,19 +193,9 @@ The complete list of transformations supported and their usage in ImageKit can b
 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. It accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-The `upload()` method requires at least the `file` and the `fileName` parameter as an input from the user. The `publicKey` parameter is added automatically. Additionally, this method uses the `authenticationEndpoint` that is specified at the time of SDK initialization. Client-side file upload requires a token, expiry timestamp and signature, and these values can be safely generated on the server-side using your ImageKit account's private key. 
+The `upload()` method requires `file` and the `fileName` parameter. Also make sure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP GET request to this endpoint and expects a JSON response with three fields i.e. `signature`, `token` and `expire`.  
 
-The SDK issues a GET request to the authentication endpoint provided and the endpoint must respond with a JSON object with the values for `token`, `signature` and `expire`. 
-
-For example, you can use ImageKit's NodeJS SDK which implements the `getAuthenticationParameters` method to create a simple API endpoint like this on your server and provide the API endpoint as the `authenticationEndpoint` parameter.
-
-```
-app.get('/auth', function(req, res) {
-    res.send(imagekit.getAuthenticationParameters());
-});
-```
-
-This method returns a callback with the `error` and `result` as arguments. 
+[Learn how to implement authenticationEndpoint](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint) on your server.
 
 You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
@@ -218,8 +208,9 @@ Sample usage
 <script type="text/javascript" src="../dist/imagekit.js"></script>
 
 <script>
-    // SDK initilization
-    // authenticationEndpoint should be implemented on your server
+    /* SDK initilization
+     authenticationEndpoint should be implemented on your server. Learn more here - https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint
+    */
     var imagekit = new ImageKit({
         publicKey : "your_public_api_key",
         urlEndpoint : "https://ik.imagekit.io/your_imagekit_id",
