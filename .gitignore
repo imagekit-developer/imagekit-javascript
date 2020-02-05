@@ -1,1 +1,3 @@
 node_modules/*
+samples/sample-app/node_modules/*
+.vscode

@@ -6,14 +6,20 @@
         <input type="file" id="file1" />
         <input type="submit" />
     </form>
-    <script type="text/javascript" src="../dist/imagekit.js"></script>
+    <script type="text/javascript" src="/imagekit.js"></script>
     <script>
         try {
             var imagekit = new ImageKit({
                 publicKey : "your_public_api_key",
                 urlEndpoint : "https://ik.imagekit.io/your_imagekit_id",
                 authenticationEndpoint : "http://www.yourserver.com/auth",
-            });    
+            });
+            
+            var imagekit = new ImageKit({
+                publicKey: '81shyFkcqoR/It6sCR1P845UtCY=',
+                urlEndpoint: 'https://ik.imagekit.io/s11xanjcm/',
+                authenticationEndpoint: 'http://localhost:3000/auth'
+            });
 
             function upload(data) {
                 var file = document.getElementById("file1");
