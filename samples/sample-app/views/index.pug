@@ -13,7 +13,7 @@ html
                     h4 Original Image
                     p
                         img(src="")
-                div(id='trans_image') 
+                div(id='transgit_image') 
                     h4 Sample transformation with height: 300, width: 400: 
                     p
                         img(src="")    
@@ -57,31 +57,10 @@ html
 
                             var el  = document.getElementById('images')
                             el.setAttribute("style", "");
-
-                            //- var el = getImageURLElement(imagekit.url({
-                            //-     src: srcUrl,
-                            //-     transformation : sampleTransformations
-                            //- }));
-                            //- statusEl.appendChild(el);
-                            //- console.log(imagekit.url({
-                            //-     src: result.url,
-                            //-     transformation : [{ HEIGHT: 300, WIDTH: 400}]
-                            //- }));
                         }
                         
                         
                     });
-                }
-
-                function getImageURLElement (url) {
-                    anchorElement = document.createElement('a');
-                    anchorElement.innerHTML = url;
-                    anchorElement.setAttribute("target", "_blank")
-                    anchorElement.setAttribute("href", url);
-                    divElement = document.createElement("div");
-                    divElement.innerHTML = "You can access the image with sample transformation at: "
-                    divElement.appendChild(anchorElement);
-                    return divElement;
                 }
             } catch(ex) {
                 console.log(ex);
