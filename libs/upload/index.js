@@ -5,7 +5,7 @@ var isObject = require('lodash/isObject');
 */
 var errorMessages = require("../../constants/errorMessages");
 var respond = require("../../utils/respond");
-var request = require("../../utils/request");
+var request = require("../../utils/request").request;
 
 module.exports = function(uploadOptions, defaultOptions, callback) {
     if(!isObject(uploadOptions)) {
