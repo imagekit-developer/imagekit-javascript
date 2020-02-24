@@ -40,6 +40,7 @@ jobs:
     - name: yarn publish
       run: |
         npm i -g yarn
+        yarn build
         yarn config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         yarn publish        
       env:
