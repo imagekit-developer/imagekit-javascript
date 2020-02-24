@@ -241,3 +241,21 @@ If the upload succeed, `err` will be `null` and the `result` will be the same as
 If the upload fails, `err` will be the same as what is received from ImageKit's servers and the `result` will be null.
 
 
+### Demo Application
+
+The fastest way to get started is running the demo application. You can run the code locally. The source code is in [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app).
+
+To run it: 
+
+```
+git clone https://github.com/imagekit-developer/imagekit-javascript.git
+
+cd imagekit-javascript
+```
+
+Find the file `.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
+
+```
+yarn startSampleApp
+```
+
