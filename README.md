@@ -230,7 +230,7 @@ Sample usage
             console.log(arguments);
             console.log(imagekit.url({
                 src: result.url,
-                transformation : [{ HEIGHT: 300, WIDTH: 400}]
+                transformation : [{ height: 300, width: 400}]
             }));
         })
     }
