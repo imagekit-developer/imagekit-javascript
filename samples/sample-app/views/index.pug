@@ -1,0 +1,69 @@
+html
+    body
+        h3 Imagekit Demo
+        form(action='#' onSubmit='upload(event)')
+            input(type='file' id='file1')
+            input(type="submit")
+        div(id='info')
+            div(id='status')
+
+            div(id='images' style='display: none')
+
+                div(id='orig_image') 
+                    h4 Original Image
+                    p
+                        img(src="")
+                div(id='trans_image') 
+                    h4 Sample transformation with height: 300, width: 400: 
+                    p
+                        img(src="")    
+            
+        script(type='text/javascript' src="/imagekit.js")
+        script.
+            try {
+                var imagekit = new ImageKit({
+                    publicKey: "!{publicKey}",
+                    urlEndpoint: "!{urlEndpoint}",
+                    authenticationEndpoint: "!{authenticationEndpoint}"
+                });
+                
+                window.imagekit = imageekit;
+
+                function upload(e) {
+                    e.preventDefault();
+                    var file = document.getElementById("file1");
+                    var statusEl = document.getElementById("status");
+                    statusEl.innerHTML = "Uploading..." 
+                    imagekit.upload({
+                        file : file.files[0],
+                        fileName : "test_image.jpg",
+                        tags : ["test_tag_1"]
+                    }, function(err, result) {
+                        if (err) {
+                            statusEl.innerHTML = "Error uploading image. "+ err.message; 
+                            console.log(err) 
+                        } else {
+                            statusEl.innerHTML = "File Uploaded";
+                            var sampleTransformations = [{ HEIGHT: 300, WIDTH: 400}];
+                            srcUrl = result.url;
+                            transformedURL = imagekit.url({
+                                src: srcUrl,
+                                transformation : sampleTransformations
+                            });
+
+                            var orig_img = document.querySelector("#orig_image > p > img");
+                            var trans_img = document.querySelector("#trans_image > p > img");
+                            
+                            orig_img.setAttribute("src", srcUrl);
+                            trans_img.setAttribute("src", transformedURL);
+
+                            var el  = document.getElementById('images')
+                            el.setAttribute("style", "");
+                        }
+                        
+                        
+                    });
+                }
+            } catch(ex) {
+                console.log(ex);
+            }
