@@ -14,7 +14,7 @@ function request (formData, defaultOptions, callback) {
                 if (err) {
                     console.log(err);
                     if(typeof callback != "function") return;
-                    callback(error);
+                    callback(err);
                 } else {
                     callback(null, responseSucessText);
                 }
@@ -75,7 +75,7 @@ function _uploadFile (formData, callback) {
 }
 
 module.exports = {
-    request,
+    request : request,
     generateSignatureToken: _generateSignatureToken,
     uploadFile: _uploadFile,
 }

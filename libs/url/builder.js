@@ -12,7 +12,7 @@ var transformationUtils = require('../../utils/transformation');
 /*
     Variables
 */
-const TRANSFORMATION_PARAMETER = "tr";
+var TRANSFORMATION_PARAMETER = "tr";
 
 module.exports.buildURL = function(opts) {
     if(!opts.path && !opts.src) {
@@ -77,7 +77,7 @@ function constructTransformationString(transformation) {
     for(var i = 0, l = transformation.length; i < l; i++) {
         var parsedTransformStep = [];
         for(var key in transformation[i]) {
-            let transformKey = transformationUtils.getTransformKey(key);
+            var transformKey = transformationUtils.getTransformKey(key);
             if(!transformKey) {
                 transformKey = key;
             }

@@ -171,7 +171,7 @@ var transformationUtils = require('../../utils/transformation');
 /*
     Variables
 */
-const TRANSFORMATION_PARAMETER = "tr";
+var TRANSFORMATION_PARAMETER = "tr";
 
 module.exports.buildURL = function(opts) {
     if(!opts.path && !opts.src) {
@@ -236,7 +236,7 @@ function constructTransformationString(transformation) {
     for(var i = 0, l = transformation.length; i < l; i++) {
         var parsedTransformStep = [];
         for(var key in transformation[i]) {
-            let transformKey = transformationUtils.getTransformKey(key);
+            var transformKey = transformationUtils.getTransformKey(key);
             if(!transformKey) {
                 transformKey = key;
             }
@@ -3696,9 +3696,9 @@ function request (formData, defaultOptions, callback) {
 
             module.exports.uploadFile(formData, function(err, responseSucessText) {
                 if (err) {
-                    console.log(error);
+                    console.log(err);
                     if(typeof callback != "function") return;
-                    callback(error);
+                    callback(err);
                 } else {
                     callback(null, responseSucessText);
                 }
@@ -3759,10 +3759,11 @@ function _uploadFile (formData, callback) {
 }
 
 module.exports = {
-    request,
+    request : request,
     generateSignatureToken: _generateSignatureToken,
     uploadFile: _uploadFile,
 }
+
 },{}],66:[function(require,module,exports){
 module.exports = function(isError, response, callback) {
     if(typeof callback == "function") { 
