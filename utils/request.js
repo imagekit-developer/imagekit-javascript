@@ -12,7 +12,7 @@ function request (formData, defaultOptions, callback) {
 
             module.exports.uploadFile(formData, function(err, responseSucessText) {
                 if (err) {
-                    console.log(error);
+                    console.log(err);
                     if(typeof callback != "function") return;
                     callback(error);
                 } else {
