@@ -1,6 +1,6 @@
 {
     "name": "imagekit-javascript",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "description": "Javascript SDK for using ImageKit.io in the browser",
     "main": "dist/imagekit-min.js",
     "dependencies": {
