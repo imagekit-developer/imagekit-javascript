@@ -2,7 +2,7 @@
     "name": "imagekit-javascript",
     "version": "1.1.2",
     "description": "Javascript SDK for using ImageKit.io in the browser",
-    "main": "dist/index.js",
+    "main": "dist/imagekit-min.js",
     "dependencies": {
         "lodash": "^4.17.15",
         "url-polyfill": "^1.1.7"

@@ -8,7 +8,7 @@ const path = require('path');
 
 
 //const html = fs.readFileSync(path.join(__dirname, "../views/index.html"));
-const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit.js"));
+const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit-min.js"));
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
 
 
