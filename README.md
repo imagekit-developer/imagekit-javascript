@@ -254,7 +254,7 @@ git clone https://github.com/imagekit-developer/imagekit-javascript.git
 cd imagekit-javascript
 ```
 
-Find the file `.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
+Create a file `.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
 
 ```
 yarn startSampleApp
