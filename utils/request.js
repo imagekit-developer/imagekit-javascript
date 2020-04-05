@@ -25,7 +25,12 @@ function request (formData, defaultOptions, callback) {
 
 function _generateSignatureToken(defaultOptions, callback) {
     var xhr = new XMLHttpRequest();
+    xhr.timeout = 60000;
     xhr.open('GET', defaultOptions.authenticationEndpoint);
+    xhr.ontimeout = function (e) {
+        if(typeof callback != "function") return;
+        callback("The authenticationEndpoint you provided timed out in 60 seconds");
+    };
     xhr.onload = function() {
         if (xhr.status === 200) {
             try {

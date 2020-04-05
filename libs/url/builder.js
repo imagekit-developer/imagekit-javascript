@@ -31,10 +31,10 @@ module.exports.buildURL = function(opts) {
 
     var queryParameters = new URLSearchParams(parsedURL.query || "");
     if(opts.sdkVersion && opts.sdkVersion.trim() != "") {
-        queryParameters.set("ik-sdk-version", opts.sdkVersion.trim());
+        queryParameters.append("ik-sdk-version", opts.sdkVersion.trim());
     }
     for(var i in opts.queryParameters) {
-        queryParameters.set(i, opts.queryParameters[i]);
+        queryParameters.append(i, opts.queryParameters[i]);
     }
     
     //Initial URL Construction Object
@@ -54,7 +54,7 @@ module.exports.buildURL = function(opts) {
         //force that if src parameter is being used for URL construction then the transformation
         //string should be added only as a query parameter
         if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-            queryParameters.set(TRANSFORMATION_PARAMETER, transformationString);   
+            queryParameters.append(TRANSFORMATION_PARAMETER, transformationString);   
         } else {
             urlObject.pathname = path.join(
                                     [TRANSFORMATION_PARAMETER, transformationString].join(transformationUtils.getChainTransformDelimiter()),
