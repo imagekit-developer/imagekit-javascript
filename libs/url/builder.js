@@ -7,7 +7,7 @@ var url = require('url');
     Utils
 */
 var transformationUtils = require('../../utils/transformation');
-// var path = require('../../utils/path-join');
+var path = require('../../utils/path-join');
 
 /*
     Variables
@@ -56,9 +56,10 @@ module.exports.buildURL = function(opts) {
         if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
             queryParameters.append(TRANSFORMATION_PARAMETER, transformationString);   
         } else {
-            urlObject.pathname = [TRANSFORMATION_PARAMETER, transformationString].join(transformationUtils.getChainTransformDelimiter())
-                                 + '/'
-                                 + urlObject.pathname
+            urlObject.pathname = path.join(
+                                    [TRANSFORMATION_PARAMETER, transformationString].join(transformationUtils.getChainTransformDelimiter()),
+                                    urlObject.pathname
+                                )
         }
     }
     
