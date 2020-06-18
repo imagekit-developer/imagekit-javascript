@@ -9,7 +9,7 @@
     },
     "devDependencies": {
         "chai": "^4.2.0",
-        "formdata-node": "^2.1.1",
+        "formdata-node": "2.1.0",
         "grunt": "^1.0.4",
         "grunt-browserify": "^5.3.0",
         "grunt-contrib-uglify": "^4.0.1",
