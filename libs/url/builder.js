@@ -2,12 +2,12 @@
     Helper Modules
 */
 var url = require('url');
-var path = require('path');
 
 /*
     Utils
 */
 var transformationUtils = require('../../utils/transformation');
+var path = require('../../utils/path-join');
 
 /*
     Variables
