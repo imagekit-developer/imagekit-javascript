@@ -2,7 +2,14 @@
 
 'use strict';
 
-var util = require('util');
+var util = {
+  isString: function(arg) {
+    return typeof arg === 'string';
+  },
+  isObject: function(arg) {
+    return typeof arg === 'object' && arg !== null;
+  }
+};
 
 // resolves . and .. elements in a path array with directory names there
 // must be no slashes or device names (c:\) in the array
