@@ -20,6 +20,7 @@ jobs:
     - name: build and test
       run: |
         npm i -g yarn
+        yarn install
         yarn build
         yarn test
       env:
