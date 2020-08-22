@@ -28,6 +28,17 @@ html
                 });
                 
                 window.imagekit = imagekit;
+                debugger;
+                var imageURL = imagekit.url({
+                    path : "/default-image.jpg",
+                    urlEndpoint : "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+                    transformation : [{
+                        "height" : "300",
+                        "width" : "400"
+                    }]
+                });
+                
+                console.log(imageURL);
 
                 function upload(e) {
                     e.preventDefault();
@@ -46,6 +57,7 @@ html
                             statusEl.innerHTML = "File Uploaded";
                             var sampleTransformations = [{ HEIGHT: 300, WIDTH: 400}];
                             srcUrl = result.url;
+                            debugger;
                             transformedURL = imagekit.url({
                                 src: srcUrl,
                                 transformation : sampleTransformations

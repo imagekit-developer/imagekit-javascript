@@ -2,22 +2,31 @@
     "name": "imagekit-javascript",
     "version": "1.2.3",
     "description": "Javascript SDK for using ImageKit.io in the browser",
-    "main": "dist/imagekit-min.js",
-    "dependencies": {
-        "lodash": "^4.17.15",
-        "url-polyfill": "^1.1.7"
-    },
+    "main": "dist/imagekit.cjs.js",
+    "module": "dist/imagekit.esm.js",
+    "browser": "dist/imagekit.umd.js",
+    "dependencies": {},
+    "files": [
+        "dist",
+        "src"
+    ],
     "devDependencies": {
+        "@babel/cli": "^7.10.5",
+        "@babel/core": "^7.10.5",
+        "@babel/preset-env": "^7.10.4",
+        "@rollup/plugin-commonjs": "^14.0.0",
+        "@rollup/plugin-node-resolve": "^8.4.0",
         "chai": "^4.2.0",
         "formdata-node": "2.1.0",
-        "grunt": "^1.0.4",
-        "grunt-browserify": "^5.3.0",
-        "grunt-contrib-uglify": "^4.0.1",
         "mocha": "^7.0.1",
+        "rollup": "^2.22.0",
+        "rollup-plugin-babel": "^4.4.0",
+        "rollup-plugin-terser": "^6.1.0",
         "sinon": "^8.1.1"
     },
     "scripts": {
-        "build": "yarn install && ./node_modules/.bin/grunt",
+        "dev": "rollup -c -w",
+        "build": "rm -rf dist*;rollup -c",
         "test": "yarn install && export NODE_ENV=test && ./node_modules/mocha/bin/mocha --exit -t 40000 test/*.js;ex=$? ; unset NODE_ENV ; exit $ex;",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js"
     },

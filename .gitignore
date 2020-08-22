@@ -3,3 +3,4 @@ samples/sample-app/node_modules/*
 .env
 .vscode
 .DS_Store
+dist

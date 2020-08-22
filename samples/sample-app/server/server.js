@@ -6,9 +6,6 @@ const uuid = require('uuid');
 const fs = require('fs');
 const path = require('path');
 
-
-//const html = fs.readFileSync(path.join(__dirname, "../views/index.html"));
-const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit-min.js"));
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
 
 
@@ -53,6 +50,8 @@ const startServer = (port = 3000, PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT) => {
 
             router.get("/imagekit.js", (req, res) => {
                 try {
+                    //const html = fs.readFileSync(path.join(__dirname, "../views/index.html"));
+                    var js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit.umd.js"));
                     res.set('Content-Type', 'text/javascript');
                     res.send(Buffer.from(js));
                 } catch (err) {

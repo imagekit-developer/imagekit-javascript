@@ -1,8 +1,8 @@
-function request (formData, defaultOptions, callback) {
-    module.exports.generateSignatureToken(defaultOptions, function (err, signaturObj) {
+export const request = (formData, defaultOptions, callback) => {
+    generateSignatureToken(defaultOptions, function (err, signaturObj) {
         if (err) {
             console.log(err);
-            if(typeof callback != "function") return;
+            if (typeof callback != "function") return;
             callback(err);
             return;
         } else {
@@ -10,10 +10,10 @@ function request (formData, defaultOptions, callback) {
             formData.append("expire", signaturObj.expire || 0);
             formData.append("token", signaturObj.token);
 
-            module.exports.uploadFile(formData, function(err, responseSucessText) {
+            uploadFile(formData, function (err, responseSucessText) {
                 if (err) {
                     console.log(err);
-                    if(typeof callback != "function") return;
+                    if (typeof callback != "function") return;
                     callback(err);
                 } else {
                     callback(null, responseSucessText);
@@ -23,15 +23,15 @@ function request (formData, defaultOptions, callback) {
     });
 }
 
-function _generateSignatureToken(defaultOptions, callback) {
+export const generateSignatureToken = (defaultOptions, callback) => {
     var xhr = new XMLHttpRequest();
     xhr.timeout = 60000;
     xhr.open('GET', defaultOptions.authenticationEndpoint);
     xhr.ontimeout = function (e) {
-        if(typeof callback != "function") return;
+        if (typeof callback != "function") return;
         callback("The authenticationEndpoint you provided timed out in 60 seconds");
     };
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 var body = JSON.parse(xhr.responseText);
@@ -42,17 +42,17 @@ function _generateSignatureToken(defaultOptions, callback) {
                 }
                 callback(null, obj);
                 return;
-            } catch(ex) {
-                if(typeof callback != "function") return;
+            } catch (ex) {
+                if (typeof callback != "function") return;
                 callback(ex);
             }
         } else {
             try {
                 var error = JSON.parse(xhr.responseText);
-                if(typeof callback != "function") return;
+                if (typeof callback != "function") return;
                 callback(error);
             } catch (ex) {
-                if(typeof callback != "function") return;
+                if (typeof callback != "function") return;
                 callback(ex);
             }
         }
@@ -61,17 +61,17 @@ function _generateSignatureToken(defaultOptions, callback) {
     return;
 }
 
-function _uploadFile (formData, callback) {
-    var uploadFileXHR= new XMLHttpRequest();
+export const uploadFile = (formData, callback) => {
+    var uploadFileXHR = new XMLHttpRequest();
     uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
-    uploadFileXHR.onload = function() {
+    uploadFileXHR.onload = function () {
         if (uploadFileXHR.status === 200) {
-            if(typeof callback != "function") return;
+            if (typeof callback != "function") return;
             var uploadResponse = JSON.parse(uploadFileXHR.responseText);
             callback(null, uploadResponse);
         }
         else if (uploadFileXHR.status !== 200) {
-            if(typeof callback != "function") return;
+            if (typeof callback != "function") return;
             callback(JSON.parse(uploadFileXHR.responseText));
         }
     };
@@ -79,8 +79,3 @@ function _uploadFile (formData, callback) {
     return
 }
 
-module.exports = {
-    request : request,
-    generateSignatureToken: _generateSignatureToken,
-    uploadFile: _uploadFile,
-}
