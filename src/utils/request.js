@@ -14,7 +14,7 @@ export const request = (formData, defaultOptions, callback) => {
                 if (err) {
                     console.log(err);
                     if (typeof callback != "function") return;
-                    callback(err);
+                    callback(err, null);
                 } else {
                     callback(null, responseSucessText);
                 }
