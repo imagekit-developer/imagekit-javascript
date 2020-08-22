@@ -15,6 +15,7 @@
         "@babel/core": "^7.10.5",
         "@babel/preset-env": "^7.10.4",
         "@rollup/plugin-commonjs": "^14.0.0",
+        "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^8.4.0",
         "chai": "^4.2.0",
         "formdata-node": "2.1.0",

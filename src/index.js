@@ -1,6 +1,6 @@
 import { url } from "./url/index";
 import { upload } from "./upload/index";
-const pkg = { version: "1.2.3" };
+import pkg from '../package.json';
 import transformationUtils from "./utils/transformation"
 import errorMessages from "./constants/errorMessages";
 

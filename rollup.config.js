@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
+import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
 import pkg from './package.json';
 import { terser } from "rollup-plugin-terser";
@@ -15,6 +16,8 @@ export default [
 		},
 		plugins: [
 			commonjs(), // so Rollup can convert `ms` to an ES module
+			json(),
+			terser()
 		]
 	},
 	// CommonJS (for Node) and ES module (for bundlers) build.
@@ -28,6 +31,9 @@ export default [
 		output: [
 			{ file: pkg.main, format: 'cjs' },
 			{ file: pkg.module, format: 'es' }
+		],
+		plugins: [
+			json()
 		]
 	}
 ];

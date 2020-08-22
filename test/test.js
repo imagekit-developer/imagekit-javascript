@@ -3,7 +3,7 @@ const sinon = require("sinon");
 // const requestUtils = require('../src/utils/request.js');
 const fs = require('fs');
 const path = require('path');
-
+const pkg = require("../package.json");
 global.FormData = require('formdata-node');
 
 const expect = chai.expect;
@@ -48,12 +48,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 });
-
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/[^\/]/);
-                expect(url).to.match(new RegExp("[^\/]\/tr:"));
-                expect(url).to.match(new RegExp(":h-300,w-400"));
-                expect(url).to.match(/[^\/]\/test_path\.jpg[^\/][\?]?/);
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
             });
 
             it('should generate the correct url with path param with multiple leading slash', function() {
@@ -64,11 +60,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 })
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/[^\/]/);
-                expect(url).to.match(new RegExp("[^\/]\/tr:"));
-                expect(url).to.match(new RegExp(":h-300,w-400"));
-                expect(url).to.match(/[^\/]\/test_path\.jpg[^\/][\?]?/);
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
 
             });
 
@@ -81,11 +74,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 })
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\_alt\/[^\/]/);
-                expect(url).to.match(new RegExp("[^\/]\/tr:"));
-                expect(url).to.match(new RegExp(":h-300,w-400"));
-                expect(url).to.match(/[^\/]\/test_path\.jpg[^\/][\?]?/);
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint_alt/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
 
             });
 
@@ -98,9 +88,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 });
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/test\_path\.jpg\?/);
-                expect(url).to.match(new RegExp('&tr=h-300%2Cw-400'));
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
             });
 
             it('should generate the correct url with src param', function() {
@@ -111,9 +100,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 });
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/test\_path\_alt\.jpg[^\/]/);
-                expect(url).to.match(new RegExp('&tr=h-300%2Cw-400'));
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
             });
 
             it('should generate the correct url with transformationPostion as query', function() {
@@ -125,9 +113,8 @@ describe("Testing SDK", function () {
                         "width" : "400"
                     }]
                 });
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/test\_path\_alt\.jpg\?/);
-                expect(url).to.match(new RegExp('&tr=h-300%2Cw-400'));
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
             });
 
             it('should generate the correct url with query params properly merged', function() {
@@ -140,11 +127,7 @@ describe("Testing SDK", function () {
                     }]
                 });
 
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/test\_path\_alt\.jpg\?t1=v1\&/);
-                expect(url).to.match(new RegExp('&t2=v2&'));
-                expect(url).to.match(new RegExp('&t3=v3&'));
-                expect(url).to.match(new RegExp('&tr=h-300%2Cw-400'));
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&ik-sdk-version=javascript-${pkg.version}&t2=v2&t3=v3&tr=h-300%2Cw-400`);
             });
 
 
@@ -159,12 +142,7 @@ describe("Testing SDK", function () {
                     }]
                 })
 
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/[^\/]/);
-                expect(url).to.match(new RegExp("[^\/]\/tr:"));
-                expect(url).to.match(new RegExp(":h-300,w-400:rt-90"));
-                expect(url).to.not.match(new RegExp(":rt-90:h-300,w-400"));
-                expect(url).to.match(/[^\/]\/test_path\.jpg[^\/][\?]?/);
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rt-90/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
             });
 
 
@@ -179,12 +157,7 @@ describe("Testing SDK", function () {
                     }]
                 })
 
-                expect(url).to.match(/^https\:\/\/ik\.imagekit\.io\/test\_url\_endpoint\/[^\/]/);
-                expect(url).to.match(new RegExp("[^\/]\/tr:"));
-                expect(url).to.match(new RegExp(":h-300,w-400:rndm_trnsf-abcd"));
-                expect(url).to.not.match(new RegExp(":rndm_trnsf-abcd:h-300,w-400"));
-                expect(url).to.match(/[^\/]\/test_path\.jpg[^\/][\?]?/);
-                expect(url).to.match(/ik\-sdk\-version\=javascript\-\d\.\d\.\d/);
+                expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
             });
             
         });
