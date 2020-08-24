@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "MANDATORY_INITIALIZATION_MISSING" : { message : "Missing publicKey or privateKey or urlEndpoint during ImageKit initialization", help : "" },
     "INVALID_TRANSFORMATION_POSITION" : { message : "Invalid transformationPosition parameter", help : "" },
     "PRIVATE_KEY_CLIENT_SIDE" : { message : "privateKey should not be passed on the client side", help : "" },

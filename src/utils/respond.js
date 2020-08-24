@@ -1,4 +1,4 @@
-module.exports = function(isError, response, callback) {
+export default function(isError, response, callback) {
     if(typeof callback == "function") { 
         if(isError) {
             callback(response, null);

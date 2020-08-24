@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -23,6 +23,7 @@ jobs:
     - name:  build and test
       run: |
         npm i -g yarn
+        yarn install
         yarn build
         yarn test
       env:
@@ -40,6 +41,7 @@ jobs:
     - name: yarn publish
       run: |
         npm i -g yarn
+        yarn build
         yarn config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         yarn publish        
       env:
