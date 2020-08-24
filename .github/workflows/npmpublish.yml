@@ -43,7 +43,7 @@ jobs:
         npm i -g yarn
         yarn build
         yarn config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-        yarn publish        
+        npm publish        
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
         CI: true
