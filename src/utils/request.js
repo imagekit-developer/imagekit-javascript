@@ -1,7 +1,6 @@
 export const request = (formData, defaultOptions, callback) => {
     generateSignatureToken(defaultOptions, function (err, signaturObj) {
         if (err) {
-            console.log(err);
             if (typeof callback != "function") return;
             callback(err);
             return;
@@ -12,7 +11,6 @@ export const request = (formData, defaultOptions, callback) => {
 
             uploadFile(formData, function (err, responseSucessText) {
                 if (err) {
-                    console.log(err);
                     if (typeof callback != "function") return;
                     callback(err, null);
                 } else {

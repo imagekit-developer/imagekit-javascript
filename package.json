@@ -1,11 +1,11 @@
 {
     "name": "imagekit-javascript",
-    "version": "1.2.3",
+    "version": "1.3.0",
     "description": "Javascript SDK for using ImageKit.io in the browser",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
-    "browser": "dist/imagekit.umd.js",
-    "dependencies": {},
+    "browser": "dist/imagekit.min.js",
+    "unpkg": "dist/imagekit.min.js",
     "files": [
         "dist",
         "src"
@@ -14,6 +14,7 @@
         "@babel/cli": "^7.10.5",
         "@babel/core": "^7.10.5",
         "@babel/preset-env": "^7.10.4",
+        "@rollup/plugin-babel": "^5.2.0",
         "@rollup/plugin-commonjs": "^14.0.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^8.4.0",
@@ -21,7 +22,6 @@
         "formdata-node": "2.1.0",
         "mocha": "^7.0.1",
         "rollup": "^2.22.0",
-        "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-terser": "^6.1.0",
         "sinon": "^8.1.1"
     },

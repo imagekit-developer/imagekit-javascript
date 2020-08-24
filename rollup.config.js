@@ -1,7 +1,5 @@
-import babel from 'rollup-plugin-babel';
-import resolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import json from '@rollup/plugin-json';
-import commonjs from '@rollup/plugin-commonjs';
 import pkg from './package.json';
 import { terser } from "rollup-plugin-terser";
 
@@ -15,7 +13,7 @@ export default [
 			format: 'umd'
 		},
 		plugins: [
-			commonjs(), // so Rollup can convert `ms` to an ES module
+			babel(),
 			json(),
 			terser()
 		]

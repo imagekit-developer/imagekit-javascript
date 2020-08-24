@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
-const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit.umd.js"));
+const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit.min.js"));
 
 const app = express();
 app.use(cors());
