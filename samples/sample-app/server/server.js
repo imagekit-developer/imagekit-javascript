@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
-const js = fs.readFileSync(path.join(__dirname, "../../../dist/imagekit.min.js"));
 
 const app = express();
 app.use(cors());
@@ -48,16 +47,6 @@ const startServer = (port = 3000, PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT) => {
                 }
             });
 
-            router.get("/imagekit.js", (req, res) => {
-                try {
-                    res.set('Content-Type', 'text/javascript');
-                    res.send(Buffer.from(js));
-                } catch (err) {
-                    console.error("Error while responding to static page request:", JSON.stringify(err, undefined, 2));
-                    res.status(500).send("Internal Server Error");
-                }
-            });
-
             router.get("/", (req, res) => {
                 try {
                     res.render(pugTemplatePath, {publicKey: PUBLIC_KEY, urlEndpoint: URL_ENDPOINT, authenticationEndpoint: `http://localhost:3000/auth`});
@@ -66,10 +55,6 @@ const startServer = (port = 3000, PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT) => {
                     res.status(500).send("Internal Server Error");
                 }
             });
-
-            
-
-
 
             app.use("/",router);
     

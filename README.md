@@ -7,22 +7,41 @@
 
 Javascript SDK for [ImageKit.io](https://imagekit.io) that implements the client-side upload and URL generation for use in the browser.
 
-ImageKit is a complete image optimization and transformation solution that comes with an [image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
+ImageKit is a complete image optimization and transformation solution with an [image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names. It allows you to deliver optimized images in minutes with minimal code changes.
 
 This SDK has no dependency.
 
 ## Installation
 
-Download the `imagekit.js` file from the dist directory or using the following command. Use the optional `--save` parameter if you wish to save the dependency in your `package.json` file.
-
+### Using npm
+Install `imagekit-javascript`
 ```
 npm install imagekit-javascript
 ```
 
-Load it using a `<script>` tag.
+Now import ImageKit
+```js
+import ImageKit from "imagekit-javascript"
+
+// or
+const ImageKit = require("imagekit-javascript")
+```
+
+### Using CDN
+You can download a specific version of this SDK from a global CDN.
+```
+https://unpkg.com/imagekit-javascript@1.3.0/dist/imagekit.min.js
+```
+
+For latest version remove the version number i.e.
+```
+https://unpkg.com/imagekit-javascript/dist/imagekit.min.js
+```
+
+Now load it using a `<script>` tag.
 
 ```
-<script type="text/javascript" src="imagekit.js"></script>
+<script type="text/javascript" src="https://unpkg.com/imagekit-javascript@1.3.0/dist/imagekit.min.js"></script>
 ```
 
 ## Initialization
@@ -40,8 +59,25 @@ var imagekit = new ImageKit({
 
 *Note: Do not include your Private Key in any client-side code, including this SDK or its initialization. If you pass the `privateKey` parameter while initializing this SDK, it throws an error*
 
-## Usage
+## Demo Application
 
+The fastest way to get started is by running the demo application. You can run the code locally. The source code is in [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app).
+
+To run it: 
+
+```
+git clone https://github.com/imagekit-developer/imagekit-javascript.git
+
+cd imagekit-javascript
+```
+
+Create a file `.env` using `sample.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
+
+```
+yarn startSampleApp
+```
+
+## Usage
 You can use this SDK for URL generation and client-side file uploads.
 
 ### URL Generation
@@ -240,23 +276,4 @@ Sample usage
 
 If the upload succeeds, `err` will be `null`, and the `result` will be the same as what is received from ImageKit's servers.
 If the upload fails, `err` will be the same as what is received from ImageKit's servers, and the `result` will be null.
-
-
-### Demo Application
-
-The fastest way to get started is by running the demo application. You can run the code locally. The source code is in [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app).
-
-To run it: 
-
-```
-git clone https://github.com/imagekit-developer/imagekit-javascript.git
-
-cd imagekit-javascript
-```
-
-Create a file `.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
-
-```
-yarn startSampleApp
-```
 
