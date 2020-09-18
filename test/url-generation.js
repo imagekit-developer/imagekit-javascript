@@ -9,6 +9,22 @@ describe("URL generation", function () {
 
     var imagekit = new ImageKit(initializationParams);
 
+    it('no transformation path', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg"
+        });
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+    it('no transformation src', function () {
+        const url = imagekit.url({
+            src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg"
+        });
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
     it('should generate the correct url with path param', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",

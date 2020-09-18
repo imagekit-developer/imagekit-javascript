@@ -9,7 +9,7 @@ export const buildURL = (opts) => {
     var urlObj, isSrcParameterUsedForURL, urlEndpointPattern;
     if (opts.path) {
         urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
-        urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern,""),opts.path]));
+        urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.path]));
     } else {
         urlObj = new URL(opts.src);
         isSrcParameterUsedForURL = true;
@@ -26,16 +26,18 @@ export const buildURL = (opts) => {
 
     var transformationString = constructTransformationString(opts.transformation);
 
-    if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-        urlObj.searchParams.append(TRANSFORMATION_PARAMETER, transformationString);
-    } else {
-        urlObj.pathname = pathJoin([
-            TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
-            urlObj.pathname
-        ]);
+    if (transformationString && transformationString.length) {
+        if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
+            urlObj.searchParams.append(TRANSFORMATION_PARAMETER, transformationString);
+        } else {
+            urlObj.pathname = pathJoin([
+                TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
+                urlObj.pathname
+            ]);
+        }
     }
 
-    urlObj.pathname = pathJoin([urlEndpointPattern,urlObj.pathname]);
+    urlObj.pathname = pathJoin([urlEndpointPattern, urlObj.pathname]);
 
     return urlObj.href;
 }
