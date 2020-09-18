@@ -19,15 +19,15 @@ const ImageKit = function(opts) {
     };
 
     if (!mandatoryParametersAvailable(this.options)) {
-        throw new Error(errorMessages.MANDATORY_INITIALIZATION_MISSING);
+        throw(errorMessages.MANDATORY_INITIALIZATION_MISSING);
     }
 
     if (privateKeyPassed(this.options)) {
-        throw new Error(errorMessages.PRIVATE_KEY_CLIENT_SIDE);
+        throw(errorMessages.PRIVATE_KEY_CLIENT_SIDE);
     }
 
     if (!transformationUtils.validParameters(this.options)) {
-        throw new Error(errorMessages.INVALID_TRANSFORMATION_POSITION);
+        throw(errorMessages.INVALID_TRANSFORMATION_POSITION);
     }
 
     /*
@@ -40,8 +40,12 @@ const ImageKit = function(opts) {
     /*
         Upload API
     */
-    this.upload = function (uploadOptions, callback) {
-        return upload(uploadOptions, this.options, callback);
+    this.upload = function (uploadOptions, callback, options) {
+        var mergedOptions = {
+            ...this.options,
+            ...options
+        };
+        return upload(uploadOptions, mergedOptions, callback);
     };
 };
 

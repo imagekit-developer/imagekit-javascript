@@ -7,6 +7,14 @@ const ImageKit = require(".."); // This will automatically pick main module (cjs
 describe("Initialization checks", function () {
     var imagekit = new ImageKit(initializationParams);
 
+    it('should throw error', function () {
+        try {
+            new ImageKit({});
+        } catch(err) {
+            expect(err.message).to.be.equal('Missing urlEndpoint during SDK initialization');
+        }
+    });
+
     it('should have options object', function () {
         expect(imagekit.options).to.be.an('object');
     });

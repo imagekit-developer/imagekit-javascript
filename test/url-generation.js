@@ -25,6 +25,17 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
 
+    it('Undefined parameters with path', function () {
+        const url = imagekit.url({
+            path: "/test_path_alt.jpg",
+            transformation: undefined,
+            transformationPosition: undefined,
+            src: undefined,
+        });
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
     it('should generate the correct url with path param', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
