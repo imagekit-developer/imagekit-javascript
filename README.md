@@ -43,7 +43,7 @@ https://unpkg.com/imagekit-javascript/dist/imagekit.min.js
 Now load it using a `<script>` tag.
 
 ```
-<script type="text/javascript" src="https://unpkg.com/imagekit-javascript@1.3.0/dist/imagekit.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js"></script>
 ```
 
 ## Initialization
