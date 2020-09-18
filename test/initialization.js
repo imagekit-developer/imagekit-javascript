@@ -21,4 +21,16 @@ describe("Initialization checks", function () {
         expect(imagekit.url).to.exist.and.to.be.a('function');
         expect(imagekit.upload).to.exist.and.to.be.a('function');
     });
+
+    it('only urlEndpoint is required parameter', function () {
+        let imagekit = new ImageKit({
+            urlEndpoint: initializationParams.urlEndpoint
+        });
+
+        expect(imagekit.options).to.be.an('object');
+        expect(imagekit.options).to.have.property('urlEndpoint').to.be.equal(initializationParams.urlEndpoint);
+        expect(imagekit.url).to.exist.and.to.be.a('function');
+        expect(imagekit.upload).to.exist.and.to.be.a('function');
+
+    });
 });

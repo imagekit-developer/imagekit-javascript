@@ -46,7 +46,7 @@ const ImageKit = function(opts) {
 };
 
 function mandatoryParametersAvailable(options) {
-    return options.publicKey && options.urlEndpoint;
+    return options.urlEndpoint;
 }
 
 function privateKeyPassed(options) {
