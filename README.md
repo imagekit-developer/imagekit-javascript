@@ -1,15 +1,17 @@
+[<img width="250" alt="ImageKit.io" src="https://raw.githubusercontent.com/imagekit-developer/imagekit-javascript/master/assets/imagekit-light-logo.svg"/>](https://imagekit.io)
+
 # ImageKit.io Javascript SDK
 
+![gzip size](https://img.badgesize.io/https://unpkg.com/imagekit-javascript/dist/imagekit.min.js?compression=gzip&label=gzip)
+![brotli size](https://img.badgesize.io/https://unpkg.com/imagekit-javascript/dist/imagekit.min.js?compression=brotli&label=brotli)
 ![Node CI](https://github.com/imagekit-developer/imagekit-javascript/workflows/Node%20CI/badge.svg)
 [![npm version](https://img.shields.io/npm/v/imagekit-javascript)](https://www.npmjs.com/package/imagekit-javascript) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
-Javascript SDK for [ImageKit.io](https://imagekit.io) that implements the client-side upload and URL generation for use in the browser.
+ImageKit Javascript SDK allows you to use real-time [image resizing](https://docs.imagekit.io/features/image-transformations), [optimization](https://docs.imagekit.io/features/image-optimization), and [file uploading](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload) in the client-side.
 
-ImageKit is a complete image optimization and transformation solution with an [image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names. It allows you to deliver optimized images in minutes with minimal code changes.
-
-This SDK has no dependency.
+This SDK is lightweight and has no dependency. You can also use this as an ES module.
 
 ## Installation
 
@@ -33,7 +35,7 @@ You can download a specific version of this SDK from a global CDN.
 https://unpkg.com/imagekit-javascript@1.3.0/dist/imagekit.min.js
 ```
 
-For latest version remove the version number i.e.
+For the latest version, remove the version number i.e.
 ```
 https://unpkg.com/imagekit-javascript/dist/imagekit.min.js
 ```
@@ -46,24 +48,28 @@ Now load it using a `<script>` tag.
 
 ## Initialization
 
+`urlEndpoint` is required to use the SDK. You can get URL-endpoint from your ImageKit dashboard - https://imagekit.io/dashboard#url-endpoints
+
 ```
 var imagekit = new ImageKit({
-    publicKey : "your_public_api_key",
-    urlEndpoint : "https://ik.imagekit.io/your_imagekit_id",
-    authenticationEndpoint : "http://www.yourserver.com/auth",
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id"
 });    
 ```
 
-`publicKey` and `urlEndpoint` are mandatory parameters for SDK initialization.
-`authenticationEndpoint` is essential if you want to use the SDK for client-side uploads.
+`publicKey` and `authenticationEndpoint` parameters are required if you want to use the SDK for client-side file upload. You can get these parameters from the developer section in your ImageKit dashboard - https://imagekit.io/dashboard#developers
+```
+var imagekit = new ImageKit({
+    publicKey: "your_public_api_key",
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
+    authenticationEndpoint: "http://www.yourserver.com/auth",
+});    
+```
 
 *Note: Do not include your Private Key in any client-side code, including this SDK or its initialization. If you pass the `privateKey` parameter while initializing this SDK, it throws an error*
 
 ## Demo Application
 
-The fastest way to get started is by running the demo application. You can run the code locally. The source code is in [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app).
-
-To run it: 
+The fastest way to get started is by running the demo application in [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app) folder. Follow these steps to run the application locally:
 
 ```
 git clone https://github.com/imagekit-developer/imagekit-javascript.git
@@ -71,7 +77,9 @@ git clone https://github.com/imagekit-developer/imagekit-javascript.git
 cd imagekit-javascript
 ```
 
-Create a file `.env` using `sample.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). The just run: 
+Create a file `.env` using `sample.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). 
+
+Now start the sample application by running:
 
 ```
 yarn startSampleApp
@@ -88,11 +96,11 @@ This method allows you to create a URL using the `path` where the image exists a
 
 ```
 var imageURL = imagekit.url({
-    path : "/default-image.jpg",
-    urlEndpoint : "https://ik.imagekit.io/your_imagekit_id/endpoint/",
-    transformation : [{
-        "height" : "300",
-        "width" : "400"
+    path: "/default-image.jpg",
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+    transformation: [{
+        "height": "300",
+        "width": "400"
     }]
 });
 ```
@@ -110,10 +118,10 @@ This method allows you to add transformation parameters to an existing, complete
 
 ```
 var imageURL = imagekit.url({
-    src : "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
-    transformation : [{
-        "height" : "300",
-        "width" : "400"
+    src: "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
+    transformation: [{
+        "height": "300",
+        "width": "400"
     }]
 });
 ```
@@ -141,15 +149,15 @@ The `.url()` method accepts the following parameters
 **1. Chained Transformations as a query parameter**
 ```
 var imageURL = imagekit.url({
-    path : "/default-image.jpg",
-    urlEndpoint : "https://ik.imagekit.io/your_imagekit_id/endpoint/",
-    transformation : [{
-        "height" : "300",
-        "width" : "400"
+    path: "/default-image.jpg",
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+    transformation: [{
+        "height": "300",
+        "width": "400"
     }, {
-        "rotation" : 90
+        "rotation": 90
     }],
-    transformationPosition : "query"
+    transformationPosition: "query"
 });
 ```
 ```
@@ -162,12 +170,12 @@ There are some transforms like [Sharpening](https://docs.imagekit.io/features/im
 
 ```
 var imageURL = imagekit.url({
-    src : "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
-    transformation : [{
-        "format" : "jpg",
-        "progressive" : "true",
-        "effectSharpen" : "-",
-        "effectContrast" : "1"
+    src: "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
+    transformation: [{
+        "format": "jpg",
+        "progressive": "true",
+        "effectSharpen": "-",
+        "effectContrast": "1"
     }]
 });
 ```
@@ -251,23 +259,23 @@ Sample usage
      authenticationEndpoint should be implemented on your server. Learn more here - https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint
     */
     var imagekit = new ImageKit({
-        publicKey : "your_public_api_key",
-        urlEndpoint : "https://ik.imagekit.io/your_imagekit_id",
-        authenticationEndpoint : "http://www.yourserver.com/auth"
+        publicKey: "your_public_api_key",
+        urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
+        authenticationEndpoint: "http://www.yourserver.com/auth"
     });
     
     // Upload function internally uses the ImageKit.io javascript SDK
     function upload(data) {
         var file = document.getElementById("file1");
         imagekit.upload({
-            file : file.files[0],
-            fileName : "abc1.jpg",
-            tags : ["tag1"]
+            file: file.files[0],
+            fileName: "abc1.jpg",
+            tags: ["tag1"]
         }, function(err, result) {
             console.log(arguments);
             console.log(imagekit.url({
                 src: result.url,
-                transformation : [{ height: 300, width: 400}]
+                transformation: [{ height: 300, width: 400}]
             }));
         })
     }

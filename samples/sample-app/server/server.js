@@ -29,16 +29,6 @@ const startServer = (port = 3000, PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT) => {
     
                     const signatureObj = imagekit.getAuthenticationParameters(token, expiration);
     
-                    // Alternate method for genrating signature
-                    /*
-                    const crypto = require('crypto');
-                    const signatureObj = {
-                        token,
-                        expire: expiration,
-                        signature :crypto.createHmac('sha1', privateAPIKey).update(token+expire).digest('hex') 
-                    }
-                    */
-    
                     res.status(200).send(signatureObj);
     
                 } catch (err) {

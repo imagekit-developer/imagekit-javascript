@@ -36,7 +36,7 @@ html
                     statusEl.innerHTML = "Uploading..." 
                     imagekit.upload({
                         file : file.files[0],
-                        fileName : "test_image.jpg",
+                        fileName : file.files[0].name || "test_image.jpg",
                         tags : ["test_tag_1"]
                     }, function(err, result) {
                         if (err) {
