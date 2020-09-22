@@ -77,7 +77,7 @@ git clone https://github.com/imagekit-developer/imagekit-javascript.git
 cd imagekit-javascript
 ```
 
-Create a file `.env` using `sample.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). 
+Create a file `.env` using `sample.env` in the directory `samples/sample-app` and fill in your `PRIVATE_KEY`, `PUBLIC_KEY` and `URL_ENDPOINT` from your [imageKit dashboard](https://imagekit.io/dashboard#developers). `SERVER_PORT` must also be included as per the `sample.env` file.
 
 Now start the sample application by running:
 
