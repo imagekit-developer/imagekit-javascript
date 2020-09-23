@@ -103,6 +103,44 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, { help: "", message: "Missing file parameter for upload" }, null);
     });
 
+    it('Auth endpoint network error handling', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback, {
+            authenticationEndpoint : "https://does-not-exist-sdfsdf/aut"
+        });
+
+        expect(server.requests.length).to.be.equal(1);
+
+        // Simulate network error on authentication endpoint
+        server.requests[0].error();
+        sinon.assert.calledWith(callback, { message: "Request to authenticationEndpoint failed due to network error", help: "" }, null);
+    });
+
+    it('Upload endpoint network error handling', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(1);
+        successSignature();
+        expect(server.requests.length).to.be.equal(2);
+
+        // Simulate network error on upload API
+        server.requests[1].error();
+        sinon.assert.calledWith(callback, { message: "Request to ImageKit upload endpoint failed due to network error", help: "" }, null);
+    });
+
     it('Boolean handling', function () {
         const fileOptions = {
             fileName: "test_file_name",
@@ -316,6 +354,54 @@ describe("File upload", function () {
         expect(arg.get('expire')).to.be.equal("123");
         expect(arg.get('signature')).to.be.equal("test_signature");
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
+        expect(arg.get('tags')).to.be.equal(undefined);
+        expect(arg.get('isPrivateFile')).to.be.equal(undefined);
+        expect(arg.get('useUniqueFileName')).to.be.equal(undefined);
+        expect(arg.get('customCoordinates')).to.be.equal(undefined);
+        expect(arg.get('responseFields')).to.be.equal(undefined);
+
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
+
+    it('Overriding public key and authentication endpoint', function () {
+        var newAuthEndpoint = "http://test/auth-override";
+        var newPublicKey = "override_public_key";
+
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "https://ik.imagekit.io/remote-url.jpg"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback, {
+            authenticationEndpoint: newAuthEndpoint,
+            publicKey: newPublicKey
+        });
+
+        expect(server.requests.length).to.be.equal(1);
+        server.respondWith("GET", newAuthEndpoint,
+        [
+            200,
+            { "Content-Type": "application/json" },
+            JSON.stringify({
+                signature: "override_test_signature",
+                expire: 123123,
+                token: "override_test_token"
+            })
+        ]);
+        server.respond();
+        expect(server.requests.length).to.be.equal(2);
+        successUploadResponse();
+
+        var arg = server.requests[1].requestBody;
+        expect(arg.get('file')).to.be.equal("https://ik.imagekit.io/remote-url.jpg");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('token')).to.be.equal("override_test_token");
+        expect(arg.get('expire')).to.be.equal("123123");
+        expect(arg.get('signature')).to.be.equal("override_test_signature");
+        expect(arg.get('publicKey')).to.be.equal('override_public_key');
         expect(arg.get('tags')).to.be.equal(undefined);
         expect(arg.get('isPrivateFile')).to.be.equal(undefined);
         expect(arg.get('useUniqueFileName')).to.be.equal(undefined);

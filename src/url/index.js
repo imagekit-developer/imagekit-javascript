@@ -24,7 +24,5 @@ export const url = (urlOpts, defaultOptions) => {
 function validOptions(opts) {
     if (!opts.urlEndpoint) return false;
 
-    if (!transformationUtils.validParameters(opts)) return false;
-
     return true;
 }

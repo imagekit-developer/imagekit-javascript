@@ -1,8 +1,11 @@
-export const request = (formData, defaultOptions, callback) => {
-    generateSignatureToken(defaultOptions, function (err, signaturObj) {
+import respond from "../utils/respond";
+import errorMessages from "../constants/errorMessages"
+
+export const request = (formData, options, callback) => {
+    generateSignatureToken(options, function (err, signaturObj) {
         if (err) {
             if (typeof callback != "function") return;
-            callback(err);
+            callback(err, null);
             return;
         } else {
             formData.append("signature", signaturObj.signature || "");
@@ -21,14 +24,19 @@ export const request = (formData, defaultOptions, callback) => {
     });
 }
 
-export const generateSignatureToken = (defaultOptions, callback) => {
+export const generateSignatureToken = (options, callback) => {
     var xhr = new XMLHttpRequest();
     xhr.timeout = 60000;
-    xhr.open('GET', defaultOptions.authenticationEndpoint);
+    xhr.open('GET', options.authenticationEndpoint);
     xhr.ontimeout = function (e) {
         if (typeof callback != "function") return;
-        callback("The authenticationEndpoint you provided timed out in 60 seconds");
+        respond(true, errorMessages.AUTH_ENDPOINT_TIMEOUT, callback);
+        return;
     };
+    xhr.onerror = function() {
+        respond(true, errorMessages.AUTH_ENDPOINT_NETWORK_ERROR, callback);
+        return;
+    }
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {
@@ -62,6 +70,10 @@ export const generateSignatureToken = (defaultOptions, callback) => {
 export const uploadFile = (formData, callback) => {
     var uploadFileXHR = new XMLHttpRequest();
     uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
+    uploadFileXHR.onerror = function() {
+        respond(true, errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR, callback);
+        return;
+    }
     uploadFileXHR.onload = function () {
         if (uploadFileXHR.status === 200) {
             if (typeof callback != "function") return;

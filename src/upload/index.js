@@ -2,7 +2,7 @@ import errorMessages from "../constants/errorMessages"
 import respond from "../utils/respond";
 import { request } from "../utils/request";
 
-export const upload = (uploadOptions, defaultOptions, callback) => {
+export const upload = (uploadOptions, options, callback) => {
     if (!uploadOptions) {
         respond(true, errorMessages.INVALID_UPLOAD_OPTIONS, callback);
         return;
@@ -18,7 +18,7 @@ export const upload = (uploadOptions, defaultOptions, callback) => {
         return;
     }
 
-    if (!defaultOptions.authenticationEndpoint) {
+    if (!options.authenticationEndpoint) {
         respond(true, errorMessages.MISSING_AUTHENTICATION_ENDPOINT, callback);
         return;
     }
@@ -27,7 +27,7 @@ export const upload = (uploadOptions, defaultOptions, callback) => {
     for (var i in uploadOptions) {
         formData.append(i, uploadOptions[i]);
     }
-    formData.append("publicKey", defaultOptions.publicKey)
+    formData.append("publicKey", options.publicKey)
 
-    request(formData, defaultOptions, callback);
+    request(formData, options, callback);
 };
