@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.3]
+- Network error handling in requests for authentication and upload endpoint
+
 ## [1.3.2]
 - Bug fix URL generation without any transformation was adding a empty tr:
 
