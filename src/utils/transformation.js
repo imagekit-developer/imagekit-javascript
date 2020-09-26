@@ -22,7 +22,7 @@ export default {
     getTransformKey: function (transform) {
         if (!transform) { return ""; }
 
-        return supportedTransforms[transform.toLowerCase()] || "";
+        return supportedTransforms[transform] || supportedTransforms[transform.toLowerCase()] || "";
     },
     getChainTransformDelimiter: function () {
         return CHAIN_TRANSFORM_DELIMITER;

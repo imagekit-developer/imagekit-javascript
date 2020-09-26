@@ -155,6 +155,45 @@ describe("URL generation", function () {
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
+
+    it('overlayImage', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400",
+                overlayImage: "overlay.jpg"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-overlay.jpg/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+    it('overlayImage with slash in path', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400",
+                overlayImage: "/path/to/overlay.jpg"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-path@@to@@overlay.jpg/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+    it('overlayX', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400",
+                overlayX: 10
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ox-10/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
 });
 
 
