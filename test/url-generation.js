@@ -194,6 +194,19 @@ describe("URL generation", function () {
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ox-10/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
+
+    it('Border', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400",
+                border: "20_FF0000"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
 });
 
 
