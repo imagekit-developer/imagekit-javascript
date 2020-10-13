@@ -4,3 +4,6 @@ samples/sample-app/node_modules/*
 .vscode
 .DS_Store
 dist
+.nyc_output
+coverage.lcov
+coverage

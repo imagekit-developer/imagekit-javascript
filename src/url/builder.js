@@ -116,8 +116,8 @@ function constructTransformationString(transformation) {
                 parsedTransformStep.push(transformKey);
             } else {
                 var value = transformation[i][key];
-                if(transformKey === "oi") {
-                    value = removeLeadingSlash(value);
+                if(transformKey === "oi" || transformKey === "di") {
+                    value = removeTrailingSlash(removeLeadingSlash(value));
                     value = value.replace(/\//g,"@@");
                 }
                 parsedTransformStep.push([transformKey, value].join(transformationUtils.getTransformKeyValueDelimiter()));
