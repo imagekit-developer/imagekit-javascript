@@ -9,6 +9,12 @@ describe("URL generation", function () {
 
     var imagekit = new ImageKit(initializationParams);
 
+    it('no path no src', function () {
+        const url = imagekit.url({});
+
+        expect(url).equal("");
+    });
+
     it('no transformation path', function () {
         const url = imagekit.url({
             path: "/test_path.jpg"

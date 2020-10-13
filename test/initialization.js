@@ -15,6 +15,17 @@ describe("Initialization checks", function () {
         }
     });
 
+    it('Pass private Key', function () {
+        try {
+            new ImageKit({
+                urlEndpoint: initializationParams.urlEndpoint,
+                privateKey: "should_not_pass"
+            });
+        } catch(err) {
+            expect(err.message).to.be.equal('privateKey should not be passed on the client side');
+        }
+    });
+
     it('should have options object', function () {
         expect(imagekit.options).to.be.an('object');
     });

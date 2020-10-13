@@ -42,64 +42,6 @@ export const buildURL = (opts) => {
     return urlObj.href;
 }
 
-export const buildURLs = (opts) => {
-    if (!opts.path && !opts.src) {
-        return "";
-    }
-
-    //Create correct query parameters
-    var parsedURL, isSrcParameterUsedForURL, parsedHost;
-    if (opts.path) {
-        parsedURL = new URL(pathJoin([opts.urlEndpoint, opts.path]));
-        parsedHost = new URL(opts.urlEndpoint);
-    } else {
-        parsedURL = new URL(opts.src);
-        isSrcParameterUsedForURL = true;
-    }
-
-    var queryParameters = new URLSearchParams(parsedURL.query || "");
-    if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
-        queryParameters.append("ik-sdk-version", opts.sdkVersion.trim());
-    }
-    for (var i in opts.queryParameters) {
-        queryParameters.append(i, opts.queryParameters[i]);
-    }
-
-    //Initial URL Construction Object
-    var urlObject = { host: "", pathname: "", search: "" };
-    if (opts.path) {
-        urlObject.protocol = parsedHost.protocol;
-        urlObject.host = opts.urlEndpoint.replace(urlObject.protocol + "//", "");
-    } else if (opts.src) {
-        urlObject.host = [parsedURL.auth, parsedURL.auth ? "@" : "", parsedURL.host].join("");
-        urlObject.protocol = parsedURL.protocol;
-    }
-    urlObject.pathname = parsedURL.pathname;
-
-    //Create Transformation String
-    var transformationString = constructTransformationString(opts.transformation);
-    if (transformationString) {
-        //force that if src parameter is being used for URL construction then the transformation
-        //string should be added only as a query parameter
-        if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-            queryParameters.append(TRANSFORMATION_PARAMETER, transformationString);
-        } else {
-            urlObject.pathname = pathJoin([
-                TRANSFORMATION_PARAMETER,
-                transformationUtils.getChainTransformDelimiter(),
-                transformationString,
-                urlObject.pathname
-            ]);
-        }
-    }
-
-    urlObject.host = removeTrailingSlash(urlObject.host);
-    urlObject.pathname = addLeadingSlash(urlObject.pathname);
-    urlObject.search = queryParameters.toString();
-
-    return url.format(urlObject);
-};
-
 function constructTransformationString(transformation) {
     if (!Array.isArray(transformation)) { return ""; }
 
@@ -128,14 +70,6 @@ function constructTransformationString(transformation) {
     }
 
     return parsedTransforms.join(transformationUtils.getChainTransformDelimiter());
-}
-
-function addLeadingSlash(str) {
-    if (typeof str == "string" && str[0] != "/") {
-        str = "/" + str;
-    }
-
-    return str;
 }
 
 function removeTrailingSlash(str) {

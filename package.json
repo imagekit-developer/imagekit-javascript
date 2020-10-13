@@ -31,7 +31,7 @@
     "scripts": {
         "dev": "rollup -c -w",
         "build": "rm -rf dist*;rollup -c",
-        "test": "export NODE_ENV=test && nyc ./node_modules/mocha/bin/mocha -r esm --exit -t 40000 test/*.js;ex=$? ; unset NODE_ENV ; exit $ex;",
+        "test": "export NODE_ENV=test && nyc ./node_modules/mocha/bin/mocha --coverage -r esm --exit -t 40000 test/*.js;ex=$? ; unset NODE_ENV ; exit $ex;",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
     },

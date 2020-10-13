@@ -14,15 +14,5 @@ export const url = (urlOpts, defaultOptions) => {
         ...urlOpts
     }
 
-    if (!validOptions(opts)) {
-        return "";
-    }
-
     return buildURL(opts);
 };
-
-function validOptions(opts) {
-    if (!opts.urlEndpoint) return false;
-
-    return true;
-}

@@ -17,9 +17,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: build and test
+    - name: Build and Test
       run: |
         npm install
+        npm run build
         npm run test
         npm run report-coverage
       env:

@@ -34,6 +34,19 @@ function successSignature() {
         ]);
     server.respond();
 }
+
+function nonSuccessErrorSignature() {
+    server.respondWith("GET", initializationParams.authenticationEndpoint,
+        [
+            403,
+            { "Content-Type": "application/json" },
+            JSON.stringify({
+                error: "Not allowed"
+            })
+        ]);
+    server.respond();
+}
+
 function successUploadResponse() {
     server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
         [
@@ -103,6 +116,22 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, { help: "", message: "Missing file parameter for upload" }, null);
     });
 
+    it('Missing authEndpoint', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback, {
+            authenticationEndpoint : ""
+        });
+
+        expect(server.requests.length).to.be.equal(0);
+        sinon.assert.calledWith(callback, { message: "Missing authentication endpoint for upload", help: "" }, null);
+    });
+
     it('Auth endpoint network error handling', function () {
         const fileOptions = {
             fileName: "test_file_name",
@@ -120,6 +149,23 @@ describe("File upload", function () {
         // Simulate network error on authentication endpoint
         server.requests[0].error();
         sinon.assert.calledWith(callback, { message: "Request to authenticationEndpoint failed due to network error", help: "" }, null);
+    });
+
+    it('Auth endpoint non 200 status code handling', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(1);
+
+        // Simulate non 200 response on authentication endpoint
+        nonSuccessErrorSignature();
+        sinon.assert.calledWith(callback, { error: "Not allowed" }, null);
     });
 
     it('Upload endpoint network error handling', function () {
