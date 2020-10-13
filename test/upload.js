@@ -3,7 +3,7 @@ const sinon = require("sinon");
 global.FormData = require('formdata-node');
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-const ImageKit = require(".."); // This will automatically pick main module (cjs bundle) as per package.json
+import ImageKit from "../src/index.js";
 var requests, server;
 
 const uploadSuccessResponseObj = {

@@ -1,7 +1,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-const ImageKit = require(".."); // This will automatically pick main module (cjs bundle) as per package.json
+import ImageKit from "../src/index.js";
 
 
 describe("Initialization checks", function () {
