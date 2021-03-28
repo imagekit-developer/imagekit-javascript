@@ -82,7 +82,11 @@ export const uploadFile = (formData, callback) => {
         }
         else if (uploadFileXHR.status !== 200) {
             if (typeof callback != "function") return;
-            callback(JSON.parse(uploadFileXHR.responseText));
+            try {
+              callback(JSON.parse(uploadFileXHR.responseText));
+            } catch (ex) {
+              callback(ex);
+            }
         }
     };
     uploadFileXHR.send(formData);
