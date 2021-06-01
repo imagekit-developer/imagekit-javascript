@@ -43,7 +43,7 @@ export default [
       babel({
         extensions: [".ts"],
       }),
-      cleanup(),
+      cleanup({ extensions: ["js", "ts"] }),
     ],
   },
 ];
