@@ -5,7 +5,6 @@ import ImageKit from "../out-tsc/src/index";
 
 
 describe("Initialization checks", function () {
-    console.log(ImageKit)
     var imagekit = new ImageKit(initializationParams);
 
     it('should throw error', function () {

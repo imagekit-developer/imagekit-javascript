@@ -32,7 +32,7 @@ export const upload = (
   let i: keyof typeof uploadOptions;
   for (i in uploadOptions) {
     const param = uploadOptions[i];
-    if (param) {
+    if (typeof param !== "undefined") {
       if (typeof param === "string" || typeof param === "boolean") {
         formData.append(i, String(param));
       } else if (param instanceof Buffer) {

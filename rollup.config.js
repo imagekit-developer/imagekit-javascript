@@ -3,9 +3,7 @@ import json from "@rollup/plugin-json";
 import pkg from "./package.json";
 import { terser } from "rollup-plugin-terser";
 import cleanup from "rollup-plugin-cleanup";
-import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
 
 export default [
   // browser-friendly UMD build
