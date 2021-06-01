@@ -3,7 +3,7 @@ const sinon = require("sinon");
 global.FormData = require('formdata-node');
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-import ImageKit from "../src/index.js";
+import ImageKit from "../out-tsc/src/index";
 var requests, server;
 
 const uploadSuccessResponseObj = {

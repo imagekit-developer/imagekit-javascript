@@ -1,30 +1,37 @@
 import respond from "../utils/respond";
 import errorMessages from "../constants/errorMessages"
+import { ImageKitOptions, UploadResponse } from "../interfaces";
 
-export const request = (formData, options, callback) => {
-    generateSignatureToken(options, function (err, signaturObj) {
+interface SignatureResponse {
+    signature: string
+    expire: number
+    token: string
+}
+
+export const request = (formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
+    generateSignatureToken(options, (err, signaturObj) => {
         if (err) {
             if (typeof callback != "function") return;
             callback(err, null);
             return;
         } else {
-            formData.append("signature", signaturObj.signature || "");
-            formData.append("expire", signaturObj.expire || 0);
-            formData.append("token", signaturObj.token);
+            formData.append("signature", signaturObj?.signature || "");
+            formData.append("expire", String(signaturObj?.expire || 0));
+            formData.append("token", signaturObj?.token || "");
 
-            uploadFile(formData, function (err, responseSucessText) {
+            uploadFile(formData, (err, responseSucessText) => {
+                if (typeof callback != "function") return;
                 if (err) {
-                    if (typeof callback != "function") return;
                     callback(err, null);
                 } else {
-                    callback(null, responseSucessText);
+                    callback(null, responseSucessText!);
                 }
             });
         }
     });
 }
 
-export const generateSignatureToken = (options, callback) => {
+export const generateSignatureToken = (options: ImageKitOptions & { authenticationEndpoint: string }, callback: (err: Error | null, response: SignatureResponse | null) => void) => {
     var xhr = new XMLHttpRequest();
     xhr.timeout = 60000;
     xhr.open('GET', options.authenticationEndpoint);
@@ -50,16 +57,16 @@ export const generateSignatureToken = (options, callback) => {
                 return;
             } catch (ex) {
                 if (typeof callback != "function") return;
-                callback(ex);
+                callback(ex, null);
             }
         } else {
             try {
                 var error = JSON.parse(xhr.responseText);
                 if (typeof callback != "function") return;
-                callback(error);
+                callback(error, null);
             } catch (ex) {
                 if (typeof callback != "function") return;
-                callback(ex);
+                callback(ex, null);
             }
         }
     };
@@ -67,7 +74,7 @@ export const generateSignatureToken = (options, callback) => {
     return;
 }
 
-export const uploadFile = (formData, callback) => {
+export const uploadFile = (formData: FormData, callback: (err: Error | null, response: UploadResponse | null) => void) => {
     var uploadFileXHR = new XMLHttpRequest();
     uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
     uploadFileXHR.onerror = function() {
@@ -83,9 +90,9 @@ export const uploadFile = (formData, callback) => {
         else if (uploadFileXHR.status !== 200) {
             if (typeof callback != "function") return;
             try {
-              callback(JSON.parse(uploadFileXHR.responseText));
+              callback(JSON.parse(uploadFileXHR.responseText), null);
             } catch (ex) {
-              callback(ex);
+              callback(ex, null);
             }
         }
     };
