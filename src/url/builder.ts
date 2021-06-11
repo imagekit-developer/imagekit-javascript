@@ -30,15 +30,18 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
 
   var urlObj, isSrcParameterUsedForURL, urlEndpointPattern;
 
-  if (opts.path) {
-    urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
-    urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.path]));
-  } else {
-    urlObj = new URL(opts.src!);
-    isSrcParameterUsedForURL = true;
+  try {
+    if (opts.path) {
+      urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
+      urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.path]));
+    } else {
+      urlObj = new URL(opts.src!);
+      isSrcParameterUsedForURL = true;
+    }  
+  } catch(e) {
+    console.error(e)
+    return "";
   }
-
-  if (!urlObj) return "";
 
   if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
     urlObj.searchParams.append("ik-sdk-version", opts.sdkVersion.trim());
