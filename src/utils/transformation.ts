@@ -18,9 +18,6 @@ export default {
     validParameters: (options: ImageKitOptions) =>  {
         return VALID_TRANSFORMATION_POSITIONS.indexOf(options.transformationPosition) != -1;
     },
-    getSupportedTransforms: function () {
-        return supportedTransforms;
-    },
     getTransformKey: function (transform: string) {
         if (!transform) { return ""; }
 

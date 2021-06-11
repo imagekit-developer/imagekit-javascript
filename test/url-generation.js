@@ -15,6 +15,12 @@ describe("URL generation", function () {
         expect(url).equal("");
     });
 
+    it('invalid src url', function () {
+        const url = imagekit.url({ src: "/" });
+
+        expect(url).equal("");
+    });
+
     it('no transformation path', function () {
         const url = imagekit.url({
             path: "/test_path.jpg"
@@ -212,6 +218,42 @@ describe("URL generation", function () {
         })
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+     it('transformation with empty key and empty value', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "": ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:-/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+    
+    /**
+     * Provided to provide support to a new transform without sdk update
+     */
+    it('transformation with undefined transform', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "undefined-transform": "true"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+    it('transformation with empty key and value', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                effectContrast: "-"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
 
     it('All combined', function () {

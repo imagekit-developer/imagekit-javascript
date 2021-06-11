@@ -90,6 +90,16 @@ describe("File upload", function () {
         server.restore();
     });
 
+    it('Invalid Options', function () {
+
+        var callback = sinon.spy();
+
+        imagekit.upload(undefined, callback);
+        expect(server.requests.length).to.be.equal(0);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { help: "", message: "Invalid uploadOptions parameter" }, null);
+    });
+
     it('Missing fileName', function () {
         const fileOptions = {
             file: "https://ik.imagekit.io/remote-url.jpg"

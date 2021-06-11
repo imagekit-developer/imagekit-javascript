@@ -60,6 +60,6 @@ export interface UrlOptionsPath extends UrlOptionsBase {
 /**
  * Options for generating an URL
  *
- * @link https://github.com/imagekit-developer/imagekit-nodejs#url-generation
+ * @link https://github.com/imagekit-developer/imagekit-javascript#url-generation
  */
 export type UrlOptions = UrlOptionsSrc | UrlOptionsPath;
