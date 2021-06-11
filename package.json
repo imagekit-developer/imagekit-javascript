@@ -15,6 +15,7 @@
         "@babel/core": "^7.10.5",
         "@babel/preset-env": "^7.10.4",
         "@babel/preset-typescript": "^7.13.0",
+        "@babel/register": "^7.14.5",
         "@rollup/plugin-babel": "^5.2.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^8.4.0",
@@ -37,7 +38,7 @@
     "scripts": {
         "dev": "rollup -c -w",
         "build": "rm -rf dist*;rollup -c",
-        "test": "export NODE_ENV=test && tsc && nyc ./node_modules/mocha/bin/mocha --coverage -r esm --exit -t 40000 test/*.js;ex=$? ; unset NODE_ENV ; exit $ex;",
+        "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha test/*.js",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
         "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
     },

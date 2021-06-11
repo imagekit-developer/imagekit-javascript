@@ -1,11 +1,10 @@
 {
     "presets": [
-        "@babel/typescript",
+        "@babel/preset-typescript",
         [
             "@babel/env",
             {
-                "targets": "> 0.25%, not dead",
-                "modules": false
+                "targets": "> 0.25%, not dead"
             }
         ]
     ]

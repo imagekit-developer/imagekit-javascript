@@ -1,7 +1,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-import ImageKit from "../out-tsc/src/index";
+import ImageKit from "../src/index";
 
 
 describe("Initialization checks", function () {
