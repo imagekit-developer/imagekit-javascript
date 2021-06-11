@@ -1,7 +1,7 @@
 /**
  * Options used when uploading a file
  *
- * @see {@link https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload#request-structure-multipart-form-data}
+ * @link https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload#request-structure-multipart-form-data
  */
 export interface UploadOptions {
   /**
@@ -16,7 +16,7 @@ export interface UploadOptions {
   /**
    * The name with which the file has to be uploaded.
    * The file name can contain:
-   * - Alphanumeric Characters: a-z , A-Z , 0-9
+   * - Alphanumeric Characters: a-z , A-Z , 0-9 (including unicode letters, marks, and numerals in other languages)
    * - Special Characters: . _ and -
    * Any other character including space will be replaced by _
    */
@@ -40,7 +40,7 @@ export interface UploadOptions {
   /**
    * The folder path (e.g. /images/folder/) in which the image has to be uploaded. If the folder(s) didn't exist before, a new folder(s) is created.
    * The folder name can contain:
-   * - Alphanumeric Characters: a-z , A-Z , 0-9
+   * - Alphanumeric Characters: a-z , A-Z , 0-9 (including unicode letters, marks, and numerals in other languages)
    * - Special Characters: / _ and -
    * - Using multiple / creates a nested folder.
    * Default value - /
