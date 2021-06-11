@@ -1,0 +1,5 @@
+{
+  "reporter": ["lcov", "text"],
+  "exclude": ["babel-register.js", "test"],
+  "include": ["src"]
+}

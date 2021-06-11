@@ -40,7 +40,7 @@
         "build": "rm -rf dist*;rollup -c",
         "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha test/*.js",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
-        "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+        "report-coverage": "codecov"
     },
     "repository": {
         "type": "git",
