@@ -48,6 +48,20 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
 
+    it('should generate the url without sdk-version', function () {
+        const ik = new ImageKit({...initializationParams, sdkVersion: ""})
+
+        const url = ik.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400"
+            }]
+        });
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
+    });
+
     it('should generate the correct url with path param', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
@@ -245,7 +259,18 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
     });
 
-    it('transformation with empty key and value', function () {
+    it('transformation with empty value', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                overlayImage: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:oi-/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+    });
+
+    it('transformation with - value', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{

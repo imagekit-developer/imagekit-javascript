@@ -11,21 +11,17 @@ interface SignatureResponse {
 export const request = (formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
     generateSignatureToken(options, (err, signaturObj) => {
         if (err) {
-            if (typeof callback != "function") return;
-            callback(err, null);
-            return;
+            return respond(true, err, callback)
         } else {
             formData.append("signature", signaturObj?.signature || "");
             formData.append("expire", String(signaturObj?.expire || 0));
             formData.append("token", signaturObj?.token || "");
 
             uploadFile(formData, (err, responseSucessText) => {
-                if (typeof callback != "function") return;
                 if (err) {
-                    callback(err, null);
-                } else {
-                    callback(null, responseSucessText!);
+                    return respond(true, err, callback)
                 }
+                return respond(false, responseSucessText!, callback)
             });
         }
     });
@@ -36,13 +32,10 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
     xhr.timeout = 60000;
     xhr.open('GET', options.authenticationEndpoint);
     xhr.ontimeout = function (e) {
-        if (typeof callback != "function") return;
         respond(true, errorMessages.AUTH_ENDPOINT_TIMEOUT, callback);
-        return;
     };
     xhr.onerror = function() {
         respond(true, errorMessages.AUTH_ENDPOINT_NETWORK_ERROR, callback);
-        return;
     }
     xhr.onload = function () {
         if (xhr.status === 200) {
@@ -53,20 +46,16 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
                     expire: body.expire,
                     token: body.token
                 }
-                callback(null, obj);
-                return;
+                respond(false, obj, callback)
             } catch (ex) {
-                if (typeof callback != "function") return;
-                callback(ex, null);
+                respond(true, ex, callback)
             }
         } else {
             try {
                 var error = JSON.parse(xhr.responseText);
-                if (typeof callback != "function") return;
-                callback(error, null);
+                respond(true, error, callback);
             } catch (ex) {
-                if (typeof callback != "function") return;
-                callback(ex, null);
+                respond(true, ex, callback);
             }
         }
     };
@@ -83,12 +72,10 @@ export const uploadFile = (formData: FormData, callback: (err: Error | null, res
     }
     uploadFileXHR.onload = function () {
         if (uploadFileXHR.status === 200) {
-            if (typeof callback != "function") return;
             var uploadResponse = JSON.parse(uploadFileXHR.responseText);
             callback(null, uploadResponse);
         }
         else if (uploadFileXHR.status !== 200) {
-            if (typeof callback != "function") return;
             try {
               callback(JSON.parse(uploadFileXHR.responseText), null);
             } catch (ex) {
