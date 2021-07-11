@@ -3,7 +3,7 @@ import { upload } from "./upload/index";
 import { version } from "../package.json";
 import transformationUtils from "./utils/transformation";
 import errorMessages from "./constants/errorMessages";
-import { IImageKit, ImageKitOptions, TransformationPosition, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
+import { IImageKit, ImageKitOptions, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
 
 function mandatoryParametersAvailable(options: ImageKitOptions) {
   return options.urlEndpoint;
@@ -15,12 +15,7 @@ function privateKeyPassed(options: ImageKitOptions) {
 
 const ImageKit = function (
   this: IImageKit,
-  opts: {
-    publicKey: string;
-    urlEndpoint: string;
-    authenticationEndpoint?: string;
-    transformationPosition?: TransformationPosition;
-  },
+  opts: ImageKitOptions,
 ) {
   opts = opts || {};
   this.options = {

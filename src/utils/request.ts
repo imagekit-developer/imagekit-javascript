@@ -78,7 +78,7 @@ export const uploadFile = (formData: FormData, callback: (err: Error | null, res
         else if (uploadFileXHR.status !== 200) {
             try {
               callback(JSON.parse(uploadFileXHR.responseText), null);
-            } catch (ex) {
+            } catch (ex : any) {
               callback(ex, null);
             }
         }

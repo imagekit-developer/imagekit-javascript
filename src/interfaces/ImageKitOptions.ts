@@ -1,9 +1,9 @@
 import { TransformationPosition } from ".";
 
 export interface ImageKitOptions {
-  sdkVersion: string;
-  publicKey: string;
   urlEndpoint: string;
+  sdkVersion?: string;
+  publicKey?: string;
   authenticationEndpoint?: string;
-  transformationPosition: TransformationPosition;
+  transformationPosition?: TransformationPosition;
 }

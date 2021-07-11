@@ -28,6 +28,11 @@ export const upload = (
     return;
   }
 
+  if (!options.publicKey) {
+    respond(true, errorMessages.MISSING_PUBLIC_KEY, callback);
+    return;
+  }
+
   var formData = new FormData();
   let i: keyof typeof uploadOptions;
   for (i in uploadOptions) {

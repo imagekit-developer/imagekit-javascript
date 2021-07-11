@@ -25,17 +25,6 @@ export interface UrlOptionsBase {
    * If not specified, the URL Endpoint specified at the time of SDK initialization is used.
    */
   urlEndpoint?: string;
-  /**
-   * Default is false. If set to true, the SDK generates a signed image URL adding the image signature to the image URL.
-   * If you are creating URL using src parameter instead of path then do correct urlEndpoint for this to work.
-   * Otherwise returned URL will have wrong signature.
-   */
-  signed?: boolean;
-  /**
-   * Meant to be used along with the signed parameter to specify the time in seconds from now when the URL should expire.
-   * If specified, the URL contains the expiry timestamp in the URL and the image signature is modified accordingly.
-   */
-  expireSeconds?: number;
 }
 
 export interface UrlOptionsSrc extends UrlOptionsBase {
