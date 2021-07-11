@@ -40,8 +40,6 @@ export const upload = (
     if (typeof param !== "undefined") {
       if (typeof param === "string" || typeof param === "boolean") {
         formData.append(i, String(param));
-      } else if (param instanceof Buffer) {
-        formData.append(i, new Blob([param]), uploadOptions.fileName);
       } else {
         formData.append(i, param);
       }

@@ -4,4 +4,4 @@ import { UploadOptions } from "./UploadOptions";
 import { UploadResponse, FileType } from "./UploadResponse";
 import { UrlOptions } from "./UrlOptions";
 
-export { ImageKitOptions, TransformationPosition, UploadOptions, UploadResponse, FileType, UrlOptions };
+export type { ImageKitOptions, TransformationPosition, UploadOptions, UploadResponse, FileType, UrlOptions };
