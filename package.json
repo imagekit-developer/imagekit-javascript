@@ -1,6 +1,6 @@
 {
     "name": "imagekit-javascript",
-    "version": "1.3.7",
+    "version": "1.2.0",
     "description": "Javascript SDK for using ImageKit.io in the browser",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
@@ -39,7 +39,7 @@
     },
     "scripts": {
         "dev": "rollup -c -w",
-		"export-types" : "tsc",
+        "export-types": "tsc",
         "build": "rm -rf dist*;rollup -c && yarn export-types",
         "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha test/*.js",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
