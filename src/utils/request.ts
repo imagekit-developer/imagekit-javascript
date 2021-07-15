@@ -1,41 +1,41 @@
 import respond from "../utils/respond";
 import errorMessages from "../constants/errorMessages"
+import { ImageKitOptions, UploadResponse } from "../interfaces";
 
-export const request = (formData, options, callback) => {
-    generateSignatureToken(options, function (err, signaturObj) {
+interface SignatureResponse {
+    signature: string
+    expire: number
+    token: string
+}
+
+export const request = (formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
+    generateSignatureToken(options, (err, signaturObj) => {
         if (err) {
-            if (typeof callback != "function") return;
-            callback(err, null);
-            return;
+            return respond(true, err, callback)
         } else {
-            formData.append("signature", signaturObj.signature || "");
-            formData.append("expire", signaturObj.expire || 0);
-            formData.append("token", signaturObj.token);
+            formData.append("signature", signaturObj?.signature || "");
+            formData.append("expire", String(signaturObj?.expire || 0));
+            formData.append("token", signaturObj?.token || "");
 
-            uploadFile(formData, function (err, responseSucessText) {
+            uploadFile(formData, (err, responseSucessText) => {
                 if (err) {
-                    if (typeof callback != "function") return;
-                    callback(err, null);
-                } else {
-                    callback(null, responseSucessText);
+                    return respond(true, err, callback)
                 }
+                return respond(false, responseSucessText!, callback)
             });
         }
     });
 }
 
-export const generateSignatureToken = (options, callback) => {
+export const generateSignatureToken = (options: ImageKitOptions & { authenticationEndpoint: string }, callback: (err: Error | null, response: SignatureResponse | null) => void) => {
     var xhr = new XMLHttpRequest();
     xhr.timeout = 60000;
     xhr.open('GET', options.authenticationEndpoint);
     xhr.ontimeout = function (e) {
-        if (typeof callback != "function") return;
         respond(true, errorMessages.AUTH_ENDPOINT_TIMEOUT, callback);
-        return;
     };
     xhr.onerror = function() {
         respond(true, errorMessages.AUTH_ENDPOINT_NETWORK_ERROR, callback);
-        return;
     }
     xhr.onload = function () {
         if (xhr.status === 200) {
@@ -46,20 +46,16 @@ export const generateSignatureToken = (options, callback) => {
                     expire: body.expire,
                     token: body.token
                 }
-                callback(null, obj);
-                return;
+                respond(false, obj, callback)
             } catch (ex) {
-                if (typeof callback != "function") return;
-                callback(ex);
+                respond(true, ex, callback)
             }
         } else {
             try {
                 var error = JSON.parse(xhr.responseText);
-                if (typeof callback != "function") return;
-                callback(error);
+                respond(true, error, callback);
             } catch (ex) {
-                if (typeof callback != "function") return;
-                callback(ex);
+                respond(true, ex, callback);
             }
         }
     };
@@ -67,7 +63,7 @@ export const generateSignatureToken = (options, callback) => {
     return;
 }
 
-export const uploadFile = (formData, callback) => {
+export const uploadFile = (formData: FormData, callback: (err: Error | null, response: UploadResponse | null) => void) => {
     var uploadFileXHR = new XMLHttpRequest();
     uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
     uploadFileXHR.onerror = function() {
@@ -76,16 +72,14 @@ export const uploadFile = (formData, callback) => {
     }
     uploadFileXHR.onload = function () {
         if (uploadFileXHR.status === 200) {
-            if (typeof callback != "function") return;
             var uploadResponse = JSON.parse(uploadFileXHR.responseText);
             callback(null, uploadResponse);
         }
         else if (uploadFileXHR.status !== 200) {
-            if (typeof callback != "function") return;
             try {
-              callback(JSON.parse(uploadFileXHR.responseText));
-            } catch (ex) {
-              callback(ex);
+              callback(JSON.parse(uploadFileXHR.responseText), null);
+            } catch (ex : any) {
+              callback(ex, null);
             }
         }
     };

@@ -1,9 +1,11 @@
 const chai = require("chai");
 const sinon = require("sinon");
-global.FormData = require('formdata-node');
+global.FormData = require("formdata-node");
+global.Blob = require("web-file-polyfill").Blob
+global.File = require("web-file-polyfill").File
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-import ImageKit from "../src/index.js";
+import ImageKit from "../src/index";
 var requests, server;
 
 const uploadSuccessResponseObj = {
@@ -88,6 +90,16 @@ describe("File upload", function () {
         // Like before we must clean up when tampering with globals.
         global.XMLHttpRequest.restore();
         server.restore();
+    });
+
+    it('Invalid Options', function () {
+
+        var callback = sinon.spy();
+
+        imagekit.upload(undefined, callback);
+        expect(server.requests.length).to.be.equal(0);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { help: "", message: "Invalid uploadOptions parameter" }, null);
     });
 
     it('Missing fileName', function () {
@@ -327,7 +339,8 @@ describe("File upload", function () {
     it('Bare minimum request', function () {
         const fileOptions = {
             fileName: "test_file_name",
-            file: "test_file"
+            file: "test_file",
+            tags: undefined
         };
 
         var callback = sinon.spy();
@@ -341,6 +354,39 @@ describe("File upload", function () {
 
         var arg = server.requests[1].requestBody;
         expect(arg.get('file')).to.be.equal("test_file");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('token')).to.be.equal("test_token");
+        expect(arg.get('expire')).to.be.equal("123");
+        expect(arg.get('signature')).to.be.equal("test_signature");
+        expect(arg.get('publicKey')).to.be.equal('test_public_key');
+        expect(arg.get('tags')).to.be.equal(undefined);
+        expect(arg.get('isPrivateFile')).to.be.equal(undefined);
+        expect(arg.get('useUniqueFileName')).to.be.equal(undefined);
+        expect(arg.get('customCoordinates')).to.be.equal(undefined);
+        expect(arg.get('responseFields')).to.be.equal(undefined);
+
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
+
+    it('Bare minimum request: Blob', function () {
+        const buffer = Buffer.from("test_buffer")
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: buffer
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(1);
+        successSignature();
+        expect(server.requests.length).to.be.equal(2);
+        successUploadResponse();
+
+        var arg = server.requests[1].requestBody;
+        expect(arg.get('file').size).to.be.eq(buffer.length);
         expect(arg.get('fileName')).to.be.equal("test_file_name");
         expect(arg.get('token')).to.be.equal("test_token");
         expect(arg.get('expire')).to.be.equal("123");

@@ -1,15 +1,23 @@
 const chai = require("chai");
 const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
-import ImageKit from "../src/index.js";
+import ImageKit from "../src/index";
 
 
 describe("Initialization checks", function () {
     var imagekit = new ImageKit(initializationParams);
 
-    it('should throw error', function () {
+    it('should throw error: options - empty object', function () {
         try {
             new ImageKit({});
+        } catch(err) {
+            expect(err.message).to.be.equal('Missing urlEndpoint during SDK initialization');
+        }
+    });
+
+    it('should throw error: options - undefined', function () {
+        try {
+            new ImageKit();
         } catch(err) {
             expect(err.message).to.be.equal('Missing urlEndpoint during SDK initialization');
         }
@@ -51,5 +59,13 @@ describe("Initialization checks", function () {
         expect(imagekit.url).to.exist.and.to.be.a('function');
         expect(imagekit.upload).to.exist.and.to.be.a('function');
 
+    });
+
+    it('should throw error: invalid transformationPosition', function () {
+        try {
+            new ImageKit({...initializationParams, transformationPosition: "test"});
+        } catch(err) {
+            expect(err.message).to.be.equal('Invalid transformationPosition parameter');
+        }
     });
 });
