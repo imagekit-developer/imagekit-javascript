@@ -19,7 +19,9 @@ This SDK is lightweight and has no dependency. You can also use this as an ES mo
 ### Using npm
 Install `imagekit-javascript`
 ```
-npm install imagekit-javascript
+npm install imagekit-javascript --save
+#or
+yarn add imagekit-javascript
 ```
 
 Now import ImageKit
