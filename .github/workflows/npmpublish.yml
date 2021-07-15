@@ -39,6 +39,7 @@ jobs:
         registry-url: https://registry.npmjs.org/
     - name: NPM Publish
       run: |
+        npm install
         npm run build
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         npm publish        
