@@ -36,7 +36,7 @@ export interface UploadOptions {
    * - % is not allowed.
    * - If this field is not specified and the file is overwritten then the tags will be removed.
    */
-  tags?: string;
+  tags?: string | string[];
   /**
    * The folder path (e.g. /images/folder/) in which the image has to be uploaded. If the folder(s) didn't exist before, a new folder(s) is created.
    * The folder name can contain:
