@@ -6,6 +6,7 @@
     "module": "dist/imagekit.esm.js",
     "browser": "dist/imagekit.min.js",
     "unpkg": "dist/imagekit.min.js",
+    "types": "dist/src/index.d.ts",
     "files": [
         "dist",
         "src"
