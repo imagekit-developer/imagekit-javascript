@@ -33,14 +33,23 @@ export const upload = (
     return;
   }
 
+  if(uploadOptions.tags && Array.isArray(uploadOptions.tags))
+  {
+    uploadOptions.tags = String(uploadOptions.tags);
+  }
+  
   var formData = new FormData();
   let i: keyof typeof uploadOptions;
   for (i in uploadOptions) {
     const param = uploadOptions[i];
     if (typeof param !== "undefined") {
-      if (typeof param === "string" || typeof param === "boolean") {
+      if (typeof param === "string" || typeof param === "boolean")  {
         formData.append(i, String(param));
-      } else {
+      } 
+      else if(Array.isArray(param)) {
+        formData.append(i, JSON.stringify(param));
+      }
+      else {
         formData.append(i, param);
       }
     }
