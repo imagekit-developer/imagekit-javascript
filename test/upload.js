@@ -21,7 +21,7 @@ const uploadSuccessResponseObj = {
     "isPrivateFile": false,
     "customCoordinates": null,
     "fileType": "image",
-    "AITags":[{"name":"Face","confidence":99.95,"source":"aws-auto-tagging"},{"name":"Person","confidence":99.95,"source":"aws-auto-tagging"},{"name":"Human","confidence":99.95,"source":"aws-auto-tagging"},{"name":"Boy","confidence":87.6,"source":"aws-auto-tagging"},{"name":"Man","confidence":84.66,"source":"aws-auto-tagging"}],
+    "AITags":[{"name":"Face","confidence":99.95,"source":"aws-auto-tagging"}],
     "extensionStatus":{"aws-auto-tagging":"success"}
 };
 
@@ -363,7 +363,13 @@ describe("File upload", function () {
             responseFields: "tags, customCoordinates, isPrivateFile, metadata",
             useUniqueFileName: false,
             isPrivateFile: true,
-            extensions: [{name: "aws-auto-tagging", minConfidence: 80, maxTags: 10}],
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ],
             webhookUrl: "https://your-domain/?appId=some-id"
         };
         var jsonStringifiedExtensions = JSON.stringify(fileOptions.extensions);
