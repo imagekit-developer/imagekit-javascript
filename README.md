@@ -287,8 +287,14 @@ Sample usage
         imagekit.upload({
             file: file.files[0],
             fileName: "abc1.jpg",
-            tags: ["tag1"]
-            extensions: [{name: "aws-auto-tagging", minConfidence: 80, maxTags: 10}]
+            tags: ["tag1"],
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ]
         }, function(err, result) {
             console.log(arguments);
             console.log(imagekit.url({
