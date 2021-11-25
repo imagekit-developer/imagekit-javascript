@@ -1,11 +1,12 @@
 {
     "name": "imagekit-javascript",
-    "version": "1.4.1",
+    "version": "1.4.3",
     "description": "Javascript SDK for using ImageKit.io in the browser",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
     "browser": "dist/imagekit.min.js",
     "unpkg": "dist/imagekit.min.js",
+    "types": "dist/src/index.d.ts",
     "files": [
         "dist",
         "src"
