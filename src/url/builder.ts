@@ -37,8 +37,8 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     } else {
       urlObj = new URL(opts.src!);
       isSrcParameterUsedForURL = true;
-    }  
-  } catch(e) {
+    }
+  } catch (e) {
     console.error(e)
     return "";
   }
@@ -89,6 +89,8 @@ function constructTransformationString(transformation: Transformation[] | undefi
 
       if (transformation[i][key] === "-") {
         parsedTransformStep.push(transformKey);
+      } else if (key === "raw") {
+        parsedTransformStep.push(transformation[i][key]);
       } else {
         var value = transformation[i][key];
         if (transformKey === "oi" || transformKey === "di") {

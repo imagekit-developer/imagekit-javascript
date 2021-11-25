@@ -191,6 +191,8 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=f-jpg%2Cpr
 
 The complete list of transformations supported and their usage in ImageKit can be found [here](https://docs.imagekit.io/features/image-transformations). The SDK gives a name to each transformation parameter, making the code simpler and readable. If a transformation is supported in ImageKit, but a name for it cannot be found in the table below, then use the transformation code from ImageKit docs as the name when using in the `url` function.
 
+If you want to generate transformations in your application and add them to the URL as it is, use the `raw` parameter.
+
 | Supported Transformation Name | Translates to parameter |
 |-------------------------------|-------------------------|
 | height | h |
@@ -249,6 +251,7 @@ The complete list of transformations supported and their usage in ImageKit can b
 | effectContrast | e-contrast |
 | effectGray | e-grayscale |
 | original | orig |
+| raw | The string provided in raw will be added in the URL as it is. |
 
 
 ### File Upload
