@@ -75,4 +75,22 @@ export interface UploadOptions {
    * Final status of pending extensions will be sent to this URL. 
    */
   webhookUrl?: string
+  /*
+   * Default is true. If overwriteFile is set to false and useUniqueFileName is also false, and a file already exists at the exact location, upload API will return an error immediately.
+   */
+  overwriteFile?: boolean
+  /*
+   * Default is true. If set to true and a file already exists at the exact location, its AITags will be removed. Set overwriteAITags to false to preserve AITags.
+   */
+  overwriteAITags?: boolean
+  /*
+   * Default is true. If the request does not have tags , overwriteTags is set to true and a file already exists at the exact location, exiting tags will be removed.
+   * In case the request body has tags, setting overwriteTags to false has no effect and request's tags are set on the asset.
+   */
+  overwriteTags?: boolean
+  /*
+   * Default is true. If the request does not have customMetadata , overwriteCustomMetadata is set to true and a file already exists at the exact location, exiting customMetadata will be removed.
+   * In case the request body has customMetadata, setting overwriteCustomMetadata to false has no effect and request's customMetadata is set on the asset.
+   */
+  overwriteCustomMetadata?: boolean
 }

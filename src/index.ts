@@ -13,6 +13,31 @@ function privateKeyPassed(options: ImageKitOptions) {
   return typeof (options as any).privateKey != "undefined";
 }
 
+const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
+  return function (...args: any[]): Promise<T> | void {
+    console.log('arg: ', args);
+    if (args.length === fn.length && typeof args[args.length - 1] !== "undefined") {
+      if (typeof args[args.length - 1] !== "function") {
+        throw new Error("Callback must be a function.");
+      }
+      fn.call(thisContext, ...args);
+    } else {
+      return new Promise<T>((resolve, reject) => {
+        const callback = function (err: Error, ...results: any[]) {
+          if (err) {
+            return reject(err);
+          } else {
+            resolve(results.length > 1 ? results : results[0]);
+          }
+        };
+        args.pop()
+        args.push(callback);
+        fn.call(thisContext, ...args);
+      });
+    }
+  };
+};
+
 class ImageKit {
   options: ImageKitOptions = {
     sdkVersion: `javascript-${version}`,
@@ -58,16 +83,20 @@ class ImageKit {
    *
    * @param uploadOptions
    */
-  upload(
-    uploadOptions: UploadOptions,
-    callback?: (err: Error | null, response: UploadResponse | null) => void,
-    options?: Partial<ImageKitOptions>,
-  ): void {
-    var mergedOptions = {
+  upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<UploadResponse>
+  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: UploadResponse | null) => void, options?: Partial<ImageKitOptions>): void;
+  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: UploadResponse | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): void | Promise<UploadResponse> {
+    let callback;
+    if (typeof callbackOrOptions === 'function') {
+      callback = callbackOrOptions;
+    } else {
+      options = callbackOrOptions || {};
+    }
+    var mergedOptions = { 
       ...this.options,
       ...options,
     };
-    return upload(uploadOptions, mergedOptions, callback);
+    return promisify<UploadResponse>(this, upload)(uploadOptions, mergedOptions, callback);
   }
 }
 
