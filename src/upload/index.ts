@@ -4,6 +4,7 @@ import { request } from "../utils/request";
 import { ImageKitOptions, UploadOptions, UploadResponse } from "../interfaces";
 
 export const upload = (
+  xhr: XMLHttpRequest,
   uploadOptions: UploadOptions,
   options: ImageKitOptions,
   callback?: (err: Error | null, response: UploadResponse | null) => void,
@@ -57,5 +58,5 @@ export const upload = (
 
   formData.append("publicKey", options.publicKey);
 
-  request(formData, { ...options, authenticationEndpoint: options.authenticationEndpoint }, callback);
+  request(xhr, formData, { ...options, authenticationEndpoint: options.authenticationEndpoint }, callback);
 };

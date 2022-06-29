@@ -84,7 +84,7 @@ export interface UploadOptions {
    */
   overwriteAITags?: boolean
   /*
-   * Default is true. If the request does not have tags , overwriteTags is set to true and a file already exists at the exact location, exiting tags will be removed.
+   * Default is true. If the request does not have tags , overwriteTags is set to true and a file already exists at the exact location, existing tags will be removed.
    * In case the request body has tags, setting overwriteTags to false has no effect and request's tags are set on the asset.
    */
   overwriteTags?: boolean
@@ -93,4 +93,9 @@ export interface UploadOptions {
    * In case the request body has customMetadata, setting overwriteCustomMetadata to false has no effect and request's customMetadata is set on the asset.
    */
   overwriteCustomMetadata?: boolean
+  /*
+   * Stringified JSON key-value data to be associated with the asset. Checkout overwriteCustomMetadata parameter to understand default behaviour.
+   * Before setting any custom metadata on an asset you have to create the field using custom metadata fields API.
+   */
+  customMetadata?: Record<string, string | number | boolean>
 }

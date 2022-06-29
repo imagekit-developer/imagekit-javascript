@@ -84,8 +84,8 @@ class ImageKit {
    * @param uploadOptions
    */
   upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<UploadResponse>
-  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: UploadResponse | null) => void, options?: Partial<ImageKitOptions>): void;
-  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: UploadResponse | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): void | Promise<UploadResponse> {
+  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: UploadResponse | null) => void, options?: Partial<ImageKitOptions>): XMLHttpRequest;
+  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: UploadResponse | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): XMLHttpRequest | Promise<UploadResponse> {
     let callback;
     if (typeof callbackOrOptions === 'function') {
       callback = callbackOrOptions;
@@ -96,7 +96,13 @@ class ImageKit {
       ...this.options,
       ...options,
     };
-    return promisify<UploadResponse>(this, upload)(uploadOptions, mergedOptions, callback);
+    const xhr = new XMLHttpRequest();
+    const promise = promisify<UploadResponse>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
+    if (typeof promise === "object" && typeof promise.then === "function") {
+      return promise
+    } else {
+      return xhr;
+    }
   }
 }
 
