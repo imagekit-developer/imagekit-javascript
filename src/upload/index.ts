@@ -50,6 +50,9 @@ export const upload = (
       else if(Array.isArray(param)) {
         formData.append(i, JSON.stringify(param));
       }
+      else if(typeof param === "object" && !(param instanceof File || param instanceof Blob)) {
+        formData.append(i, JSON.stringify(param));
+      }
       else {
         formData.append(i, param);
       }

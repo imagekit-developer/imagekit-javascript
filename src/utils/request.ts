@@ -11,13 +11,16 @@ interface SignatureResponse {
 
 function getResponseHeaderMap(xhr: XMLHttpRequest) {
     const headers: Record<string, string | number | boolean> = {};
-    xhr.getAllResponseHeaders()
+    const responseHeaders = xhr.getAllResponseHeaders();
+    if (Object.keys(responseHeaders).length) {
+        responseHeaders
         .trim()
         .split(/[\r\n]+/)
         .map(value => value.split(/: /))
         .forEach(keyValue => {
           headers[keyValue[0].trim()] = keyValue[1].trim();
         });
+    }
     return headers;
 }
 

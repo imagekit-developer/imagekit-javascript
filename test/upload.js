@@ -444,7 +444,8 @@ describe("File upload", function () {
         successUploadResponse();
 
         var arg = server.requests[0].requestBody;
-        expect(arg.get('file').size).to.be.eq(buffer.length);
+
+        expect(JSON.parse(arg.get('file')).data.length).to.be.eq(buffer.length);
         expect(arg.get('fileName')).to.be.equal("test_file_name");
         expect(arg.get('token')).to.be.equal("test_token");
         expect(arg.get('expire')).to.be.equal("123");

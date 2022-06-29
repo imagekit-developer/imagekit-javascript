@@ -97,5 +97,5 @@ export interface UploadOptions {
    * Stringified JSON key-value data to be associated with the asset. Checkout overwriteCustomMetadata parameter to understand default behaviour.
    * Before setting any custom metadata on an asset you have to create the field using custom metadata fields API.
    */
-  customMetadata?: Record<string, string | number | boolean>
+  customMetadata?: string | Record<string, string | number | boolean | Array<string | number | boolean>>
 }

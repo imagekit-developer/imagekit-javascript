@@ -159,8 +159,4 @@ export interface UploadResponse {
    * Field object which will contain the status of each extension at the time of completion of the update/upload request.
    */ 
   extensionStatus?: { [key: string]: string }
-  /*
-   * Metadata for the response containing headers and status
-   */
-  $ResponseMetadata?: object
 }

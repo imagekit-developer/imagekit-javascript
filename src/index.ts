@@ -1,6 +1,7 @@
 import { version } from "../package.json";
 import errorMessages from "./constants/errorMessages";
 import { ImageKitOptions, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
+import IKResponse from "./interfaces/IKResponse";
 import { upload } from "./upload/index";
 import { url } from "./url/index";
 import transformationUtils from "./utils/transformation";
@@ -83,9 +84,9 @@ class ImageKit {
    *
    * @param uploadOptions
    */
-  upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<UploadResponse>
-  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: UploadResponse | null) => void, options?: Partial<ImageKitOptions>): XMLHttpRequest;
-  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: UploadResponse | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): XMLHttpRequest | Promise<UploadResponse> {
+  upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<IKResponse<UploadResponse>>
+  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): XMLHttpRequest;
+  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): XMLHttpRequest | Promise<IKResponse<UploadResponse>> {
     let callback;
     if (typeof callbackOrOptions === 'function') {
       callback = callbackOrOptions;
@@ -97,7 +98,7 @@ class ImageKit {
       ...options,
     };
     const xhr = new XMLHttpRequest();
-    const promise = promisify<UploadResponse>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
+    const promise = promisify<IKResponse<UploadResponse>>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
     if (typeof promise === "object" && typeof promise.then === "function") {
       return promise
     } else {
