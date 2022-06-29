@@ -418,7 +418,7 @@ describe("File upload", function () {
         expect(arg.get('expire')).to.be.equal("123");
         expect(arg.get('signature')).to.be.equal("test_signature");
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
-        expect(arg.get('tags')).to.be.equal(undefined);
+        expect(arg.get('tags')).to.be.equal('undefined');
         expect(arg.get('isPrivateFile')).to.be.equal(undefined);
         expect(arg.get('useUniqueFileName')).to.be.equal(undefined);
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
@@ -445,7 +445,7 @@ describe("File upload", function () {
 
         var arg = server.requests[0].requestBody;
 
-        expect(JSON.parse(arg.get('file')).data.length).to.be.eq(buffer.length);
+        expect(arg.get('file').size).to.be.eq(buffer.length);
         expect(arg.get('fileName')).to.be.equal("test_file_name");
         expect(arg.get('token')).to.be.equal("test_token");
         expect(arg.get('expire')).to.be.equal("123");

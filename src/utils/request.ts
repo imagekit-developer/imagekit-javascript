@@ -39,8 +39,7 @@ const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest):IKResponse<Up
 }
 
 export const request = (uploadFileXHR: XMLHttpRequest,formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
-    var signatureXHR = new XMLHttpRequest();
-    generateSignatureToken(signatureXHR, options, (err, signaturObj) => {
+    generateSignatureToken(options, (err, signaturObj) => {
         if (err) {
             return respond(true, err, callback)
         } else {
@@ -59,7 +58,8 @@ export const request = (uploadFileXHR: XMLHttpRequest,formData: FormData, option
     return uploadFileXHR;
 }
 
-export const generateSignatureToken = (xhr:XMLHttpRequest, options: ImageKitOptions & { authenticationEndpoint: string }, callback: (err: Error | null, response: SignatureResponse | null) => void) => {
+export const generateSignatureToken = (options: ImageKitOptions & { authenticationEndpoint: string }, callback: (err: Error | null, response: SignatureResponse | null) => void) => {
+    var xhr = new XMLHttpRequest();
     xhr.timeout = 60000;
     xhr.open('GET', options.authenticationEndpoint);
     xhr.ontimeout = function (e) {
