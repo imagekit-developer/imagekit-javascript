@@ -612,6 +612,109 @@ describe("File upload", function () {
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
+
+    it('With customMetadata', function(){
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            tags: "test_tag1,test_tag2",
+            customCoordinates: "10, 10, 100, 100",
+            responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+            useUniqueFileName: false,
+            isPrivateFile: true,
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ],
+            overwriteFile: false,
+            overwriteAITags: false,
+            overwriteTags: false,
+            overwriteCustomMetadata: false,
+            customMetadata: {
+                brand: "Nike",
+                color: "red"
+            },
+        };
+        var jsonStringifiedExtensions = JSON.stringify(fileOptions.extensions);
+        var customMetadata = JSON.stringify(fileOptions.customMetadata);
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        successUploadResponse();
+
+        var arg = server.requests[0].requestBody;
+
+        expect(arg.get('file')).to.be.equal("test_file");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('token')).to.be.equal("test_token");
+        expect(arg.get('expire')).to.be.equal("123");
+        expect(arg.get('signature')).to.be.equal("test_signature");
+        expect(arg.get('tags')).to.be.equal("test_tag1,test_tag2");
+        expect(arg.get('customCoordinates')).to.be.equal("10, 10, 100, 100");
+        expect(arg.get('responseFields')).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
+        expect(arg.get('useUniqueFileName')).to.be.equal('false');
+        expect(arg.get('isPrivateFile')).to.be.equal('true');
+        expect(arg.get('publicKey')).to.be.equal('test_public_key');
+        expect(arg.get('extensions')).to.be.equal(jsonStringifiedExtensions);
+        expect(arg.get('overwriteFile')).to.be.equal('false');
+        expect(arg.get('overwriteAITags')).to.be.equal('false');
+        expect(arg.get('overwriteTags')).to.be.equal('false');
+        expect(arg.get('overwriteCustomMetadata')).to.be.equal('false');
+        expect(arg.get('customMetadata')).to.be.equal(customMetadata);
+
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
+
+    it('check XHR object', function(){
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            tags: "test_tag1,test_tag2",
+            customCoordinates: "10, 10, 100, 100",
+            responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+            useUniqueFileName: false,
+            isPrivateFile: true,
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ],
+        };
+        var jsonStringifiedExtensions = JSON.stringify(fileOptions.extensions);
+        var callback = sinon.spy();
+
+        var xhr = imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        successUploadResponse();
+
+        var arg = server.requests[0].requestBody;
+
+        expect(arg.get('file')).to.be.equal("test_file");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('token')).to.be.equal("test_token");
+        expect(arg.get('expire')).to.be.equal("123");
+        expect(arg.get('signature')).to.be.equal("test_signature");
+        expect(arg.get('tags')).to.be.equal("test_tag1,test_tag2");
+        expect(arg.get('customCoordinates')).to.be.equal("10, 10, 100, 100");
+        expect(arg.get('responseFields')).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
+        expect(arg.get('useUniqueFileName')).to.be.equal('false');
+        expect(arg.get('isPrivateFile')).to.be.equal('true');
+        expect(arg.get('publicKey')).to.be.equal('test_public_key');
+        expect(arg.get('extensions')).to.be.equal(jsonStringifiedExtensions);
+        expect(server.requests[0]).to.be.equal(xhr);
+
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
 });
-
-
