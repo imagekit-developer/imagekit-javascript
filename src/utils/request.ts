@@ -90,7 +90,7 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
             try {
                 var error = JSON.parse(xhr.responseText);
                 var result = addResponseHeadersAndBody(error, xhr);
-                respond(true, error, callback);
+                respond(true, result, callback);
             } catch (ex) {
                 respond(true, ex, callback);
             }
