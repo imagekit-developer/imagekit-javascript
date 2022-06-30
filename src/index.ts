@@ -16,7 +16,6 @@ function privateKeyPassed(options: ImageKitOptions) {
 
 const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
   return function (...args: any[]): Promise<T> | void {
-    console.log('arg: ', args);
     if (args.length === fn.length && typeof args[args.length - 1] !== "undefined") {
       if (typeof args[args.length - 1] !== "function") {
         throw new Error("Callback must be a function.");
