@@ -84,25 +84,25 @@ class ImageKit {
    * @param uploadOptions
    */
   upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<IKResponse<UploadResponse>>
-  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): XMLHttpRequest;
-  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): XMLHttpRequest | Promise<IKResponse<UploadResponse>> {
+  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): void;
+  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): void | Promise<IKResponse<UploadResponse>> {
     let callback;
+    if (typeof uploadOptions !== "object") {
+      throw ("First parameter needs to be object");
+    }
     if (typeof callbackOrOptions === 'function') {
       callback = callbackOrOptions;
     } else {
       options = callbackOrOptions || {};
     }
-    var mergedOptions = { 
+    var mergedOptions = {
       ...this.options,
       ...options,
     };
-    const xhr = new XMLHttpRequest();
-    const promise = promisify<IKResponse<UploadResponse>>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
-    if (typeof promise === "object" && typeof promise.then === "function") {
-      return promise
-    } else {
-      return xhr;
-    }
+    const { xhr: userProvidedXHR } = uploadOptions || {};
+    delete uploadOptions.xhr;
+    const xhr = userProvidedXHR || new XMLHttpRequest();
+    return promisify<IKResponse<UploadResponse>>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
   }
 }
 
