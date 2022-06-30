@@ -1,6 +1,7 @@
 import { version } from "../package.json";
 import errorMessages from "./constants/errorMessages";
 import { ImageKitOptions, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
+import IKResponse from "./interfaces/IKResponse";
 import { upload } from "./upload/index";
 import { url } from "./url/index";
 import transformationUtils from "./utils/transformation";
@@ -12,6 +13,30 @@ function mandatoryParametersAvailable(options: ImageKitOptions) {
 function privateKeyPassed(options: ImageKitOptions) {
   return typeof (options as any).privateKey != "undefined";
 }
+
+const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
+  return function (...args: any[]): Promise<T> | void {
+    if (args.length === fn.length && typeof args[args.length - 1] !== "undefined") {
+      if (typeof args[args.length - 1] !== "function") {
+        throw new Error("Callback must be a function.");
+      }
+      fn.call(thisContext, ...args);
+    } else {
+      return new Promise<T>((resolve, reject) => {
+        const callback = function (err: Error, ...results: any[]) {
+          if (err) {
+            return reject(err);
+          } else {
+            resolve(results.length > 1 ? results : results[0]);
+          }
+        };
+        args.pop()
+        args.push(callback);
+        fn.call(thisContext, ...args);
+      });
+    }
+  };
+};
 
 class ImageKit {
   options: ImageKitOptions = {
@@ -58,16 +83,26 @@ class ImageKit {
    *
    * @param uploadOptions
    */
-  upload(
-    uploadOptions: UploadOptions,
-    callback?: (err: Error | null, response: UploadResponse | null) => void,
-    options?: Partial<ImageKitOptions>,
-  ): void {
-    var mergedOptions = {
+  upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<IKResponse<UploadResponse>>
+  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): XMLHttpRequest;
+  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): XMLHttpRequest | Promise<IKResponse<UploadResponse>> {
+    let callback;
+    if (typeof callbackOrOptions === 'function') {
+      callback = callbackOrOptions;
+    } else {
+      options = callbackOrOptions || {};
+    }
+    var mergedOptions = { 
       ...this.options,
       ...options,
     };
-    return upload(uploadOptions, mergedOptions, callback);
+    const xhr = new XMLHttpRequest();
+    const promise = promisify<IKResponse<UploadResponse>>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
+    if (typeof promise === "object" && typeof promise.then === "function") {
+      return promise
+    } else {
+      return xhr;
+    }
   }
 }
 

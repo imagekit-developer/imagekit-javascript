@@ -281,6 +281,11 @@ const supportedTransforms: { [key: string]: string } = {
    * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#original-image-orig
    */
   original: "orig",
+
+  /**
+   * @link https://docs.imagekit.io/features/image-transformations/conditional-transformations
+   */
+   raw: "raw",
 }
 
 

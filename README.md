@@ -287,7 +287,9 @@ Sample usage
     // Upload function internally uses the ImageKit.io javascript SDK
     function upload(data) {
         var file = document.getElementById("file1");
-        imagekit.upload({
+
+        // Using Callback Function
+        var xhr = imagekit.upload({
             file: file.files[0],
             fileName: "abc1.jpg",
             tags: ["tag1"],
@@ -305,10 +307,78 @@ Sample usage
                 transformation: [{ height: 300, width: 400}]
             }));
         })
+
+        xhr.upload.onprogress = (event) => {
+            console.log(`Uploaded ${event.loaded} of ${event.total} bytes`);
+        }
+
+        // Using Promises
+        imagekit.upload({
+            file: file.files[0],
+            fileName: "abc1.jpg",
+            tags: ["tag1"],
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ]
+        }).then(result => {
+            console.log(imagekit.url({
+                src: result.url,
+                transformation: [{ height: 300, width: 400}]
+            }));
+        }).then(error => {
+            console.log(error);
+        })
     }
 </script>
 ```
 
 If the upload succeeds, `err` will be `null`, and the `result` will be the same as what is received from ImageKit's servers.
 If the upload fails, `err` will be the same as what is received from ImageKit's servers, and the `result` will be null.
+Upload using callback functions returns the upload XHR, it can be used to monitor the progress of the upload.
 
+## Access request-id, other response headers and HTTP status code
+You can access `$ResponseMetadata` on success or error object to access the HTTP status code and response headers.
+
+```javascript
+// Success
+var response = await imagekit.upload({
+    file: file.files[0],
+    fileName: "abc1.jpg",
+    tags: ["tag1"],
+    extensions: [
+        {
+            name: "aws-auto-tagging",
+            minConfidence: 80,
+            maxTags: 10
+        }
+    ]
+});
+console.log(response.$ResponseMetadata.statusCode); // 200
+
+// { 'content-length': "300", 'content-type': 'application/json', 'x-request-id': 'ee560df4-d44f-455e-a48e-29dfda49aec5'}
+console.log(response.$ResponseMetadata.headers);
+
+// Error
+try {
+    await imagekit.upload({
+        file: file.files[0],
+        fileName: "abc1.jpg",
+        tags: ["tag1"],
+        extensions: [
+            {
+                name: "aws-auto-tagging",
+                minConfidence: 80,
+                maxTags: 10
+            }
+        ]
+    });
+} catch (ex) {
+    console.log(response.$ResponseMetadata.statusCode); // 400
+
+    // {'content-type': 'application/json', 'x-request-id': 'ee560df4-d44f-455e-a48e-29dfda49aec5'}
+    console.log(response.$ResponseMetadata.headers);
+}

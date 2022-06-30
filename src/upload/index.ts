@@ -4,6 +4,7 @@ import { request } from "../utils/request";
 import { ImageKitOptions, UploadOptions, UploadResponse } from "../interfaces";
 
 export const upload = (
+  xhr: XMLHttpRequest,
   uploadOptions: UploadOptions,
   options: ImageKitOptions,
   callback?: (err: Error | null, response: UploadResponse | null) => void,
@@ -39,23 +40,28 @@ export const upload = (
   }
   
   var formData = new FormData();
-  let i: keyof typeof uploadOptions;
-  for (i in uploadOptions) {
-    const param = uploadOptions[i];
-    if (typeof param !== "undefined") {
-      if (typeof param === "string" || typeof param === "boolean")  {
-        formData.append(i, String(param));
-      } 
-      else if(Array.isArray(param)) {
-        formData.append(i, JSON.stringify(param));
+  let key: keyof typeof uploadOptions;
+  for (key in uploadOptions) {
+    if (key) {
+      if (key == "file" && typeof uploadOptions.file != "string") {
+        formData.append('file', uploadOptions.file, String(uploadOptions.fileName));
+      } else if (key == "tags" && Array.isArray(uploadOptions.tags)) {
+        formData.append('tags', uploadOptions.tags.join(","));
+      } else if (key == "responseFields" && Array.isArray(uploadOptions.responseFields)) {
+        formData.append('responseFields', uploadOptions.responseFields.join(","));
+      } else if (key == "extensions" && Array.isArray(uploadOptions.extensions)) {
+        formData.append('extensions', JSON.stringify(uploadOptions.extensions));
+      } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
+        !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {
+        formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
       }
       else {
-        formData.append(i, param);
+        formData.append(key, String(uploadOptions[key]));
       }
     }
   }
 
   formData.append("publicKey", options.publicKey);
 
-  request(formData, { ...options, authenticationEndpoint: options.authenticationEndpoint }, callback);
+  request(xhr, formData, { ...options, authenticationEndpoint: options.authenticationEndpoint }, callback);
 };
