@@ -674,7 +674,8 @@ describe("File upload", function () {
 
     it('check custom XHR object is used', function () {
         var xhr = new XMLHttpRequest();
-        xhr.onprogress = sinon.spy();
+        var fun = function () { return "hello from function" };
+        xhr.onprogress = fun;
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file",
@@ -696,7 +697,7 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(2);
         expect(server.requests[0]).to.be.equal(xhr);
-        expect(server.requests[0].onprogress.toString()).to.be.equal("spy");
+        expect(server.requests[0].onprogress.toString()).to.be.equal(fun.toString());
         successSignature();
         successUploadResponse();
 
@@ -789,5 +790,52 @@ describe("File upload", function () {
 
         successSignature();
         errorUploadResponse(500, errRes);
+    });
+
+    it('Custom xhr promise', function (done) {
+        var xhr = new XMLHttpRequest();
+        var fun = function () { return "hello from function" };
+        xhr.onprogress = fun;
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            tags: "test_tag1,test_tag2",
+            customCoordinates: "10, 10, 100, 100",
+            responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+            useUniqueFileName: false,
+            isPrivateFile: true,
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ],
+            xhr
+        };
+        imagekit.upload(fileOptions).then((response) => {
+            expect(server.requests.length).to.be.equal(2);
+            var arg = server.requests[0].requestBody;
+            expect(server.requests[0]).to.be.equal(xhr);
+            expect(server.requests[0].onprogress.toString()).to.be.equal(fun.toString());
+
+            expect(arg.get('file')).to.be.equal("test_file");
+            expect(arg.get('fileName')).to.be.equal("test_file_name");
+            expect(arg.get('token')).to.be.equal("test_token");
+            expect(arg.get('expire')).to.be.equal("123");
+            expect(arg.get('signature')).to.be.equal("test_signature");
+            expect(arg.get('tags')).to.be.equal("test_tag1,test_tag2");
+            expect(arg.get('customCoordinates')).to.be.equal("10, 10, 100, 100");
+            expect(arg.get('responseFields')).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
+            expect(arg.get('useUniqueFileName')).to.be.equal('false');
+            expect(arg.get('isPrivateFile')).to.be.equal('true');
+            expect(arg.get('publicKey')).to.be.equal('test_public_key');
+            expect(arg.get('extensions')).to.be.equal(JSON.stringify(fileOptions.extensions));
+            expect(response).to.be.deep.equal(uploadSuccessResponseObj)
+            done();
+        });
+
+        successSignature();
+        successUploadResponse();
     });
 });
