@@ -17,7 +17,7 @@ html
                     h4 Sample transformation with height: 300, width: 400: 
                     p
                         img(src="")    
-            
+
         script(type='text/javascript' src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js")
         script.
             try {
@@ -26,25 +26,42 @@ html
                     urlEndpoint: "!{urlEndpoint}",
                     authenticationEndpoint: "!{authenticationEndpoint}"
                 });
-                
+
                 window.imagekit = imagekit;
+
 
                 function upload(e) {
                     e.preventDefault();
                     var file = document.getElementById("file1");
+                    var fileSize = file.files[0].size;
                     var statusEl = document.getElementById("status");
-                    statusEl.innerHTML = "Uploading..." 
+                    statusEl.innerHTML = "Uploading...";
+
+                    // Use this if you want to track upload progress
+                    var customXHR = new XMLHttpRequest();
+                    customXHR.upload.addEventListener('progress', function (e) {
+                        if (e.loaded <= fileSize) {
+                            var percent = Math.round(e.loaded / fileSize * 100);
+                            console.log(`Uploaded ${percent}%`);
+                        } 
+
+                        if(e.loaded == e.total){
+                            console.log("Upload done");
+                        }
+                    });
+
                     imagekit.upload({
+                        xhr: customXHR, // Use this if you want to track upload progress
                         file : file.files[0],
                         fileName : file.files[0].name || "test_image.jpg",
                         tags : ["test_tag_1"],
                         //- extensions: [
-                        //-         {
-                        //-             name: "aws-auto-tagging",
-                        //-             minConfidence: 80,
-                        //-             maxTags: 10
-                        //-         }
-                        //-     ],
+                        //-     {
+                        //-         name: "aws-auto-tagging",
+                        //-         minConfidence: 80,
+                        //-         maxTags: 10
+                        //-     }
+                        //- ],
                     }, function(err, result) {
                         if (err) {
                             statusEl.innerHTML = "Error uploading image. "+ err.message; 
@@ -60,15 +77,13 @@ html
 
                             var orig_img = document.querySelector("#orig_image > p > img");
                             var trans_img = document.querySelector("#trans_image > p > img");
-                            
+
                             orig_img.setAttribute("src", srcUrl);
                             trans_img.setAttribute("src", transformedURL);
 
                             var el  = document.getElementById('images')
                             el.setAttribute("style", "");
                         }
-                        
-                        
                     });
                 }
             } catch(ex) {
