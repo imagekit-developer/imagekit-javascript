@@ -9,11 +9,6 @@ export const upload = (
   options: ImageKitOptions,
   callback?: (err: Error | null, response: UploadResponse | null) => void,
 ) => {
-  if (!uploadOptions) {
-    respond(true, errorMessages.INVALID_UPLOAD_OPTIONS, callback);
-    return;
-  }
-
   if (!uploadOptions.file) {
     respond(true, errorMessages.MISSING_UPLOAD_FILE_PARAMETER, callback);
     return;
@@ -34,22 +29,17 @@ export const upload = (
     return;
   }
 
-  if(uploadOptions.tags && Array.isArray(uploadOptions.tags))
-  {
-    uploadOptions.tags = String(uploadOptions.tags);
-  }
-  
   var formData = new FormData();
   let key: keyof typeof uploadOptions;
   for (key in uploadOptions) {
     if (key) {
-      if (key == "file" && typeof uploadOptions.file != "string") {
+      if (key === "file" && typeof uploadOptions.file != "string") {
         formData.append('file', uploadOptions.file, String(uploadOptions.fileName));
-      } else if (key == "tags" && Array.isArray(uploadOptions.tags)) {
+      } else if (key === "tags" && Array.isArray(uploadOptions.tags)) {
         formData.append('tags', uploadOptions.tags.join(","));
-      } else if (key == "responseFields" && Array.isArray(uploadOptions.responseFields)) {
+      } else if (key === "responseFields" && Array.isArray(uploadOptions.responseFields)) {
         formData.append('responseFields', uploadOptions.responseFields.join(","));
-      } else if (key == "extensions" && Array.isArray(uploadOptions.extensions)) {
+      } else if (key === "extensions" && Array.isArray(uploadOptions.extensions)) {
         formData.append('extensions', JSON.stringify(uploadOptions.extensions));
       } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
         !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {

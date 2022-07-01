@@ -14,17 +14,17 @@ function getResponseHeaderMap(xhr: XMLHttpRequest) {
     const responseHeaders = xhr.getAllResponseHeaders();
     if (Object.keys(responseHeaders).length) {
         responseHeaders
-        .trim()
-        .split(/[\r\n]+/)
-        .map(value => value.split(/: /))
-        .forEach(keyValue => {
-          headers[keyValue[0].trim()] = keyValue[1].trim();
-        });
+            .trim()
+            .split(/[\r\n]+/)
+            .map(value => value.split(/: /))
+            .forEach(keyValue => {
+                headers[keyValue[0].trim()] = keyValue[1].trim();
+            });
     }
     return headers;
 }
 
-const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest):IKResponse<UploadResponse> => {
+const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest): IKResponse<UploadResponse> => {
     let response = { ...body };
     const responseMetadata = {
         statusCode: xhr.status,
@@ -38,7 +38,7 @@ const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest):IKResponse<Up
     return response as IKResponse<UploadResponse>;
 }
 
-export const request = (uploadFileXHR: XMLHttpRequest,formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
+export const request = (uploadFileXHR: XMLHttpRequest, formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
     generateSignatureToken(options, (err, signaturObj) => {
         if (err) {
             return respond(true, err, callback)
@@ -67,7 +67,7 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
         var result = addResponseHeadersAndBody(body, xhr);
         respond(true, result, callback);
     };
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         var body = errorMessages.AUTH_ENDPOINT_NETWORK_ERROR;
         var result = addResponseHeadersAndBody(body, xhr);
         respond(true, result, callback);
@@ -80,6 +80,10 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
                     signature: body.signature,
                     expire: body.expire,
                     token: body.token
+                }
+                if (!obj.signature || !obj.expire || !obj.token) {
+                    respond(true, {}, callback);
+                    return;
                 }
                 var result = addResponseHeadersAndBody(obj, xhr);
                 respond(false, result, callback);
@@ -100,9 +104,9 @@ export const generateSignatureToken = (options: ImageKitOptions & { authenticati
     return;
 }
 
-export const uploadFile = (uploadFileXHR:XMLHttpRequest, formData: FormData, callback: (err: Error | IKResponse<UploadResponse> | null, response: UploadResponse | null) => void) => {
+export const uploadFile = (uploadFileXHR: XMLHttpRequest, formData: FormData, callback: (err: Error | IKResponse<UploadResponse> | null, response: UploadResponse | null) => void) => {
     uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
-    uploadFileXHR.onerror = function() {
+    uploadFileXHR.onerror = function () {
         var body = errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR;
         var result = addResponseHeadersAndBody(body, uploadFileXHR);
         respond(true, result, callback);
@@ -116,11 +120,11 @@ export const uploadFile = (uploadFileXHR:XMLHttpRequest, formData: FormData, cal
         }
         else if (uploadFileXHR.status !== 200) {
             try {
-              var body = JSON.parse(uploadFileXHR.responseText);
-              var uploadResponse = addResponseHeadersAndBody(body, uploadFileXHR);
-              callback(uploadResponse, null);
-            } catch (ex : any) {
-              callback(ex, null);
+                var body = JSON.parse(uploadFileXHR.responseText);
+                var uploadResponse = addResponseHeadersAndBody(body, uploadFileXHR);
+                callback(uploadResponse, null);
+            } catch (ex: any) {
+                callback(ex, null);
             }
         }
     };
