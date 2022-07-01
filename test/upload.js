@@ -838,4 +838,80 @@ describe("File upload", function () {
         successSignature();
         successUploadResponse();
     });
+
+    it('$ResponseMetadata assertions using promise', function (done) {
+        var dummyResonseHeaders = {
+            "Content-Type": "application/json",
+            "x-request-id": "sdfsdfsdfdsf"
+        };
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            tags: "test_tag1,test_tag2",
+            customCoordinates: "10, 10, 100, 100",
+            responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+            useUniqueFileName: false,
+            isPrivateFile: true,
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ]
+        };
+        imagekit.upload(fileOptions).then((response) => {
+            expect(server.requests.length).to.be.equal(2);
+            expect(response.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
+            expect(response.$ResponseMetadata.statusCode).to.be.deep.equal(200);
+            done();
+        });
+
+        successSignature();
+
+        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
+            [
+                200,
+                dummyResonseHeaders,
+                JSON.stringify(uploadSuccessResponseObj)
+            ]
+        );
+        server.respond();
+    });
+
+    it('$ResponseMetadata assertions using callback', function () {
+        var dummyResonseHeaders = {
+            "Content-Type": "application/json",
+            "x-request-id": "sdfsdfsdfdsf"
+        };
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+        var callback = sinon.spy();
+        imagekit.upload(fileOptions, callback);
+
+        successSignature();
+        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
+            [
+                200,
+                dummyResonseHeaders,
+                JSON.stringify(uploadSuccessResponseObj)
+            ]
+        );
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        successUploadResponse();
+
+        expect(callback.calledOnce).to.be.true;
+
+        var callBackArguments = callback.args[0];
+        expect(callBackArguments.length).to.be.eq(2);
+        var callbackResult = callBackArguments[1];
+
+        expect(callbackResult).to.be.deep.equal(uploadSuccessResponseObj);
+        expect(callbackResult.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
+        expect(callbackResult.$ResponseMetadata.statusCode).to.be.deep.equal(200);
+    });
 });

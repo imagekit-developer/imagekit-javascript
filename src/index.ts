@@ -10,10 +10,6 @@ function mandatoryParametersAvailable(options: ImageKitOptions) {
   return options.urlEndpoint;
 }
 
-function privateKeyPassed(options: ImageKitOptions) {
-  return typeof (options as any).privateKey != "undefined";
-}
-
 const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
   return function (...args: any[]): Promise<T> | void {
     if (args.length === fn.length && typeof args[args.length - 1] !== "undefined") {
@@ -50,9 +46,6 @@ class ImageKit {
     this.options = { ...this.options, ...(opts || {}) };
     if (!mandatoryParametersAvailable(this.options)) {
       throw errorMessages.MANDATORY_INITIALIZATION_MISSING;
-    }
-    if (privateKeyPassed(this.options)) {
-      throw errorMessages.PRIVATE_KEY_CLIENT_SIDE;
     }
 
     if (!transformationUtils.validParameters(this.options)) {
