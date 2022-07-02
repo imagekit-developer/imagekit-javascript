@@ -102,16 +102,14 @@ describe("File upload", function () {
         server.restore();
     });
 
-    it('Invalid options', function (done) {
+    it('Invalid options', function () {
         var callback = sinon.spy();
 
-        try {
-            imagekit.upload(undefined, callback);
-        } catch (ex) {
-            // console.log(ex);
-            expect(ex).to.be.deep.equal("First parameter needs to be object");
-            done();
-        }
+        imagekit.upload(undefined, callback);
+        expect(server.requests.length).to.be.equal(0);
+        // await sleep()
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { help: "", message: "Invalid uploadOptions parameter" }, null);
     });
 
     it('Missing fileName', function () {

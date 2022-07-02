@@ -3,6 +3,7 @@ import errorMessages from "./constants/errorMessages";
 import { ImageKitOptions, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
 import IKResponse from "./interfaces/IKResponse";
 import { upload } from "./upload/index";
+import respond from "./utils/respond";
 import { url } from "./url/index";
 import transformationUtils from "./utils/transformation";
 
@@ -80,13 +81,13 @@ class ImageKit {
   upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): void;
   upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): void | Promise<IKResponse<UploadResponse>> {
     let callback;
-    if (typeof uploadOptions !== "object") {
-      throw ("First parameter needs to be object");
-    }
     if (typeof callbackOrOptions === 'function') {
       callback = callbackOrOptions;
     } else {
       options = callbackOrOptions || {};
+    }
+    if (!uploadOptions || typeof uploadOptions !== "object") {
+      return respond(true, errorMessages.INVALID_UPLOAD_OPTIONS, callback);
     }
     var mergedOptions = {
       ...this.options,
