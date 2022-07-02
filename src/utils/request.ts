@@ -2,7 +2,6 @@ import respond from "../utils/respond";
 import errorMessages from "../constants/errorMessages"
 import { ImageKitOptions, UploadResponse } from "../interfaces";
 import IKResponse from "../interfaces/IKResponse";
-import 'regenerator-runtime/runtime'
 
 interface SignatureResponse {
     signature: string
