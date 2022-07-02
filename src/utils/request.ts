@@ -1,6 +1,8 @@
 import respond from "../utils/respond";
 import errorMessages from "../constants/errorMessages"
 import { ImageKitOptions, UploadResponse } from "../interfaces";
+import IKResponse from "../interfaces/IKResponse";
+import 'regenerator-runtime/runtime'
 
 interface SignatureResponse {
     signature: string
@@ -8,82 +10,123 @@ interface SignatureResponse {
     token: string
 }
 
-export const request = (formData: FormData, options: ImageKitOptions & { authenticationEndpoint: string }, callback?: (err: Error | null, response: UploadResponse | null) => void) => {
-    generateSignatureToken(options, (err, signaturObj) => {
-        if (err) {
-            return respond(true, err, callback)
-        } else {
-            formData.append("signature", signaturObj?.signature || "");
-            formData.append("expire", String(signaturObj?.expire || 0));
-            formData.append("token", signaturObj?.token || "");
-
-            uploadFile(formData, (err, responseSucessText) => {
-                if (err) {
-                    return respond(true, err, callback)
-                }
-                return respond(false, responseSucessText!, callback)
+function getResponseHeaderMap(xhr: XMLHttpRequest) {
+    const headers: Record<string, string | number | boolean> = {};
+    const responseHeaders = xhr.getAllResponseHeaders();
+    if (Object.keys(responseHeaders).length) {
+        responseHeaders
+            .trim()
+            .split(/[\r\n]+/)
+            .map(value => value.split(/: /))
+            .forEach(keyValue => {
+                headers[keyValue[0].trim()] = keyValue[1].trim();
             });
+    }
+    return headers;
+}
+
+const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest): IKResponse<UploadResponse> => {
+    let response = { ...body };
+    const responseMetadata = {
+        statusCode: xhr.status,
+        headers: getResponseHeaderMap(xhr)
+    }
+    Object.defineProperty(response, "$ResponseMetadata", {
+        value: responseMetadata,
+        enumerable: false,
+        writable: false
+    });
+    return response as IKResponse<UploadResponse>;
+}
+
+export const request = async (
+    uploadFileXHR: XMLHttpRequest,
+    formData: FormData,
+    options: ImageKitOptions & { authenticationEndpoint: string },
+    callback?: (err: Error | null, response: UploadResponse | null) => void) => {
+    try {
+        var signaturObj = await generateSignatureToken(options.authenticationEndpoint);
+    } catch (ex) {
+        return respond(true, ex, callback);
+    }
+
+    formData.append("signature", signaturObj.signature);
+    formData.append("expire", String(signaturObj.expire));
+    formData.append("token", signaturObj.token);
+
+    try {
+        var result = await uploadFile(uploadFileXHR, formData);
+        return respond(false, result, callback);
+    } catch (ex) {
+        return respond(true, ex, callback);
+    }
+}
+
+export const generateSignatureToken = (
+    authenticationEndpoint: string
+): Promise<SignatureResponse> => {
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.timeout = 60000;
+        xhr.open('GET', authenticationEndpoint);
+        xhr.ontimeout = function (e) {
+            return reject(errorMessages.AUTH_ENDPOINT_TIMEOUT);
+        };
+        xhr.onerror = function () {
+            return reject(errorMessages.AUTH_ENDPOINT_NETWORK_ERROR);
         }
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                try {
+                    var body = JSON.parse(xhr.responseText);
+                    var obj = {
+                        signature: body.signature,
+                        expire: body.expire,
+                        token: body.token
+                    }
+                    if (!obj.signature || !obj.expire || !obj.token) {
+                        return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                    }
+                    return resolve(obj);
+                } catch (ex) {
+                    return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                }
+            } else {
+                return reject(errorMessages.AUTH_INVALID_RESPONSE);
+            }
+        };
+        xhr.send();
     });
 }
 
-export const generateSignatureToken = (options: ImageKitOptions & { authenticationEndpoint: string }, callback: (err: Error | null, response: SignatureResponse | null) => void) => {
-    var xhr = new XMLHttpRequest();
-    xhr.timeout = 60000;
-    xhr.open('GET', options.authenticationEndpoint);
-    xhr.ontimeout = function (e) {
-        respond(true, errorMessages.AUTH_ENDPOINT_TIMEOUT, callback);
-    };
-    xhr.onerror = function() {
-        respond(true, errorMessages.AUTH_ENDPOINT_NETWORK_ERROR, callback);
-    }
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            try {
-                var body = JSON.parse(xhr.responseText);
-                var obj = {
-                    signature: body.signature,
-                    expire: body.expire,
-                    token: body.token
+export const uploadFile = (
+    uploadFileXHR: XMLHttpRequest,
+    formData: FormData
+): Promise<IKResponse<UploadResponse> | Error> => {
+    return new Promise((resolve, reject) => {
+        uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
+        uploadFileXHR.onerror = function (e) {
+            return reject(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR);
+        }
+        uploadFileXHR.onload = function () {
+            if (uploadFileXHR.status === 200) {
+                try {
+                    var body = JSON.parse(uploadFileXHR.responseText);
+                    var uploadResponse = addResponseHeadersAndBody(body, uploadFileXHR);
+                    return resolve(uploadResponse);
+                } catch (ex: any) {
+                    return reject(ex);
                 }
-                respond(false, obj, callback)
-            } catch (ex) {
-                respond(true, ex, callback)
+            } else {
+                try {
+                    var body = JSON.parse(uploadFileXHR.responseText);
+                    var uploadError = addResponseHeadersAndBody(body, uploadFileXHR);
+                    return reject(uploadError)
+                } catch (ex: any) {
+                    return reject(ex);
+                }
             }
-        } else {
-            try {
-                var error = JSON.parse(xhr.responseText);
-                respond(true, error, callback);
-            } catch (ex) {
-                respond(true, ex, callback);
-            }
-        }
-    };
-    xhr.send();
-    return;
+        };
+        uploadFileXHR.send(formData);
+    });
 }
-
-export const uploadFile = (formData: FormData, callback: (err: Error | null, response: UploadResponse | null) => void) => {
-    var uploadFileXHR = new XMLHttpRequest();
-    uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
-    uploadFileXHR.onerror = function() {
-        respond(true, errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR, callback);
-        return;
-    }
-    uploadFileXHR.onload = function () {
-        if (uploadFileXHR.status === 200) {
-            var uploadResponse = JSON.parse(uploadFileXHR.responseText);
-            callback(null, uploadResponse);
-        }
-        else if (uploadFileXHR.status !== 200) {
-            try {
-              callback(JSON.parse(uploadFileXHR.responseText), null);
-            } catch (ex : any) {
-              callback(ex, null);
-            }
-        }
-    };
-    uploadFileXHR.send(formData);
-    return
-}
-

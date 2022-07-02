@@ -36,7 +36,7 @@ export interface UploadOptions {
    * - % is not allowed.
    * - If this field is not specified and the file is overwritten then the tags will be removed.
    */
-  tags?: string;
+  tags?: string | string[];
   /**
    * The folder path (e.g. /images/folder/) in which the image has to be uploaded. If the folder(s) didn't exist before, a new folder(s) is created.
    * The folder name can contain:
@@ -66,7 +66,7 @@ export interface UploadOptions {
    *
    * For example, set the value of this field to tags,customCoordinates,isPrivateFile,metadata to get value of tags, customCoordinates, isPrivateFile , and metadata in the response.
    */
-  responseFields?: string;
+  responseFields?: string | string[];
   /* 
    * Object with array of extensions to be processed on the image.
    */
@@ -75,4 +75,32 @@ export interface UploadOptions {
    * Final status of pending extensions will be sent to this URL. 
    */
   webhookUrl?: string
+  /*
+   * Default is true. If overwriteFile is set to false and useUniqueFileName is also false, and a file already exists at the exact location, upload API will return an error immediately.
+   */
+  overwriteFile?: boolean
+  /*
+   * Default is true. If set to true and a file already exists at the exact location, its AITags will be removed. Set overwriteAITags to false to preserve AITags.
+   */
+  overwriteAITags?: boolean
+  /*
+   * Default is true. If the request does not have tags , overwriteTags is set to true and a file already exists at the exact location, existing tags will be removed.
+   * In case the request body has tags, setting overwriteTags to false has no effect and request's tags are set on the asset.
+   */
+  overwriteTags?: boolean
+  /*
+   * Default is true. If the request does not have customMetadata , overwriteCustomMetadata is set to true and a file already exists at the exact location, exiting customMetadata will be removed.
+   * In case the request body has customMetadata, setting overwriteCustomMetadata to false has no effect and request's customMetadata is set on the asset.
+   */
+  overwriteCustomMetadata?: boolean
+  /*
+   * Stringified JSON key-value data to be associated with the asset. Checkout overwriteCustomMetadata parameter to understand default behaviour.
+   * Before setting any custom metadata on an asset you have to create the field using custom metadata fields API.
+   */
+  customMetadata?: string | Record<string, string | number | boolean | Array<string | number | boolean>>
+
+  /**
+   * Optional XMLHttpRequest object that you can send for upload API request. You can listen to `progress` and other events on this object for any custom logic. 
+   */
+  xhr?: XMLHttpRequest
 }

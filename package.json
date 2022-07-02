@@ -1,6 +1,6 @@
 {
     "name": "imagekit-javascript",
-    "version": "1.4.3",
+    "version": "1.5.0",
     "description": "Javascript SDK for using ImageKit.io in the browser",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
@@ -68,5 +68,8 @@
     "bugs": {
         "url": "https://github.com/imagekit-developer/imagekit-javascript/issues"
     },
-    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme"
+    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme",
+    "dependencies": {
+        "regenerator-runtime": "^0.13.9"
+    }
 }

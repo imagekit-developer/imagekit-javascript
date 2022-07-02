@@ -10,9 +10,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
-ImageKit Javascript SDK allows you to use real-time [image resizing](https://docs.imagekit.io/features/image-transformations), [optimization](https://docs.imagekit.io/features/image-optimization), and [file uploading](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload) in the client-side.
+Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for image & video resizing and provides an interface for file upload. This SDK is lightweight and you can also use this as an ES module.
 
-This SDK is lightweight and has no dependency. You can also use this as an ES module.
+ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
 ## Installation
 
@@ -85,6 +85,7 @@ Create a file `.env` using `sample.env` in the directory `samples/sample-app` an
 Now start the sample application by running:
 
 ```
+// Run it from project root
 yarn startSampleApp
 ```
 
@@ -95,7 +96,7 @@ You can use this SDK for URL generation and client-side file uploads.
 
 **1. Using image path and image hostname or endpoint**
 
-This method allows you to create a URL using the `path` where the image exists and the URL endpoint (`urlEndpoint`) you want to use to access the image. You can refer to the documentation [here](https://docs.imagekit.io/integration/url-endpoints) to read more about URL endpoints in ImageKit and the section about [image origins](https://docs.imagekit.io/integration/configure-origin) to understand about paths with different kinds of origins.
+This method allows you to create an URL to access a file using the relative file path and the ImageKit URL endpoint (`urlEndpoint`). The file can be an image, video, or any other static file supported by ImageKit.
 
 ```
 var imageURL = imagekit.url({
@@ -116,7 +117,7 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/tr:h-300,w-400/default-image.jp
 
 **2. Using full image URL**
 
-This method allows you to add transformation parameters to an existing, complete URL that is already mapped to ImageKit using the `src` parameter. This method should be used if you have the complete URL mapped to ImageKit stored in your database.
+This method allows you to add transformation parameters to an absolute URL. For example, if you have configured a custom CNAME and have absolute asset URLs in your database or CMS, you will often need this.
 
 
 ```
@@ -141,11 +142,11 @@ The `.url()` method accepts the following parameters
 | Option           | Description                    |
 | :----------------| :----------------------------- |
 | urlEndpoint      | Optional. The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/endpoint/ |
-| path             | Conditional. This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter need to be specified for URL generation. |
-| src              | Conditional. This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter need to be specified for URL generation. |
-| transformation   | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name  and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
-| transformationPostion | Optional. The default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query` which adds the transformation string as the query parameter `tr` in the URL. If you use `src` parameter to create the URL, then the transformation string is always added as a query parameter. |
-| queryParameters  | Optional. These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameter to your URLs. |
+| path             | Conditional. This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation. |
+| src              | Conditional. This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation. |
+| transformation   | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
+| transformationPostion | Optional. The default value is `path`, which places the transformation string as a path parameter in the URL. It can also be specified as `query`, which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter. |
+| queryParameters  | Optional. These are the other query parameters that you want to add to the final URL. These can be any query parameters and are not necessarily related to ImageKit. Especially useful if you want to add some versioning parameters to your URLs. |
 
 #### Examples of generating URLs
 
@@ -189,7 +190,7 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=f-jpg%2Cpr
 
 #### List of supported transformations
 
-The complete list of transformations supported and their usage in ImageKit can be found [here](https://docs.imagekit.io/features/image-transformations). The SDK gives a name to each transformation parameter, making the code simpler and readable. If a transformation is supported in ImageKit, but a name for it cannot be found in the table below, then use the transformation code from ImageKit docs as the name when using in the `url` function.
+See the complete list of transformations supported in ImageKit [here](https://docs.imagekit.io/features/image-transformations). The SDK gives a name to each transformation parameter e.g. `height` for `h` and `width` for `w` parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
 
 If you want to generate transformations in your application and add them to the URL as it is, use the `raw` parameter.
 
@@ -256,9 +257,9 @@ If you want to generate transformations in your application and add them to the 
 
 ### File Upload
 
-The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. It accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
+The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. 
 
-The `upload()` method requires `file` and the `fileName` parameter. 
+The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
 Also, make sure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP GET request to this endpoint and expects a JSON response with three fields, i.e. `signature`, `token`, and `expire`.  
 
@@ -266,8 +267,9 @@ Also, make sure that you have specified `authenticationEndpoint` during SDK init
 
 You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload, use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-Sample usage
-```
+
+#### Sample usage
+```html
 <form action="#" onsubmit="upload()">
     <input type="file" id="file1" />
     <input type="submit" />
@@ -287,6 +289,8 @@ Sample usage
     // Upload function internally uses the ImageKit.io javascript SDK
     function upload(data) {
         var file = document.getElementById("file1");
+
+        // Using Callback Function
         imagekit.upload({
             file: file.files[0],
             fileName: "abc1.jpg",
@@ -299,11 +303,25 @@ Sample usage
                 }
             ]
         }, function(err, result) {
-            console.log(arguments);
-            console.log(imagekit.url({
-                src: result.url,
-                transformation: [{ height: 300, width: 400}]
-            }));
+            console.log(result);
+        })
+
+        // Using Promises
+        imagekit.upload({
+            file: file.files[0],
+            fileName: "abc1.jpg",
+            tags: ["tag1"],
+            extensions: [
+                {
+                    name: "aws-auto-tagging",
+                    minConfidence: 80,
+                    maxTags: 10
+                }
+            ]
+        }).then(result => {
+            console.log(result);
+        }).then(error => {
+            console.log(error);
         })
     }
 </script>
@@ -312,3 +330,81 @@ Sample usage
 If the upload succeeds, `err` will be `null`, and the `result` will be the same as what is received from ImageKit's servers.
 If the upload fails, `err` will be the same as what is received from ImageKit's servers, and the `result` will be null.
 
+## Tracking upload progress using custom XMLHttpRequest
+You can use a custom XMLHttpRequest object as the following to bind `progress` or any other events for a customized implementation.
+
+```js
+var fileSize = file.files[0].size;
+var customXHR = new XMLHttpRequest();
+customXHR.upload.addEventListener('progress', function (e) {
+    if (e.loaded <= fileSize) {
+        var percent = Math.round(e.loaded / fileSize * 100);
+        console.log(`Uploaded ${percent}%`);
+    } 
+
+    if(e.loaded == e.total){
+        console.log("Upload done");
+    }
+});
+
+imagekit.upload({
+    xhr: customXHR,
+    file: file.files[0],
+    fileName: "abc1.jpg",
+    tags: ["tag1"],
+    extensions: [
+        {
+            name: "aws-auto-tagging",
+            minConfidence: 80,
+            maxTags: 10
+        }
+    ]
+}).then(result => {
+    console.log(result);
+}).then(error => {
+    console.log(error);
+})
+```
+
+## Access request-id, other response headers, and HTTP status code
+You can access `$ResponseMetadata` on success or error object to access the HTTP status code and response headers.
+
+```js
+// Success
+var response = await imagekit.upload({
+    file: file.files[0],
+    fileName: "abc1.jpg",
+    tags: ["tag1"],
+    extensions: [
+        {
+            name: "aws-auto-tagging",
+            minConfidence: 80,
+            maxTags: 10
+        }
+    ]
+});
+console.log(response.$ResponseMetadata.statusCode); // 200
+
+// { 'content-length': "300", 'content-type': 'application/json', 'x-request-id': 'ee560df4-d44f-455e-a48e-29dfda49aec5'}
+console.log(response.$ResponseMetadata.headers);
+
+// Error
+try {
+    await imagekit.upload({
+        file: file.files[0],
+        fileName: "abc1.jpg",
+        tags: ["tag1"],
+        extensions: [
+            {
+                name: "aws-auto-tagging",
+                minConfidence: 80,
+                maxTags: 10
+            }
+        ]
+    });
+} catch (ex) {
+    console.log(response.$ResponseMetadata.statusCode); // 400
+
+    // {'content-type': 'application/json', 'x-request-id': 'ee560df4-d44f-455e-a48e-29dfda49aec5'}
+    console.log(response.$ResponseMetadata.headers);
+}
