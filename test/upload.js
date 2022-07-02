@@ -7,6 +7,7 @@ const expect = chai.expect;
 const initializationParams = require("./data").initializationParams
 import ImageKit from "../src/index";
 var requests, server;
+import 'regenerator-runtime/runtime'
 
 const uploadSuccessResponseObj = {
     "fileId": "598821f949c0a938d57563bd",
