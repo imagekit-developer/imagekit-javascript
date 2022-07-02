@@ -107,7 +107,6 @@ describe("File upload", function () {
 
         imagekit.upload(undefined, callback);
         expect(server.requests.length).to.be.equal(0);
-        // await sleep()
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, { help: "", message: "Invalid uploadOptions parameter" }, null);
     });
@@ -204,6 +203,57 @@ describe("File upload", function () {
 
         // Simulate non 200 response on authentication endpoint
         nonSuccessErrorSignature();
+        await sleep();
+        sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
+    });
+
+    it('Auth endpoint 200 status with bad body', async function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+
+        // Simulate non 200 response on authentication endpoint
+        server.respondWith("GET", initializationParams.authenticationEndpoint,
+            [
+                200,
+                { "Content-Type": "application/json" },
+                "invalid json"
+            ]);
+        server.respond();
+        await sleep();
+        sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
+    });
+
+    it('Auth endpoint 200 status missing token', async function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+
+        // Simulate non 200 response on authentication endpoint
+        server.respondWith("GET", initializationParams.authenticationEndpoint,
+            [
+                200,
+                { "Content-Type": "application/json" },
+                JSON.stringify({
+                    signature: "sig",
+                    timestamp: "123"
+                })
+            ]);
+        server.respond();
         await sleep();
         sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
     });
@@ -507,6 +557,60 @@ describe("File upload", function () {
         await sleep();
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, errRes, null);
+    });
+
+    it('Error during upload non 2xx with bad body', async function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        await sleep();
+        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
+            [
+                500,
+                { "Content-Type": "application/json" },
+                "sdf"
+            ]
+        );
+        server.respond();
+        await sleep();
+        expect(callback.calledOnce).to.be.true;
+        var error = callback.args[0][0];
+        expect(error instanceof SyntaxError).to.be.true;
+    });
+
+    it('Error during upload 2xx with bad body', async function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        await sleep();
+        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
+            [
+                200,
+                { "Content-Type": "application/json" },
+                "sdf"
+            ]
+        );
+        server.respond();
+        await sleep();
+        expect(callback.calledOnce).to.be.true;
+        var error = callback.args[0][0];
+        expect(error instanceof SyntaxError).to.be.true;
     });
 
     it('Upload via URL', async function () {
