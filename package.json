@@ -69,7 +69,5 @@
         "url": "https://github.com/imagekit-developer/imagekit-javascript/issues"
     },
     "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme",
-    "dependencies": {
-        "regenerator-runtime": "^0.13.9"
-    }
+    "dependencies": {}
 }

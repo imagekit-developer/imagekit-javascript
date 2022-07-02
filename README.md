@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
-Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for image & video resizing and provides an interface for file upload. This SDK is lightweight and you can also use this as an ES module.
+Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for image & video resizing and provides an interface for file upload. This SDK is lightweight and has no dependency. You can also use this as an ES module.
 
 ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 

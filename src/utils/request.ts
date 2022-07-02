@@ -39,27 +39,25 @@ const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest): IKResponse<U
     return response as IKResponse<UploadResponse>;
 }
 
-export const request = async (
+export const request = (
     uploadFileXHR: XMLHttpRequest,
     formData: FormData,
     options: ImageKitOptions & { authenticationEndpoint: string },
     callback?: (err: Error | null, response: UploadResponse | null) => void) => {
-    try {
-        var signaturObj = await generateSignatureToken(options.authenticationEndpoint);
-    } catch (ex) {
-        return respond(true, ex, callback);
-    }
 
-    formData.append("signature", signaturObj.signature);
-    formData.append("expire", String(signaturObj.expire));
-    formData.append("token", signaturObj.token);
+    generateSignatureToken(options.authenticationEndpoint).then((signaturObj) => {
+        formData.append("signature", signaturObj.signature);
+        formData.append("expire", String(signaturObj.expire));
+        formData.append("token", signaturObj.token);
 
-    try {
-        var result = await uploadFile(uploadFileXHR, formData);
-        return respond(false, result, callback);
-    } catch (ex) {
+        uploadFile(uploadFileXHR, formData).then((result) => {
+            return respond(false, result, callback);
+        }, (ex) => {
+            return respond(true, ex, callback);
+        });
+    }, (ex) => {
         return respond(true, ex, callback);
-    }
+    });
 }
 
 export const generateSignatureToken = (
