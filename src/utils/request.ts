@@ -65,7 +65,9 @@ export const generateSignatureToken = (
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
         xhr.timeout = 60000;
-        xhr.open('GET', authenticationEndpoint);
+        var urlObj = new URL(authenticationEndpoint);
+        urlObj.searchParams.set("t", new Date().getTime().toString());
+        xhr.open('GET', urlObj.toString());
         xhr.ontimeout = function (e) {
             return reject(errorMessages.AUTH_ENDPOINT_TIMEOUT);
         };
