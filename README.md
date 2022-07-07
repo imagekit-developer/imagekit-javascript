@@ -261,7 +261,7 @@ The SDK provides a simple interface using the `.upload()` method to upload files
 
 The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-Also, make sure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP GET request to this endpoint and expects a JSON response with three fields, i.e. `signature`, `token`, and `expire`.  
+Also, ensure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP GET request to this endpoint and expects a JSON response with three fields, i.e. `signature`, `token`, and `expire`. In addition, the SDK adds a query parameter `v` with a random value to ensure that the request URL is unique and the response is not cached in [Safari iOS](https://github.com/imagekit-developer/imagekit-javascript/issues/59). Your backend can ignore this query parameter.
 
 [Learn how to implement authenticationEndpoint](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint) on your server.
 
