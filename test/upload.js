@@ -27,7 +27,7 @@ const uploadSuccessResponseObj = {
 };
 
 function successSignature() {
-    server.respondWith("GET", initializationParams.authenticationEndpoint,
+    server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
         [
             200,
             { "Content-Type": "application/json" },
@@ -41,7 +41,7 @@ function successSignature() {
 }
 
 function nonSuccessErrorSignature() {
-    server.respondWith("GET", initializationParams.authenticationEndpoint,
+    server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
         [
             403,
             { "Content-Type": "application/json" },
@@ -221,7 +221,7 @@ describe("File upload", function () {
         expect(server.requests.length).to.be.equal(2);
 
         // Simulate non 200 response on authentication endpoint
-        server.respondWith("GET", initializationParams.authenticationEndpoint,
+        server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
             [
                 200,
                 { "Content-Type": "application/json" },
@@ -245,7 +245,7 @@ describe("File upload", function () {
         expect(server.requests.length).to.be.equal(2);
 
         // Simulate non 200 response on authentication endpoint
-        server.respondWith("GET", initializationParams.authenticationEndpoint,
+        server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
             [
                 200,
                 { "Content-Type": "application/json" },
@@ -664,7 +664,7 @@ describe("File upload", function () {
         });
 
         expect(server.requests.length).to.be.equal(2);
-        server.respondWith("GET", newAuthEndpoint,
+        server.respondWith("GET", new RegExp(newAuthEndpoint + ".*"),
             [
                 200,
                 { "Content-Type": "application/json" },
