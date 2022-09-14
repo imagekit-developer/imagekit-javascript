@@ -26,7 +26,7 @@ describe("URL generation", function () {
             path: "/test_path.jpg"
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
     });
 
     it('no transformation src', function () {
@@ -34,7 +34,7 @@ describe("URL generation", function () {
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg"
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
     it('Undefined parameters with path', function () {
@@ -45,7 +45,7 @@ describe("URL generation", function () {
             src: undefined,
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
     it('should generate the url without sdk-version', function () {
@@ -71,7 +71,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
     });
 
     it('should generate the correct url with path param with multiple leading slash', function () {
@@ -83,7 +83,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
 
     });
 
@@ -97,7 +97,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint_alt/tr:h-300,w-400/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint_alt/tr:h-300,w-400/test_path.jpg`);
 
     });
 
@@ -111,7 +111,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300%2Cw-400`);
     });
 
     it('should generate the correct url with src param', function () {
@@ -123,7 +123,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
     });
 
     it('should generate the correct url with transformationPostion as query', function () {
@@ -136,7 +136,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?ik-sdk-version=javascript-${pkg.version}&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
     });
 
     it('should generate the correct url with query params properly merged', function () {
@@ -149,7 +149,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&ik-sdk-version=javascript-${pkg.version}&t2=v2&t3=v3&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300%2Cw-400`);
     });
 
 
@@ -164,7 +164,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rt-90/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rt-90/test_path.jpg`);
     });
 
 
@@ -179,7 +179,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg`);
     });
 
     it('overlayImage', function () {
@@ -192,7 +192,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-overlay.jpg/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-overlay.jpg/test_path.jpg`);
     });
 
     it('overlayImage with slash in path', function () {
@@ -205,7 +205,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-path@@to@@overlay.jpg/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,oi-path@@to@@overlay.jpg/test_path.jpg`);
     });
 
     it('overlayX', function () {
@@ -218,7 +218,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ox-10/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ox-10/test_path.jpg`);
     });
 
     it('Border', function () {
@@ -231,7 +231,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg`);
     });
 
      it('transformation with empty key and empty value', function () {
@@ -242,7 +242,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:-/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:-/test_path.jpg`);
     });
     
     /**
@@ -256,7 +256,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg`);
     });
 
     it('transformation with empty value', function () {
@@ -267,7 +267,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:oi-/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:oi-/test_path.jpg`);
     });
 
     it('transformation with - value', function () {
@@ -278,7 +278,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg`);
     });
 
     it('All combined', function () {
@@ -341,7 +341,7 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,ox-35,oy-35,ofo-bottom,oh-20,ow-20,oi-folder@@file.jpg,oit-false,oiar-4:3,oibg-0F0F0F,oib-10_0F0F0F,oidpr-2,oiq-50,oic-force,ot-two%20words,ots-20,otf-Open%20Sans,otc-00FFFF,oa-5,ott-b,obg-00AAFF55,ote-b3ZlcmxheSBtYWRlIGVhc3k%3D,otw-50,otbg-00AAFF55,otp-40,otia-left,or-10,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast-true,e-grayscale-true,orig-true,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg?ik-sdk-version=javascript-${pkg.version}`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,ox-35,oy-35,ofo-bottom,oh-20,ow-20,oi-folder@@file.jpg,oit-false,oiar-4:3,oibg-0F0F0F,oib-10_0F0F0F,oidpr-2,oiq-50,oic-force,ot-two%20words,ots-20,otf-Open%20Sans,otc-00FFFF,oa-5,ott-b,obg-00AAFF55,ote-b3ZlcmxheSBtYWRlIGVhc3k%3D,otw-50,otbg-00AAFF55,otp-40,otia-left,or-10,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast-true,e-grayscale-true,orig-true,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
     });
 });
 
