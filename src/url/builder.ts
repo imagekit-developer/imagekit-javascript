@@ -43,9 +43,9 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     return "";
   }
 
-  if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
-    urlObj.searchParams.append("ik-sdk-version", opts.sdkVersion.trim());
-  }
+  // if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
+  //   urlObj.searchParams.append("ik-sdk-version", opts.sdkVersion.trim());
+  // }
 
   for (var i in opts.queryParameters) {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
