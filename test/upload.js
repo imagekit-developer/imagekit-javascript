@@ -492,7 +492,7 @@ describe("File upload", function () {
         expect(arg.get('expire')).to.be.equal("123");
         expect(arg.get('signature')).to.be.equal("test_signature");
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
-        expect(arg.get('tags')).to.be.equal('undefined');
+        expect(arg.get('tags')).to.be.equal(undefined);
         expect(arg.get('isPrivateFile')).to.be.equal(undefined);
         expect(arg.get('useUniqueFileName')).to.be.equal(undefined);
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
@@ -1129,5 +1129,53 @@ describe("File upload", function () {
         expect(callbackResult).to.be.deep.equal(uploadSuccessResponseObj);
         expect(callbackResult.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
         expect(callbackResult.$ResponseMetadata.statusCode).to.be.deep.equal(200);
+    });
+
+    it('Undefined fields should not be sent', async function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            tags: undefined,
+            folder: undefined,
+            isPrivateFile: undefined,
+            customCoordinates: undefined,
+            responseFields: undefined,
+            extensions: undefined,
+            webhookUrl: undefined,
+            overwriteFile: undefined,
+            overwriteAITags: undefined,
+            overwriteTags: undefined,
+            overwriteCustomMetadata: undefined,
+            customMetadata: undefined
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(2);
+        successSignature();
+        await sleep();
+        successUploadResponse();
+        await sleep();
+
+        var arg = server.requests[0].requestBody;
+        expect(arg.get('file')).to.be.equal("test_file");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('extensions')).to.be.equal(undefined);
+        expect(arg.get('tags')).to.be.equal(undefined);
+        expect(arg.get('folder')).to.be.equal(undefined);
+        expect(arg.get('isPrivateFile')).to.be.equal(undefined);
+        expect(arg.get('customCoordinates')).to.be.equal(undefined);
+        expect(arg.get('responseFields')).to.be.equal(undefined);
+        expect(arg.get('extensions')).to.be.equal(undefined);
+        expect(arg.get('webhookUrl')).to.be.equal(undefined);
+        expect(arg.get('overwriteFile')).to.be.equal(undefined);
+        expect(arg.get('overwriteAITags')).to.be.equal(undefined);
+        expect(arg.get('overwriteTags')).to.be.equal(undefined);
+        expect(arg.get('overwriteCustomMetadata')).to.be.equal(undefined);
+        expect(arg.get('customMetadata')).to.be.equal(undefined);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
 });

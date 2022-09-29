@@ -44,8 +44,7 @@ export const upload = (
       } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
         !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {
         formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
-      }
-      else {
+      } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
       }
     }
