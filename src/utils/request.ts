@@ -65,7 +65,7 @@ export const request = (
         return
     }
 
-    generateSignatureToken(options.authenticationEndpoint,).then((signaturObj) => {
+    generateSignatureToken(options.authenticationEndpoint).then((signaturObj) => {
         formData.append("signature", signaturObj.signature);
         formData.append("expire", String(signaturObj.expire));
         formData.append("token", signaturObj.token);
@@ -86,11 +86,9 @@ export const getJwt = (
     jwtRequestOptions: JwtRequestOptions
 ): Promise<JwtResponse> => {
     return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.timeout = 60000;
-        var urlObj = new URL(authenticationEndpoint);
-        urlObj.searchParams.set("t", Math.random().toString());
-        xhr.open('POST', urlObj.toString());
+        xhr.open('POST', authenticationEndpoint);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.ontimeout = function (e) {
             return reject(errorMessages.AUTH_ENDPOINT_TIMEOUT);
@@ -101,8 +99,8 @@ export const getJwt = (
         xhr.onload = function () {
             if (xhr.status === 200) {
                 try {
-                    var body = JSON.parse(xhr.responseText);
-                    var obj = {
+                    const body = JSON.parse(xhr.responseText);
+                    const obj = {
                         token: body.token
                     }
                     if (!obj.token) {
@@ -165,7 +163,7 @@ export const uploadFile = (
     apiVersion: undefined | string = undefined,
 ): Promise<IKResponse<UploadResponse> | Error> => {
     return new Promise((resolve, reject) => {
-        const uploadUrl = apiVersion && apiVersion === 'v2-alpha' ? 'https://upload.imagekit.io/api/v2-alpha/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'
+        const uploadUrl = apiVersion === 'v2-alpha' ? 'https://upload.imagekit.io/api/v2-alpha/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'
         uploadFileXHR.open('POST', uploadUrl);
         uploadFileXHR.onerror = function (e) {
             return reject(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR);
