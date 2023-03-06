@@ -104,3 +104,9 @@ export interface UploadOptions {
    */
   xhr?: XMLHttpRequest
 }
+
+export interface JwtRequestOptions {
+  publicKey: string
+  expire: number
+  uploadPayload:{[key: string]: Object}
+}
