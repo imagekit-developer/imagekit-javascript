@@ -1,11 +1,15 @@
 import respond from "../utils/respond";
 import errorMessages from "../constants/errorMessages"
-import { ImageKitOptions, UploadResponse } from "../interfaces";
+import { ImageKitOptions, UploadResponse, JwtRequestOptions } from "../interfaces";
 import IKResponse from "../interfaces/IKResponse";
 
 interface SignatureResponse {
     signature: string
     expire: number
+    token: string
+}
+
+interface JwtResponse {
     token: string
 }
 
@@ -41,13 +45,31 @@ const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest): IKResponse<U
 export const request = (
     uploadFileXHR: XMLHttpRequest,
     formData: FormData,
+    jwtRequestOptions: JwtRequestOptions,
     options: ImageKitOptions & { authenticationEndpoint: string },
     callback?: (err: Error | null, response: UploadResponse | null) => void) => {
+
+    if (options.apiVersion === 'v2-alpha') {
+
+        getJwt(options.authenticationEndpoint, jwtRequestOptions).then((tokenObj) => {
+            formData.append("token", tokenObj.token);
+
+            uploadFile(uploadFileXHR, formData, options.apiVersion).then((result) => {
+                return respond(false, result, callback);
+            }, (ex) => {
+                return respond(true, ex, callback);
+            });
+        }, (ex) => {
+            return respond(true, ex, callback);
+        });
+        return
+    }
 
     generateSignatureToken(options.authenticationEndpoint).then((signaturObj) => {
         formData.append("signature", signaturObj.signature);
         formData.append("expire", String(signaturObj.expire));
         formData.append("token", signaturObj.token);
+        formData.append("publicKey", String(options.publicKey));
 
         uploadFile(uploadFileXHR, formData).then((result) => {
             return respond(false, result, callback);
@@ -56,6 +78,43 @@ export const request = (
         });
     }, (ex) => {
         return respond(true, ex, callback);
+    });
+}
+
+export const getJwt = (
+    authenticationEndpoint: string,
+    jwtRequestOptions: JwtRequestOptions
+): Promise<JwtResponse> => {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.timeout = 60000;
+        xhr.open('POST', authenticationEndpoint);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.ontimeout = function (e) {
+            return reject(errorMessages.AUTH_ENDPOINT_TIMEOUT);
+        };
+        xhr.onerror = function () {
+            return reject(errorMessages.AUTH_ENDPOINT_NETWORK_ERROR);
+        }
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                try {
+                    const body = JSON.parse(xhr.responseText);
+                    const obj = {
+                        token: body.token
+                    }
+                    if (!obj.token) {
+                        return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                    }
+                    return resolve(obj);
+                } catch (ex) {
+                    return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                }
+            } else {
+                return reject(errorMessages.AUTH_INVALID_RESPONSE);
+            }
+        };
+        xhr.send(JSON.stringify(jwtRequestOptions));
     });
 }
 
@@ -100,10 +159,12 @@ export const generateSignatureToken = (
 
 export const uploadFile = (
     uploadFileXHR: XMLHttpRequest,
-    formData: FormData
+    formData: FormData,
+    apiVersion: undefined | string = undefined,
 ): Promise<IKResponse<UploadResponse> | Error> => {
     return new Promise((resolve, reject) => {
-        uploadFileXHR.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
+        const uploadUrl = apiVersion === 'v2-alpha' ? 'https://upload.imagekit.io/api/v2-alpha/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'
+        uploadFileXHR.open('POST', uploadUrl);
         uploadFileXHR.onerror = function (e) {
             return reject(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR);
         }
