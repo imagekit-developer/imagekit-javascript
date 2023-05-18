@@ -10,6 +10,7 @@ export default {
   AUTH_ENDPOINT_TIMEOUT: { message: "The authenticationEndpoint you provided timed out in 60 seconds", help: "" },
   AUTH_ENDPOINT_NETWORK_ERROR: { message: "Request to authenticationEndpoint failed due to network error", help: "" },
   AUTH_INVALID_RESPONSE: { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" },
+  AUTH_INVALID_RESPONSE_V2: { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with one field token.", help: "" },
   UPLOAD_ENDPOINT_NETWORK_ERROR: {
     message: "Request to ImageKit upload endpoint failed due to network error",
     help: "",

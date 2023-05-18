@@ -49,8 +49,7 @@ export const request = (
     options: ImageKitOptions & { authenticationEndpoint: string },
     callback?: (err: Error | null, response: UploadResponse | null) => void) => {
 
-    if (options.apiVersion === 'v2-alpha') {
-
+    if (options.apiVersion === 'v2') {
         getJwt(options.authenticationEndpoint, jwtRequestOptions).then((tokenObj) => {
             formData.append("token", tokenObj.token);
 
@@ -104,14 +103,14 @@ export const getJwt = (
                         token: body.token
                     }
                     if (!obj.token) {
-                        return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                        return reject(errorMessages.AUTH_INVALID_RESPONSE_V2);
                     }
                     return resolve(obj);
                 } catch (ex) {
-                    return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                    return reject(errorMessages.AUTH_INVALID_RESPONSE_V2);
                 }
             } else {
-                return reject(errorMessages.AUTH_INVALID_RESPONSE);
+                return reject(errorMessages.AUTH_INVALID_RESPONSE_V2);
             }
         };
         xhr.send(JSON.stringify(jwtRequestOptions));
@@ -160,10 +159,10 @@ export const generateSignatureToken = (
 export const uploadFile = (
     uploadFileXHR: XMLHttpRequest,
     formData: FormData,
-    apiVersion: undefined | string = undefined,
+    apiVersion?: "v2",
 ): Promise<IKResponse<UploadResponse> | Error> => {
     return new Promise((resolve, reject) => {
-        const uploadUrl = apiVersion === 'v2-alpha' ? 'https://upload.imagekit.io/api/v2-alpha/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'
+        const uploadUrl = apiVersion === 'v2' ? 'https://upload.imagekit.io/api/v2/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'
         uploadFileXHR.open('POST', uploadUrl);
         uploadFileXHR.onerror = function (e) {
             return reject(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR);

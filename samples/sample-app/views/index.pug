@@ -1,6 +1,8 @@
 html
     body
         h3 Imagekit Demo
+        button(id='toggle' onClick='toggle(event)') Use API v2
+        h2(id='api-description') Using API v1 signature-based authentication.
         form(action='#' onSubmit='upload(event)')
             input(type='file' id='file1')
             input(type="submit")
@@ -21,14 +23,34 @@ html
         script(type='text/javascript' src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js")
         script.
             try {
-                var imagekit = new ImageKit({
+                var imagekitV1 = new ImageKit({
                     publicKey: "!{publicKey}",
                     urlEndpoint: "!{urlEndpoint}",
                     authenticationEndpoint: "!{authenticationEndpoint}"
                 });
 
-                window.imagekit = imagekit;
+                var imagekitV2 = new ImageKit({
+                    publicKey: "!{publicKey}",
+                    urlEndpoint: "!{urlEndpoint}",
+                    authenticationEndpoint: "!{authenticationEndpointV2}",
+                    apiVersion: "v2"
+                });
 
+                window.imagekitV1 = imagekitV1;
+                window.imagekitV2 = imagekitV2;
+                window.imagekit = imagekitV1;
+
+                function toggle(e) {
+                    if (window.imagekit.options.apiVersion == "v2") {
+                        window.imagekit = imagekitV1;
+                        document.getElementById("toggle").innerHTML = "Use API v2";
+                        document.getElementById("api-description").innerHTML = "Using API v1 signature-based authentication.";
+                    } else {
+                        window.imagekit = imagekitV2;
+                        document.getElementById("toggle").innerHTML = "Use API v1";
+                        document.getElementById("api-description").innerHTML = "Using API v2 JWT authentication.";
+                    }
+                }
 
                 function upload(e) {
                     e.preventDefault();

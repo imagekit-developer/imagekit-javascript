@@ -108,5 +108,5 @@ export interface UploadOptions {
 export interface JwtRequestOptions {
   publicKey: string
   expire: number
-  uploadPayload: { [key: string]: Object | string | boolean }
+  uploadPayload: { [key: string]: string }
 }
