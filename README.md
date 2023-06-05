@@ -260,7 +260,7 @@ If you want to generate transformations in your application and add them to the 
 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. 
 
-<b>Using signature-based authentication (API v1)</b>
+### Using signature-based authentication (API v1)
 
 The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API v1](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
@@ -270,13 +270,13 @@ Also, ensure that you have specified `authenticationEndpoint` during SDK initial
 
 You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload, use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-<b>Using JSON Web Token (JWT) authentication (API v2)</b>
+### Using JSON Web Token (JWT) authentication (API v2)
 
 The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API v2](https://docs.imagekit.io/api-reference/upload-file-api/secure-client-side-file-upload).
 
 Ensure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP POST request to this endpoint and expects a JSON response having status code 200 with one field, `token`. Which is the JWT that will be used to upload the file to ImageKit.
 
-[Learn how to implement authenticationEndpoint](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint) for API v2 on your server.
+[Learn how to implement authenticationEndpoint](https://docs.imagekit.io/api-reference/upload-file-api/secure-client-side-file-upload#how-to-implement-authenticationendpoint-endpoint) for API v2 on your server.
 
 
 #### Sample usage

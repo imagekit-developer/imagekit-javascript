@@ -159,7 +159,7 @@ export const generateSignatureToken = (
 export const uploadFile = (
     uploadFileXHR: XMLHttpRequest,
     formData: FormData,
-    apiVersion?: "v2",
+    apiVersion?: "v2" | "v1",
 ): Promise<IKResponse<UploadResponse> | Error> => {
     return new Promise((resolve, reject) => {
         const uploadUrl = apiVersion === 'v2' ? 'https://upload.imagekit.io/api/v2/files/upload' : 'https://upload.imagekit.io/api/v1/files/upload'

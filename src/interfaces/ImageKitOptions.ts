@@ -6,5 +6,5 @@ export interface ImageKitOptions {
   publicKey?: string;
   authenticationEndpoint?: string;
   transformationPosition?: TransformationPosition;
-  apiVersion?: "v2";
+  apiVersion?: "v2" | "v1";
 }
