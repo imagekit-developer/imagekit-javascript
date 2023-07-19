@@ -41,60 +41,12 @@ const addResponseHeadersAndBody = (body: any, xhr: XMLHttpRequest): IKResponse<U
 export const request = (
     uploadFileXHR: XMLHttpRequest,
     formData: FormData,
-    options: ImageKitOptions & { authenticationEndpoint: string },
     callback?: (err: Error | null, response: UploadResponse | null) => void) => {
-
-    generateSignatureToken(options.authenticationEndpoint).then((signaturObj) => {
-        formData.append("signature", signaturObj.signature);
-        formData.append("expire", String(signaturObj.expire));
-        formData.append("token", signaturObj.token);
-
-        uploadFile(uploadFileXHR, formData).then((result) => {
-            return respond(false, result, callback);
-        }, (ex) => {
-            return respond(true, ex, callback);
-        });
+        
+    uploadFile(uploadFileXHR, formData).then((result) => {
+        return respond(false, result, callback);
     }, (ex) => {
         return respond(true, ex, callback);
-    });
-}
-
-export const generateSignatureToken = (
-    authenticationEndpoint: string
-): Promise<SignatureResponse> => {
-    return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.timeout = 60000;
-        var urlObj = new URL(authenticationEndpoint);
-        urlObj.searchParams.append("t", Math.random().toString());
-        xhr.open('GET', urlObj.toString());
-        xhr.ontimeout = function (e) {
-            return reject(errorMessages.AUTH_ENDPOINT_TIMEOUT);
-        };
-        xhr.onerror = function () {
-            return reject(errorMessages.AUTH_ENDPOINT_NETWORK_ERROR);
-        }
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                try {
-                    var body = JSON.parse(xhr.responseText);
-                    var obj = {
-                        signature: body.signature,
-                        expire: body.expire,
-                        token: body.token
-                    }
-                    if (!obj.signature || !obj.expire || !obj.token) {
-                        return reject(errorMessages.AUTH_INVALID_RESPONSE);
-                    }
-                    return resolve(obj);
-                } catch (ex) {
-                    return reject(errorMessages.AUTH_INVALID_RESPONSE);
-                }
-            } else {
-                return reject(errorMessages.AUTH_INVALID_RESPONSE);
-            }
-        };
-        xhr.send();
     });
 }
 

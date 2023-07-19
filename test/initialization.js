@@ -41,7 +41,6 @@ describe("Initialization checks", function () {
     it('should have correctly initialized options object.', function () {
         expect(imagekit.options).to.have.property('publicKey').to.be.equal(initializationParams.publicKey);
         expect(imagekit.options).to.have.property('urlEndpoint').to.be.equal(initializationParams.urlEndpoint);
-        expect(imagekit.options).to.have.property('authenticationEndpoint').to.be.equal(initializationParams.authenticationEndpoint);
     });
 
     it("should have callable functions 'url' and 'upload'", function () {

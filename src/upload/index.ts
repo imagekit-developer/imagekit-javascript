@@ -19,16 +19,10 @@ export const upload = (
     return;
   }
 
-  if (!options.authenticationEndpoint) {
-    respond(true, errorMessages.MISSING_AUTHENTICATION_ENDPOINT, callback);
-    return;
-  }
-
   if (!options.publicKey) {
     respond(true, errorMessages.MISSING_PUBLIC_KEY, callback);
     return;
   }
-
   var formData = new FormData();
   let key: keyof typeof uploadOptions;
   for (key in uploadOptions) {
@@ -46,11 +40,17 @@ export const upload = (
         formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
       } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
+      } else if (key === 'signature') {
+        formData.append("signature", uploadOptions.signature);
+      } else if (key === 'expire') {
+        formData.append("expire", String(uploadOptions.expire));
+      } else if (key === 'token') {
+        formData.append("token", uploadOptions.token);
       }
     }
   }
 
   formData.append("publicKey", options.publicKey);
 
-  request(xhr, formData, { ...options, authenticationEndpoint: options.authenticationEndpoint }, callback);
+  request(xhr, formData, callback);
 };
