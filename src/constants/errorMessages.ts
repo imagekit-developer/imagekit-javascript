@@ -15,4 +15,5 @@ export default {
     help: "",
   },
   INVALID_UPLOAD_OPTIONS: { message: "Invalid uploadOptions parameter", help: "" },
+  MISSING_SECURITY_PARAMETERS: { message: "Missing security paramters for upload", help: ""}
 };

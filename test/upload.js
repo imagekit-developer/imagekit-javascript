@@ -26,30 +26,10 @@ const uploadSuccessResponseObj = {
     "extensionStatus": { "aws-auto-tagging": "success" }
 };
 
-function successSignature() {
-    server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
-        [
-            200,
-            { "Content-Type": "application/json" },
-            JSON.stringify({
-                signature: "test_signature",
-                expire: 123,
-                token: "test_token"
-            })
-        ]);
-    server.respond();
-}
-
-function nonSuccessErrorSignature() {
-    server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
-        [
-            403,
-            { "Content-Type": "application/json" },
-            JSON.stringify({
-                error: "Not allowed"
-            })
-        ]);
-    server.respond();
+const securityParameters = {
+    signature: "test_signature",
+    expire: 123,
+    token: "test_token"
 }
 
 function successUploadResponse() {
@@ -114,6 +94,7 @@ describe("File upload", function () {
 
     it('Missing fileName', function () {
         const fileOptions = {
+            ...securityParameters,
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
@@ -127,6 +108,7 @@ describe("File upload", function () {
 
     it('Missing file', function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
         };
 
@@ -138,7 +120,7 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, { help: "", message: "Missing file parameter for upload" }, null);
     });
 
-    it('Missing authEndpoint', function () {
+    it('Missing security parameters', function () {
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file"
@@ -146,12 +128,10 @@ describe("File upload", function () {
 
         var callback = sinon.spy();
 
-        imagekit.upload(fileOptions, callback, {
-            authenticationEndpoint: ""
-        });
-
+        imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
-        sinon.assert.calledWith(callback, { message: "Missing authentication endpoint for upload", help: "" }, null);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { message: "Missing security paramters for upload", help: "" }, null);
     });
 
     it('Missing public key', function () {
@@ -170,97 +150,9 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, { message: "Missing public key for upload", help: "" }, null);
     });
 
-    it('Auth endpoint network error handling', async function () {
-        const fileOptions = {
-            fileName: "test_file_name",
-            file: "test_file"
-        };
-
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback, {
-            authenticationEndpoint: "https://does-not-exist-sdfsdf/aut"
-        });
-
-        expect(server.requests.length).to.be.equal(2);
-
-        // Simulate network error on authentication endpoint
-        server.requests[1].error();
-        await sleep();
-        sinon.assert.calledWith(callback, { message: "Request to authenticationEndpoint failed due to network error", help: "" }, null);
-    });
-
-    it('Auth endpoint non 200 status code handling', async function () {
-        const fileOptions = {
-            fileName: "test_file_name",
-            file: "test_file"
-        };
-
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
-        expect(server.requests.length).to.be.equal(2);
-
-        // Simulate non 200 response on authentication endpoint
-        nonSuccessErrorSignature();
-        await sleep();
-        sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
-    });
-
-    it('Auth endpoint 200 status with bad body', async function () {
-        const fileOptions = {
-            fileName: "test_file_name",
-            file: "test_file"
-        };
-
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
-        expect(server.requests.length).to.be.equal(2);
-
-        // Simulate non 200 response on authentication endpoint
-        server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
-            [
-                200,
-                { "Content-Type": "application/json" },
-                "invalid json"
-            ]);
-        server.respond();
-        await sleep();
-        sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
-    });
-
-    it('Auth endpoint 200 status missing token', async function () {
-        const fileOptions = {
-            fileName: "test_file_name",
-            file: "test_file"
-        };
-
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
-        expect(server.requests.length).to.be.equal(2);
-
-        // Simulate non 200 response on authentication endpoint
-        server.respondWith("GET", new RegExp(initializationParams.authenticationEndpoint + ".*"),
-            [
-                200,
-                { "Content-Type": "application/json" },
-                JSON.stringify({
-                    signature: "sig",
-                    timestamp: "123"
-                })
-            ]);
-        server.respond();
-        await sleep();
-        sinon.assert.calledWith(callback, { message: "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire.", help: "" }, null);
-    });
-
     it('Upload endpoint network error handling', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file"
         };
@@ -269,8 +161,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
 
         // Simulate network error on upload API
@@ -281,6 +172,7 @@ describe("File upload", function () {
 
     it('Boolean handling', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -294,8 +186,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -319,6 +210,7 @@ describe("File upload", function () {
 
     it('Tag array handling', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: ["test_tag1", "test_tag2"],
@@ -330,8 +222,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -353,6 +244,7 @@ describe("File upload", function () {
 
     it('Missing useUniqueFileName', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: ["test_tag1", "test_tag2"],
@@ -363,8 +255,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -388,6 +279,7 @@ describe("File upload", function () {
 
     it('Missing isPrivateFile', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: ["test_tag1", "test_tag2"]
@@ -397,8 +289,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -422,6 +313,7 @@ describe("File upload", function () {
 
     it('With extensions parameter', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -442,8 +334,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -470,6 +361,7 @@ describe("File upload", function () {
 
     it('Bare minimum request', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: undefined
@@ -479,8 +371,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -505,6 +396,7 @@ describe("File upload", function () {
     it('Bare minimum request: Blob', async function () {
         const buffer = Buffer.from("test_buffer")
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: buffer
         };
@@ -513,8 +405,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -539,6 +430,7 @@ describe("File upload", function () {
 
     it('Error during upload', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file"
         };
@@ -547,8 +439,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
             help: "For support kindly contact us at support@imagekit.io .",
@@ -562,6 +453,7 @@ describe("File upload", function () {
 
     it('Error during upload non 2xx with bad body', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file"
         };
@@ -570,8 +462,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
             [
@@ -589,6 +480,7 @@ describe("File upload", function () {
 
     it('Error during upload 2xx with bad body', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file"
         };
@@ -597,8 +489,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
             [
@@ -616,6 +507,7 @@ describe("File upload", function () {
 
     it('Upload via URL', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
@@ -624,8 +516,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -647,11 +538,11 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
 
-    it('Overriding public key and authentication endpoint', async function () {
-        var newAuthEndpoint = "http://test/auth-override";
+    it('Overriding public', async function () {
         var newPublicKey = "override_public_key";
 
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
@@ -659,22 +550,10 @@ describe("File upload", function () {
         var callback = sinon.spy();
 
         imagekit.upload(fileOptions, callback, {
-            authenticationEndpoint: newAuthEndpoint,
             publicKey: newPublicKey
         });
 
-        expect(server.requests.length).to.be.equal(2);
-        server.respondWith("GET", new RegExp(newAuthEndpoint + ".*"),
-            [
-                200,
-                { "Content-Type": "application/json" },
-                JSON.stringify({
-                    signature: "override_test_signature",
-                    expire: 123123,
-                    token: "override_test_token"
-                })
-            ]);
-        server.respond();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -682,9 +561,9 @@ describe("File upload", function () {
         var arg = server.requests[0].requestBody;
         expect(arg.get('file')).to.be.equal("https://ik.imagekit.io/remote-url.jpg");
         expect(arg.get('fileName')).to.be.equal("test_file_name");
-        expect(arg.get('token')).to.be.equal("override_test_token");
-        expect(arg.get('expire')).to.be.equal("123123");
-        expect(arg.get('signature')).to.be.equal("override_test_signature");
+        expect(arg.get('token')).to.be.equal("test_token");
+        expect(arg.get('expire')).to.be.equal("123");
+        expect(arg.get('signature')).to.be.equal("test_signature");
         expect(arg.get('publicKey')).to.be.equal('override_public_key');
         expect(arg.get('tags')).to.be.equal(undefined);
         expect(arg.get('isPrivateFile')).to.be.equal(undefined);
@@ -700,6 +579,7 @@ describe("File upload", function () {
 
     it('With overwrite parameters', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -723,8 +603,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -754,6 +633,7 @@ describe("File upload", function () {
 
     it('With customMetadata', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -781,8 +661,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -813,6 +692,7 @@ describe("File upload", function () {
 
     it('Array type fields', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: ["test_tag1", "test_tag2"],
@@ -840,8 +720,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();
@@ -875,6 +754,7 @@ describe("File upload", function () {
         var fun = function () { return "hello from function" };
         xhr.onprogress = fun;
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -893,10 +773,9 @@ describe("File upload", function () {
         };
         var callback = sinon.spy();
         imagekit.upload(fileOptions, callback);
-        expect(server.requests.length).to.be.equal(2);
+        expect(server.requests.length).to.be.equal(1);
         expect(server.requests[0]).to.be.equal(xhr);
         expect(server.requests[0].onprogress.toString()).to.be.equal(fun.toString());
-        successSignature();
         await sleep();
         successUploadResponse();
         await sleep();
@@ -922,6 +801,7 @@ describe("File upload", function () {
 
     it('Upload using promise - success', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -939,9 +819,8 @@ describe("File upload", function () {
         };
 
         var uploadPromise = imagekit.upload(fileOptions);
-        expect(server.requests.length).to.be.equal(2);
+        expect(server.requests.length).to.be.equal(1);
 
-        successSignature();
         await sleep();
         successUploadResponse();
         await sleep();
@@ -970,6 +849,7 @@ describe("File upload", function () {
             message: "Your account cannot be authenticated."
         }
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -988,7 +868,6 @@ describe("File upload", function () {
 
         try {
             var uploadPromise = imagekit.upload(fileOptions);
-            successSignature();
             await sleep();
             errorUploadResponse(500, errRes);
             await sleep();
@@ -1003,6 +882,7 @@ describe("File upload", function () {
         var fun = function () { return "hello from function" };
         xhr.onprogress = fun;
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -1021,10 +901,9 @@ describe("File upload", function () {
         };
         var uploadPromise = imagekit.upload(fileOptions);
 
-        expect(server.requests.length).to.be.equal(2);
+        expect(server.requests.length).to.be.equal(1);
 
 
-        successSignature();
         await sleep();
         successUploadResponse();
         await sleep();
@@ -1057,6 +936,7 @@ describe("File upload", function () {
             "x-request-id": "sdfsdfsdfdsf"
         };
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: "test_tag1,test_tag2",
@@ -1074,9 +954,8 @@ describe("File upload", function () {
         };
 
         var uploadPromise = imagekit.upload(fileOptions)
-        expect(server.requests.length).to.be.equal(2);
+        expect(server.requests.length).to.be.equal(1);
 
-        successSignature();
         await sleep();
 
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -1100,15 +979,15 @@ describe("File upload", function () {
             "x-request-id": "sdfsdfsdfdsf"
         };
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file"
         };
         var callback = sinon.spy();
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
+        expect(server.requests.length).to.be.equal(1);
 
-        successSignature();
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
             [
@@ -1133,6 +1012,7 @@ describe("File upload", function () {
 
     it('Undefined fields should not be sent', async function () {
         const fileOptions = {
+            ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             tags: undefined,
@@ -1153,8 +1033,7 @@ describe("File upload", function () {
 
         imagekit.upload(fileOptions, callback);
 
-        expect(server.requests.length).to.be.equal(2);
-        successSignature();
+        expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
         await sleep();

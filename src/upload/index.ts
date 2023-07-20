@@ -23,6 +23,12 @@ export const upload = (
     respond(true, errorMessages.MISSING_PUBLIC_KEY, callback);
     return;
   }
+
+  if(!uploadOptions.token || !uploadOptions.signature || !uploadOptions.expire) {
+    respond(true, errorMessages.MISSING_SECURITY_PARAMETERS, callback)
+    return
+  }
+
   var formData = new FormData();
   let key: keyof typeof uploadOptions;
   for (key in uploadOptions) {
@@ -30,7 +36,13 @@ export const upload = (
       if (key === "file" && typeof uploadOptions.file != "string") {
         formData.append('file', uploadOptions.file, String(uploadOptions.fileName));
       } else if (key === "tags" && Array.isArray(uploadOptions.tags)) {
-        formData.append('tags', uploadOptions.tags.join(","));
+        formData.append('tags', uploadOptions.tags.join(",")); 
+      } else if (key === 'signature') {
+        formData.append("signature", uploadOptions.signature);
+      } else if (key === 'expire') {
+        formData.append("expire", String(uploadOptions.expire));
+      } else if (key === 'token') {
+        formData.append("token", uploadOptions.token);
       } else if (key === "responseFields" && Array.isArray(uploadOptions.responseFields)) {
         formData.append('responseFields', uploadOptions.responseFields.join(","));
       } else if (key === "extensions" && Array.isArray(uploadOptions.extensions)) {
@@ -40,12 +52,6 @@ export const upload = (
         formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
       } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
-      } else if (key === 'signature') {
-        formData.append("signature", uploadOptions.signature);
-      } else if (key === 'expire') {
-        formData.append("expire", String(uploadOptions.expire));
-      } else if (key === 'token') {
-        formData.append("token", uploadOptions.token);
       }
     }
   }
