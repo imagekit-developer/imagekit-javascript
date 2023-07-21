@@ -14,7 +14,7 @@ export interface UploadOptions {
    */
   file: string | Blob | File;
   /**
-   * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key. Learn how to create a signature below on the page. This should be in lowercase.
+   * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key. This should be in lowercase.
    * Warning: Signature must be calculated on the server-side. This field is required for authentication when uploading a file from the client-side.
    */
   signature: string;
