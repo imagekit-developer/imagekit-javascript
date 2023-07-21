@@ -24,7 +24,6 @@ html
                 var imagekit = new ImageKit({
                     publicKey: "!{publicKey}",
                     urlEndpoint: "!{urlEndpoint}",
-                    authenticationEndpoint: "!{authenticationEndpoint}"
                 });
 
                 window.imagekit = imagekit;
@@ -55,6 +54,12 @@ html
                         file : file.files[0],
                         fileName : file.files[0].name || "test_image.jpg",
                         tags : ["test_tag_1"],
+                        token: "!{signatureObj.token}",
+                        signature: "!{signatureObj.signature}",
+                        expire: "!{signatureObj.expire}"
+                        //- token: "63b76592-e9be-428b-8fc7-d4e15aba7506",
+                        //- expire: 1689917695,
+                        //- signature: "7ddcf61b7e54036c88ba838a9bc86fa969eb1f5b"
                         //- extensions: [
                         //-     {
                         //-         name: "aws-auto-tagging",
