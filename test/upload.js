@@ -131,7 +131,7 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
         expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing security parameters for upload. The SDK expects token, signature and expire authentication.", help: "" }, null);
+        sinon.assert.calledWith(callback, { message: "Missing security parameters for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
     });
 
     it('Missing public key', function () {
