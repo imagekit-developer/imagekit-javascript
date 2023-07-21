@@ -538,7 +538,7 @@ describe("File upload", function () {
         sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
 
-    it('Overriding public', async function () {
+    it('Overriding public key', async function () {
         var newPublicKey = "override_public_key";
 
         const fileOptions = {
