@@ -24,8 +24,18 @@ export const upload = (
     return;
   }
 
-  if(!uploadOptions.token || !uploadOptions.signature || !uploadOptions.expire) {
-    respond(true, errorMessages.MISSING_SECURITY_PARAMETERS, callback)
+  if(!uploadOptions.token) {
+    respond(true, errorMessages.MISSING_TOKEN, callback)
+    return
+  }
+
+  if(!uploadOptions.signature) {
+    respond(true, errorMessages.MISSING_SIGNATURE, callback)
+    return
+  }
+
+  if(!uploadOptions.expire) {
+    respond(true, errorMessages.MISSING_EXPIRE, callback)
     return
   }
 
