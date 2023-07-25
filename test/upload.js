@@ -119,11 +119,13 @@ describe("File upload", function () {
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, { help: "", message: "Missing file parameter for upload" }, null);
     });
-
-    it('Missing security parameters', function () {
+    
+    it('Missing token', function () {
         const fileOptions = {
             fileName: "test_file_name",
-            file: "test_file"
+            file: "test_file",
+            signature: 'test_signature',
+            expire: 123
         };
 
         var callback = sinon.spy();
@@ -131,7 +133,39 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
         expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing security parameters for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
+        sinon.assert.calledWith(callback, { message: "Missing token for upload. The SDK expects token for authentication.", help: "" }, null);
+    });
+
+    it('Missing signature', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            token: 'test_token',
+            expire: 123
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+        expect(server.requests.length).to.be.equal(1);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { message: "Missing signature for upload. The SDK expects signature for authentication.", help: "" }, null);
+    });
+
+    it('Missing expire', function () {
+        const fileOptions = {
+            fileName: "test_file_name",
+            file: "test_file",
+            token: 'test_token',
+            signature: 'test_signature'
+        };
+
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+        expect(server.requests.length).to.be.equal(1);
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, { message: "Missing expire for upload. The SDK expects expire for authentication.", help: "" }, null);
     });
 
     it('Missing public key', function () {
