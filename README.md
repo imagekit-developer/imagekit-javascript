@@ -14,6 +14,12 @@ Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for 
 
 ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
+## Changelog - SDK Version 2.0.0
+### Breaking changes
+**1. Authentication Process Update:**
+* Previously, when using client side file upload, the SDK required the `publicKey` and `authenticationEndpoint` parameters during SDK initialization to fetch security parameters (`signature`, `token`, and `expire`).
+* In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
+
 ## Installation
 
 ### Using npm
@@ -59,12 +65,11 @@ var imagekit = new ImageKit({
 });    
 ```
 
-`publicKey` and `authenticationEndpoint` parameters are required if you want to use the SDK for client-side file upload. You can get these parameters from the developer section in your ImageKit dashboard - https://imagekit.io/dashboard#developers
+`publicKey` parameter is required if you want to use the SDK for client-side file upload. You can get this parameter from the developer section in your ImageKit dashboard - https://imagekit.io/dashboard#developers
 ```
 var imagekit = new ImageKit({
     publicKey: "your_public_api_key",
     urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
-    authenticationEndpoint: "http://www.yourserver.com/auth",
 });    
 ```
 
@@ -261,9 +266,7 @@ The SDK provides a simple interface using the `.upload()` method to upload files
 
 The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-Also, ensure that you have specified `authenticationEndpoint` during SDK initialization. The SDK makes an HTTP GET request to this endpoint and expects a JSON response with three fields, i.e. `signature`, `token`, and `expire`. In addition, the SDK adds a query parameter `t` with a random value to ensure that the request URL is unique and the response is not cached in [Safari iOS](https://github.com/imagekit-developer/imagekit-javascript/issues/59). Your backend can ignore this query parameter.
-
-[Learn how to implement authenticationEndpoint](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint) on your server.
+Also before making an upload request, please ensure you have generated mandatory security parameters: `signature`, `token`, and `expire`. To generate these security parameters, refer to the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). Obtain the parameters using a secure method and pass them, along with the mandatory `file` and `fileName` parameters, to the `upload()` method.
 
 You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload, use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
@@ -277,13 +280,12 @@ You can pass other parameters supported by the ImageKit upload API using the sam
 <script type="text/javascript" src="../dist/imagekit.js"></script>
 
 <script>
-    /* SDK initilization
-     authenticationEndpoint should be implemented on your server. Learn more here - https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#how-to-implement-authenticationendpoint-endpoint
+    /*  
+    SDK initilization
     */
     var imagekit = new ImageKit({
         publicKey: "your_public_api_key",
         urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
-        authenticationEndpoint: "http://www.yourserver.com/auth"
     });
     
     // Upload function internally uses the ImageKit.io javascript SDK
@@ -295,6 +297,9 @@ You can pass other parameters supported by the ImageKit upload API using the sam
             file: file.files[0],
             fileName: "abc1.jpg",
             tags: ["tag1"],
+            token: 'generated_token',
+            signature: 'generated_signature',
+            expire: 'generated_expire',
             extensions: [
                 {
                     name: "aws-auto-tagging",
@@ -311,6 +316,9 @@ You can pass other parameters supported by the ImageKit upload API using the sam
             file: file.files[0],
             fileName: "abc1.jpg",
             tags: ["tag1"],
+            token: 'generated_token',
+            signature: 'generated_signature',
+            expire: 'generated_expire',
             extensions: [
                 {
                     name: "aws-auto-tagging",
@@ -352,6 +360,9 @@ imagekit.upload({
     file: file.files[0],
     fileName: "abc1.jpg",
     tags: ["tag1"],
+    token: 'generated_token',
+    signature: 'generated_signature',
+    expire: 'generated_expire',
     extensions: [
         {
             name: "aws-auto-tagging",
@@ -375,6 +386,9 @@ var response = await imagekit.upload({
     file: file.files[0],
     fileName: "abc1.jpg",
     tags: ["tag1"],
+    token: 'generated_token',
+    signature: 'generated_signature',
+    expire: 'generated_expire',
     extensions: [
         {
             name: "aws-auto-tagging",
@@ -394,6 +408,9 @@ try {
         file: file.files[0],
         fileName: "abc1.jpg",
         tags: ["tag1"],
+        token: 'generated_token',
+        signature: 'generated_signature',
+        expire: 'generated_expire',
         extensions: [
             {
                 name: "aws-auto-tagging",
@@ -408,3 +425,4 @@ try {
     // {'content-type': 'application/json', 'x-request-id': 'ee560df4-d44f-455e-a48e-29dfda49aec5'}
     console.log(response.$ResponseMetadata.headers);
 }
+```

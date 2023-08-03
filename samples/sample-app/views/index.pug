@@ -24,7 +24,6 @@ html
                 var imagekit = new ImageKit({
                     publicKey: "!{publicKey}",
                     urlEndpoint: "!{urlEndpoint}",
-                    authenticationEndpoint: "!{authenticationEndpoint}"
                 });
 
                 window.imagekit = imagekit;
@@ -34,6 +33,7 @@ html
                     e.preventDefault();
                     var file = document.getElementById("file1");
                     var fileSize = file.files[0].size;
+                    var AUTH_INVALID_RESPONSE = "Invalid response from authenticationEndpoint. The SDK expects a JSON response with three fields i.e. signature, token and expire."
                     var statusEl = document.getElementById("status");
                     statusEl.innerHTML = "Uploading...";
 
@@ -50,41 +50,72 @@ html
                         }
                     });
 
-                    imagekit.upload({
-                        xhr: customXHR, // Use this if you want to track upload progress
-                        file : file.files[0],
-                        fileName : file.files[0].name || "test_image.jpg",
-                        tags : ["test_tag_1"],
-                        //- extensions: [
-                        //-     {
-                        //-         name: "aws-auto-tagging",
-                        //-         minConfidence: 80,
-                        //-         maxTags: 10
-                        //-     }
-                        //- ],
-                    }, function(err, result) {
-                        if (err) {
-                            statusEl.innerHTML = "Error uploading image. "+ err.message; 
-                            console.log(err) 
-                        } else {
-                            statusEl.innerHTML = "File Uploaded";
-                            var sampleTransformations = [{ HEIGHT: 300, WIDTH: 400}];
-                            srcUrl = result.url;
-                            transformedURL = imagekit.url({
-                                src: srcUrl,
-                                transformation : sampleTransformations
+                    // Generating security parameters using authenticationEndpoint
+                    const securityParametersRequest = new XMLHttpRequest();
+                    securityParametersRequest.timeout = 60000;
+                    var urlObj = new URL("!{authenticationEndpoint}");
+                    securityParametersRequest.open('GET', urlObj.toString());
+                    securityParametersRequest.ontimeout = function (e) {
+                        console.log(e.message);
+                        return statusEl.innerHTML = "Timeout generating security parameters. "+ e.message
+                    };
+                    securityParametersRequest.onerror = function (e) {
+                        console.log(e.message)
+                        return statusEl.innerHTML = "Request to authenticationEndpoint failed due to network error."+ e.message
+                    }
+                    securityParametersRequest.onload = () => {
+                        if(securityParametersRequest.status === 200) {
+                            var securityParametersObj = JSON.parse(securityParametersRequest.response)
+
+                            if(!securityParametersObj || !securityParametersObj.token || !securityParametersObj.signature || !securityParametersObj.expire) {
+                                return statusEl.innerHTML = AUTH_INVALID_RESPONSE;
+                            }
+                            
+                            // Uploading image
+                            imagekit.upload({
+                                xhr: customXHR, // Use this if you want to track upload progress
+                                file : file.files[0],
+                                fileName : file.files[0].name || "test_image.jpg",
+                                tags : ["test_tag_1"],
+                                token: securityParametersObj.token,
+                                signature: securityParametersObj.signature,
+                                expire: securityParametersObj.expire,
+                                //- extensions: [
+                                //-     {
+                                //-         name: "aws-auto-tagging",
+                                //-         minConfidence: 80,
+                                //-         maxTags: 10
+                                //-     }
+                                //- ],
+                            }, function(err, result) {
+                                if (err) {
+                                    statusEl.innerHTML = "Error uploading image. "+ err.message; 
+                                    console.log(err) 
+                                } else {
+                                    statusEl.innerHTML = "File Uploaded";
+                                    var sampleTransformations = [{ HEIGHT: 300, WIDTH: 400}];
+                                    srcUrl = result.url;
+                                    transformedURL = imagekit.url({
+                                        src: srcUrl,
+                                        transformation : sampleTransformations
+                                    });
+
+                                    var orig_img = document.querySelector("#orig_image > p > img");
+                                    var trans_img = document.querySelector("#trans_image > p > img");
+
+                                    orig_img.setAttribute("src", srcUrl);
+                                    trans_img.setAttribute("src", transformedURL);
+
+                                    var el  = document.getElementById('images')
+                                    el.setAttribute("style", "");
+                                }
                             });
-
-                            var orig_img = document.querySelector("#orig_image > p > img");
-                            var trans_img = document.querySelector("#trans_image > p > img");
-
-                            orig_img.setAttribute("src", srcUrl);
-                            trans_img.setAttribute("src", transformedURL);
-
-                            var el  = document.getElementById('images')
-                            el.setAttribute("style", "");
+                        }  else {
+                            return statusEl.innerHTML = AUTH_INVALID_RESPONSE;
                         }
-                    });
+                    }
+
+                    securityParametersRequest.send();
                 }
             } catch(ex) {
                 console.log(ex);

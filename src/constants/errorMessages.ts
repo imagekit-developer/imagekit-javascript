@@ -15,4 +15,7 @@ export default {
     help: "",
   },
   INVALID_UPLOAD_OPTIONS: { message: "Invalid uploadOptions parameter", help: "" },
+  MISSING_SIGNATURE: { message: "Missing signature for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
+  MISSING_TOKEN: { message: "Missing token for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
+  MISSING_EXPIRE: { message: "Missing expire for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
 };
