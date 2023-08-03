@@ -18,7 +18,7 @@ ImageKit is complete media storage, optimization, and transformation solution th
 ### Breaking changes
 **1. Authentication Process Update:**
 * Previously, when using client side file upload, the SDK required the `publicKey` and `authenticationEndpoint` parameters during SDK initialization to fetch security parameters (`signature`, `token`, and `expire`).
-* In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
+* In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#signature-generation-for-client-side-file-upload).
 
 ## Installation
 
@@ -90,7 +90,7 @@ Create a file `.env` using `sample.env` in the directory `samples/sample-app` an
 Now start the sample application by running:
 
 ```
-// Run it from project root
+// Run it from the project root
 yarn startSampleApp
 ```
 
@@ -266,7 +266,7 @@ The SDK provides a simple interface using the `.upload()` method to upload files
 
 The `upload()` method requires mandatory `file` and the `fileName` parameter. In addition, it accepts all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
-Also before making an upload request, please ensure you have generated mandatory security parameters: `signature`, `token`, and `expire`. To generate these security parameters, refer to the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). Obtain the parameters using a secure method and pass them, along with the mandatory `file` and `fileName` parameters, to the `upload()` method.
+Also, before making an upload request, please ensure you have generated mandatory security parameters: `signature`, `token`, and `expire`. To generate these security parameters, refer to the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#signature-generation-for-client-side-file-upload). Obtain the parameters using a secure method and pass them, along with the mandatory `file` and `fileName` parameters, to the `upload()` method.
 
 You can pass other parameters supported by the ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to specify tags for a file at the time of upload, use the `tags` parameter as specified in the [documentation here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload).
 
@@ -281,7 +281,7 @@ You can pass other parameters supported by the ImageKit upload API using the sam
 
 <script>
     /*  
-    SDK initilization
+    SDK initialization
     */
     var imagekit = new ImageKit({
         publicKey: "your_public_api_key",
