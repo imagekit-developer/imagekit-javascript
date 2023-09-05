@@ -255,6 +255,22 @@ If you want to generate transformations in your application and add them to the 
 | raw | The string provided in raw will be added in the URL as it is. |
 
 
+##### Deprecation notice
+
+The old overlay syntax will be deprecated on 31st Oct 2023 and will start returning errors when used in URLs. Please migrate to the new Layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
+
+If you are creating overlay transformations using the JavaScript SDK, you can migrate to the new Layers syntax using the raw parameter:
+
+transformation : [
+{ 
+ "width" : 300,
+ "height" : 300
+},
+{
+        "raw": "l-image,i-logo.png,w-10,rt-90,l-end"
+    }]
+
+
 ### File Upload
 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media Library. 
