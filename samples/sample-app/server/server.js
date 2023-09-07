@@ -3,7 +3,6 @@ const router = express.Router();
 const cors = require('cors');
 const ImageKit = require('imagekit');
 const uuid = require('uuid');
-const fs = require('fs');
 const path = require('path');
 
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
@@ -21,7 +20,6 @@ const startServer = (port = 3000, PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT) => {
                 urlEndpoint: URL_ENDPOINT
             });
 
-    
             router.get("/auth", (req, res) => {
                 try {
                     const token = req.query.token || uuid.v4();
