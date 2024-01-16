@@ -291,7 +291,7 @@ describe("URL generation", function () {
                 trim: 5,
                 metadata: true,
                 colorProfile: true,
-                defaultImage: "folder/file.jpg/", //trailing slash case
+                defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
                 dpr: 3,
                 effectSharpen: 10,
                 effectUSM: "2-2-0.8-0.024",
