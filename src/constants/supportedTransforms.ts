@@ -88,141 +88,6 @@ const supportedTransforms: { [key: string]: string } = {
   named: "n",
 
   /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-oi
-   */
-  overlayImage: "oi",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-aspect-ratio-oiar
-   */
-  overlayImageAspectRatio: "oiar",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-background-oibg
-   */
-  overlayImageBackground: "oibg",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-border-oib
-   */
-  overlayImageBorder: "oib",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-dpr-oidpr
-   */
-  overlayImageDPR: "oidpr",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-quality-oiq
-   */
-  overlayImageQuality: "oiq",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-image-cropping
-   */
-  overlayImageCropping: "oic",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#trimming-of-the-overlay-image
-   */
-  overlayImageTrim: "oit",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-x-position-ox
-   */
-  overlayX: "ox",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-y-position-oy
-   */
-  overlayY: "oy",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-focus-ofo
-   */
-  overlayFocus: "ofo",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-height-oh
-   */
-  overlayHeight: "oh",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-width-ow
-   */
-  overlayWidth: "ow",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-ot
-   */
-  overlayText: "ot",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-size-ots
-   */
-  overlayTextFontSize: "ots",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-font-otf
-   */
-  overlayTextFontFamily: "otf",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-color-otc
-   */
-  overlayTextColor: "otc",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-transparency-oa
-   */
-  overlayTextTransparency: "oa",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-transparency-oa
-   */
-  overlayAlpha: "oa",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-typography-ott
-   */
-  overlayTextTypography: "ott",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-background-obg
-   */
-  overlayBackground: "obg",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-encoded-ote
-   */
-  overlayTextEncoded: "ote",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-width-otw
-   */
-  overlayTextWidth: "otw",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-background-otbg
-   */
-  overlayTextBackground: "otbg",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-padding-otp
-   */
-  overlayTextPadding: "otp",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-text-inner-alignment-otia
-   */
-  overlayTextInnerAlignment: "otia",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/overlay#overlay-radius-or
-   */
-  overlayRadius: "or",
-
-  /**
    * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#progressive-image-pr
    */
   progressive: "pr",
@@ -281,6 +146,16 @@ const supportedTransforms: { [key: string]: string } = {
    * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#original-image-orig
    */
   original: "orig",
+
+  /**
+   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#shadow-e-shadow
+   */
+  effectShadow: "e-shadow",
+
+  /**
+   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation.md#gradient-e-gradient
+   */
+  effectGradient: "e-gradient",
 
   /**
    * @link https://docs.imagekit.io/features/image-transformations/conditional-transformations

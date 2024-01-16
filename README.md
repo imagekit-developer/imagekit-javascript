@@ -296,6 +296,8 @@ If you want to generate transformations in your application and add them to the 
 | effectUSM | e-usm |
 | effectContrast | e-contrast |
 | effectGray | e-grayscale |
+| effectShadow | e-shadow |
+| effectGradient | e-gradient |
 | original | orig |
 | raw | The string provided in raw will be added in the URL as it is. |
 

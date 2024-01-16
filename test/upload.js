@@ -1091,4 +1091,35 @@ describe("File upload", function () {
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
+
+    it('With pre and post transformation', async function () {
+        const fileOptions = {
+            ...securityParameters,
+            fileName: "test_file_name",
+            file: "test_file",
+            responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+            useUniqueFileName: false,
+            transformation: { pre: 'w-100', post: [{type: 'transformation', value: ''}]}
+        };
+        var callback = sinon.spy();
+
+        imagekit.upload(fileOptions, callback);
+
+        expect(server.requests.length).to.be.equal(1);
+        await sleep();
+        successUploadResponse();
+        await sleep();
+
+        var arg = server.requests[0].requestBody;
+
+        expect(arg.get('file')).to.be.equal("test_file");
+        expect(arg.get('fileName')).to.be.equal("test_file_name");
+        expect(arg.get('responseFields')).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
+        expect(arg.get('useUniqueFileName')).to.be.equal('false');
+        expect(arg.get('publicKey')).to.be.equal('test_public_key');
+        expect(arg.get('transformation')).to.be.equal(JSON.stringify(fileOptions.transformation));
+
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
 });

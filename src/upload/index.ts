@@ -60,7 +60,10 @@ export const upload = (
       } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
         !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {
         formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
-      } else if(uploadOptions[key] !== undefined) {
+      } else if(key === "transformation" && typeof uploadOptions.transformation === "object" &&
+        uploadOptions.transformation !== null) {
+        formData.append(key, JSON.stringify(uploadOptions.transformation));
+      }else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
       }
     }

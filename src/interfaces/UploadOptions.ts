@@ -1,3 +1,12 @@
+interface postTransformation{
+  type: 'abs' | 'thumbnail' | 'transformation' | 'gif-to-video'
+  protocol?: 'hls' | 'dash'
+  value?: string
+}
+interface transformation{
+  pre?: string
+  post?: postTransformation[]
+}
 /**
  * Options used when uploading a file
  *
@@ -112,6 +121,8 @@ export interface UploadOptions {
    * Before setting any custom metadata on an asset you have to create the field using custom metadata fields API.
    */
   customMetadata?: string | Record<string, string | number | boolean | Array<string | number | boolean>>
+
+  transformation?: transformation
 
   /**
    * Optional XMLHttpRequest object that you can send for upload API request. You can listen to `progress` and other events on this object for any custom logic. 
