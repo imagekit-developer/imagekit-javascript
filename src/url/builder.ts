@@ -93,7 +93,7 @@ function constructTransformationString(transformation: Transformation[] | undefi
         parsedTransformStep.push(transformation[i][key]);
       } else {
         var value = transformation[i][key];
-        if (transformKey === "oi" || transformKey === "di") {
+        if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value || ""));
           value = value.replace(/\//g, "@@");
         }
