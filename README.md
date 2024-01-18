@@ -279,7 +279,7 @@ var imageURL = imagekit.url({
 
 **Sample Result URL**
 ```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-iw_div_4,h-ih_div_2:b-cw_mul_0.05_yellow
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-iw_div_4,h-ih_div_2,b-cw_mul_0.05_yellow
 ```
 
 #### List of supported transformations
