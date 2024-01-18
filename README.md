@@ -260,6 +260,27 @@ var imageURL = imagekit.url({
 https://ik.imagekit.io/your_imagekit_id/tr:h-300,w-400,l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end/img/sample-video.mp4
 ```
 
+**3. Arithmetic expressions In transformations**
+
+ImageKit allows use of [arithmetic expressions](https://docs.imagekit.io/features/arithmetic-expressions-in-transformations) in certain dimension and position-related parameters, making media transformations more flexible and dynamic.
+
+For example:
+
+```js
+var imageURL = imagekit.url({
+    src: "https://ik.imagekit.io/your_imagekit_id/default-image.jpg",
+    transformation: [{
+        "width": "iw_div_4",
+        "height": "ih_div_2",
+        "border": "cw_mul_0.05_yellow"
+    }]
+});
+```
+
+**Sample Result URL**
+```
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-iw_div_4,h-ih_div_2:b-cw_mul_0.05_yellow
+```
 
 #### List of supported transformations
 
