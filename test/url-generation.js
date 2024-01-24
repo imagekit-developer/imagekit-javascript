@@ -250,11 +250,11 @@ describe("URL generation", function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
-                effectShadow: ""
+                defaultImage: ""
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow-/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-/test_path.jpg`);
     });
 
     it('transformation with - value', function () {
