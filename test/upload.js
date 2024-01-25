@@ -1182,7 +1182,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
-    it("Should return error for invalid transformation", async function () {
+    it("Should return error for an invalid transformation", async function () {
       const fileOptions = {
         ...securityParameters,
         fileName: "test_file_name",
@@ -1206,7 +1206,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
-    it("Should return error for invalid pre transformation", async function () {
+    it("Should return error for an invalid pre transformation", async function () {
       const fileOptions = {
         ...securityParameters,
         fileName: "test_file_name",
@@ -1230,7 +1230,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
-    it("Should return error for invalid post transformation of type abs", async function () {
+    it("Should return error for an invalid post transformation of type abs", async function () {
       const fileOptions = {
         ...securityParameters,
         fileName: "test_file_name",
@@ -1254,7 +1254,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
-    it("Should return error for invalid post transformation of type transformation", async function () {
+    it("Should return error for an invalid post transformation of type transformation", async function () {
       const fileOptions = {
         ...securityParameters,
         fileName: "test_file_name",
@@ -1278,7 +1278,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
-    it("Should return error for invalid post transformation if not an array", async function () {
+    it("Should return error for an invalid post transformation if it's not an array", async function () {
       const fileOptions = {
         ...securityParameters,
         fileName: "test_file_name",

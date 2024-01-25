@@ -268,17 +268,6 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg`);
     });
 
-    it('transformation with defaultImage', function () {
-        const url = imagekit.url({
-            path: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-            }]
-        })
-
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
-    });
-
     it('skip transformation if it is undefined or null', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",

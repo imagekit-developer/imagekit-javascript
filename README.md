@@ -14,8 +14,14 @@ Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for 
 
 ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
-## Changelog - SDK Version 2.0.0
-### Breaking changes
+## Changelog
+### SDK Version 3.0.0
+#### Breaking changes
+**1. Overlay Syntax update**
+* The old overlay syntax parameters such as `oi`, `ot`, `obg`, and more. These parameters are deprecated and will start returning errors when used in URLs. Please migrate to the new Layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
+* You can migrate to the new Layers syntax using the `raw` transformation parameter.
+### SDK Version 2.0.0
+#### Breaking changes
 **1. Authentication Process Update:**
 * Previously, when using client side file upload, the SDK required the `publicKey` and `authenticationEndpoint` parameters during SDK initialization to fetch security parameters (`signature`, `token`, and `expire`).
 * In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#signature-generation-for-client-side-file-upload).
