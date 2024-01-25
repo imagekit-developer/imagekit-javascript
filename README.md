@@ -18,7 +18,7 @@ ImageKit is complete media storage, optimization, and transformation solution th
 ### SDK Version 3.0.0
 #### Breaking changes
 **1. Overlay Syntax update**
-* The old overlay syntax parameters such as `oi`, `ot`, `obg`, and more. These parameters are deprecated and will start returning errors when used in URLs. Please migrate to the new Layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
+* The [old overlay](https://docs.imagekit.io/features/image-transformations/overlay) syntax parameters such as `oi`, `ot`, `obg`, and more are deprecated and will start returning errors when used in URLs. Please migrate to the new Layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
 * You can migrate to the new Layers syntax using the `raw` transformation parameter.
 ### SDK Version 2.0.0
 #### Breaking changes
