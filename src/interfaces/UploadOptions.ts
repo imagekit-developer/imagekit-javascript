@@ -14,11 +14,11 @@ interface AbsObject {
   protocol: "hls" | "dash";
 }
 
-type postTransformation = TransformationObject | GifToVideoOrThumbnailObject | AbsObject;
+type PostTransformation = TransformationObject | GifToVideoOrThumbnailObject | AbsObject;
 
-interface transformation{
+interface Transformation{
   pre?: string
-  post?: postTransformation[]
+  post?: PostTransformation[]
 }
 /**
  * Options used when uploading a file
@@ -135,7 +135,7 @@ export interface UploadOptions {
    */
   customMetadata?: string | Record<string, string | number | boolean | Array<string | number | boolean>>
 
-  transformation?: transformation
+  transformation?: Transformation
 
   /**
    * Optional XMLHttpRequest object that you can send for upload API request. You can listen to `progress` and other events on this object for any custom logic. 
