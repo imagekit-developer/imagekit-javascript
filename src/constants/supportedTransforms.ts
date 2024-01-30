@@ -153,7 +153,7 @@ const supportedTransforms: { [key: string]: string } = {
   effectShadow: "e-shadow",
 
   /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation.md#gradient-e-gradient
+   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#gradient-e-gradient
    */
   effectGradient: "e-gradient",
 

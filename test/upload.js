@@ -1122,6 +1122,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
+
     it("With pre transformation", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1152,6 +1153,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
+
     it("With post transformation", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1182,6 +1184,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
     });
+
     it("Should return error for an invalid transformation", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1206,6 +1209,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
+
     it("Should return error for an invalid pre transformation", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1230,6 +1234,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
+
     it("Should return error for an invalid post transformation of type abs", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1254,6 +1259,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
+
     it("Should return error for an invalid post transformation of type transformation", async function () {
       const fileOptions = {
         ...securityParameters,
@@ -1278,6 +1284,7 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
+
     it("Should return error for an invalid post transformation if it's not an array", async function () {
       const fileOptions = {
         ...securityParameters,
