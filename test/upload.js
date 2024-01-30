@@ -1202,7 +1202,7 @@ describe("File upload", function () {
       await sleep();
       var errRes = {
         help: "",
-        message: "Invalid transformation parameter.",
+        message: "Invalid transformation parameter. Please include at least pre, post, or both.",
       };
       errorUploadResponse(500, errRes);
       await sleep();
