@@ -14,8 +14,14 @@ Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for 
 
 ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
-## Changelog - SDK Version 2.0.0
-### Breaking changes
+## Changelog
+### SDK Version 3.0.0
+#### Breaking changes
+**1. Overlay syntax update**
+* In version 3.0.0, we've removed the old overlay syntax parameters for transformations, such as `oi`, `ot`, `obg`, and [more](https://docs.imagekit.io/features/image-transformations/overlay). These parameters are deprecated and will start returning errors when used in URLs. Please migrate to the new layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
+* You can migrate to the new layers syntax using the `raw` transformation parameter.
+### SDK Version 2.0.0
+#### Breaking changes
 **1. Authentication Process Update:**
 * Previously, when using client side file upload, the SDK required the `publicKey` and `authenticationEndpoint` parameters during SDK initialization to fetch security parameters (`signature`, `token`, and `expire`).
 * In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#signature-generation-for-client-side-file-upload).
@@ -260,6 +266,27 @@ var imageURL = imagekit.url({
 https://ik.imagekit.io/your_imagekit_id/tr:h-300,w-400,l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end/img/sample-video.mp4
 ```
 
+**4. Arithmetic expressions in transformations**
+
+ImageKit allows use of [arithmetic expressions](https://docs.imagekit.io/features/arithmetic-expressions-in-transformations) in certain dimension and position-related parameters, making media transformations more flexible and dynamic.
+
+For example:
+
+```js
+var imageURL = imagekit.url({
+    src: "https://ik.imagekit.io/your_imagekit_id/default-image.jpg",
+    transformation: [{
+        "width": "iw_div_4",
+        "height": "ih_div_2",
+        "border": "cw_mul_0.05_yellow"
+    }]
+});
+```
+
+**Sample Result URL**
+```
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-iw_div_4,h-ih_div_2,b-cw_mul_0.05_yellow
+```
 
 #### List of supported transformations
 
@@ -296,6 +323,8 @@ If you want to generate transformations in your application and add them to the 
 | effectUSM | e-usm |
 | effectContrast | e-contrast |
 | effectGray | e-grayscale |
+| effectShadow | e-shadow |
+| effectGradient | e-gradient |
 | original | orig |
 | raw | The string provided in raw will be added in the URL as it is. |
 

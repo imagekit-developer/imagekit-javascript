@@ -18,4 +18,7 @@ export default {
   MISSING_SIGNATURE: { message: "Missing signature for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
   MISSING_TOKEN: { message: "Missing token for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
   MISSING_EXPIRE: { message: "Missing expire for upload. The SDK expects token, sginature and expire for authentication.", help: ""},
+  INVALID_TRANSFORMATION: { message: "Invalid transformation parameter. Please include at least pre, post, or both.", help: ""},
+  INVALID_PRE_TRANSFORMATION: { message: "Invalid pre transformation parameter.", help: ""},
+  INVALID_POST_TRANSFORMATION: { message: "Invalid post transformation parameter.", help: ""},
 };

@@ -39,6 +39,33 @@ export const upload = (
     return
   }
 
+  if (uploadOptions.transformation) {
+    if (!(Object.keys(uploadOptions.transformation).includes("pre") || Object.keys(uploadOptions.transformation).includes("post"))) {
+      respond(true, errorMessages.INVALID_TRANSFORMATION, callback);
+      return;
+    }
+    if (Object.keys(uploadOptions.transformation).includes("pre") && !uploadOptions.transformation.pre) {
+      respond(true, errorMessages.INVALID_PRE_TRANSFORMATION, callback);
+      return;
+    }
+    if (Object.keys(uploadOptions.transformation).includes("post")) {
+      if (Array.isArray(uploadOptions.transformation.post)) {
+        for (let transformation of uploadOptions.transformation.post) {
+          if (transformation.type === "abs" && !(transformation.protocol || transformation.value)) {
+            respond(true, errorMessages.INVALID_POST_TRANSFORMATION, callback);
+            return;
+          } else if (transformation.type === "transformation" && !transformation.value) {
+            respond(true, errorMessages.INVALID_POST_TRANSFORMATION, callback);
+            return;
+          }
+        }
+      } else {
+        respond(true, errorMessages.INVALID_POST_TRANSFORMATION, callback);
+        return;
+      }
+    }
+  }
+
   var formData = new FormData();
   let key: keyof typeof uploadOptions;
   for (key in uploadOptions) {
@@ -60,6 +87,9 @@ export const upload = (
       } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
         !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {
         formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
+      } else if(key === "transformation" && typeof uploadOptions.transformation === "object" &&
+        uploadOptions.transformation !== null) {
+        formData.append(key, JSON.stringify(uploadOptions.transformation));
       } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
       }
