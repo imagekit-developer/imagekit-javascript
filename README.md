@@ -375,7 +375,16 @@ You can pass other parameters supported by the ImageKit upload API using the sam
                     minConfidence: 80,
                     maxTags: 10
                 }
-            ]
+            ],
+            transformation: {
+                pre: 'l-text,i-Imagekit,fs-50,l-end',
+                post: [
+                    {
+                        type: 'transformation',
+                        value: 'w-100'
+                    }
+                ]
+            }
         }, function(err, result) {
             console.log(result);
         })
@@ -394,7 +403,16 @@ You can pass other parameters supported by the ImageKit upload API using the sam
                     minConfidence: 80,
                     maxTags: 10
                 }
-            ]
+            ],
+            transformation: {
+                pre: 'l-text,i-Imagekit,fs-50,l-end',
+                post: [
+                    {
+                        type: 'transformation',
+                        value: 'w-100'
+                    }
+                ]
+            }
         }).then(result => {
             console.log(result);
         }).then(error => {
