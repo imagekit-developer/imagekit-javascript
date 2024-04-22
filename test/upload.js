@@ -133,7 +133,7 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
         expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing token for upload. The SDK expects token, sginature and expire for authentication.", help: "" }, null);
+        sinon.assert.calledWith(callback, { message: "Missing token for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
     });
 
     it('Missing signature', function () {
@@ -149,7 +149,7 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
         expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing signature for upload. The SDK expects token, sginature and expire for authentication.", help: "" }, null);
+        sinon.assert.calledWith(callback, { message: "Missing signature for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
     });
 
     it('Missing expire', function () {
@@ -165,7 +165,7 @@ describe("File upload", function () {
         imagekit.upload(fileOptions, callback);
         expect(server.requests.length).to.be.equal(1);
         expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing expire for upload. The SDK expects token, sginature and expire for authentication.", help: "" }, null);
+        sinon.assert.calledWith(callback, { message: "Missing expire for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
     });
 
     it('Missing public key', function () {
