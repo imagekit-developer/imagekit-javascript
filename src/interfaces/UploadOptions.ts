@@ -143,7 +143,7 @@ export interface UploadOptions {
   xhr?: XMLHttpRequest
 
   /**
-   * Server-side checks to run on the asset.
+   * Optional `checks` parameters can be used to run server-side checks before files are uploaded to the Media Library.
    */
   checks?: string
 }
