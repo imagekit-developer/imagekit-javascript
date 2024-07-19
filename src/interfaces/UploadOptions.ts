@@ -141,4 +141,9 @@ export interface UploadOptions {
    * Optional XMLHttpRequest object that you can send for upload API request. You can listen to `progress` and other events on this object for any custom logic. 
    */
   xhr?: XMLHttpRequest
+
+  /**
+   * Optional `checks` parameters can be used to run server-side checks before files are uploaded to the Media Library.
+   */
+  checks?: string
 }

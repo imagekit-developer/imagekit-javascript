@@ -90,6 +90,8 @@ export const upload = (
       } else if(key === "transformation" && typeof uploadOptions.transformation === "object" &&
         uploadOptions.transformation !== null) {
         formData.append(key, JSON.stringify(uploadOptions.transformation));
+      } else if (key === 'checks' && uploadOptions.checks) {
+        formData.append("checks", uploadOptions.checks);
       } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
       }
