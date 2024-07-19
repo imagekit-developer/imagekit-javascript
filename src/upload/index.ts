@@ -9,7 +9,6 @@ export const upload = (
   options: ImageKitOptions,
   callback?: (err: Error | null, response: UploadResponse | null) => void,
 ) => {
-  console.log({uploadOptions})
   if (!uploadOptions.file) {
     respond(true, errorMessages.MISSING_UPLOAD_FILE_PARAMETER, callback);
     return;
