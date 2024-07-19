@@ -141,4 +141,9 @@ export interface UploadOptions {
    * Optional XMLHttpRequest object that you can send for upload API request. You can listen to `progress` and other events on this object for any custom logic. 
    */
   xhr?: XMLHttpRequest
+
+  /**
+   * Server-side checks to run on the asset.
+   */
+  checks?: string
 }

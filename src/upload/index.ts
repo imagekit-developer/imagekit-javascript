@@ -9,6 +9,7 @@ export const upload = (
   options: ImageKitOptions,
   callback?: (err: Error | null, response: UploadResponse | null) => void,
 ) => {
+  console.log({uploadOptions})
   if (!uploadOptions.file) {
     respond(true, errorMessages.MISSING_UPLOAD_FILE_PARAMETER, callback);
     return;
@@ -90,6 +91,8 @@ export const upload = (
       } else if(key === "transformation" && typeof uploadOptions.transformation === "object" &&
         uploadOptions.transformation !== null) {
         formData.append(key, JSON.stringify(uploadOptions.transformation));
+      } else if (key === 'checks' && uploadOptions.checks) {
+        formData.append("checks", uploadOptions.checks);
       } else if(uploadOptions[key] !== undefined) {
         formData.append(key, String(uploadOptions[key]));
       }

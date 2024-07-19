@@ -1309,4 +1309,58 @@ describe("File upload", function () {
       expect(callback.calledOnce).to.be.true;
       sinon.assert.calledWith(callback, errRes, null);
     });
+
+    it("With checks option", async function () {
+        const fileOptions = {
+          ...securityParameters,
+          fileName: "test_file_name",
+          file: "test_file",
+          responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+          useUniqueFileName: false,
+          checks: "'request.folder' : '/'",
+        };
+        var callback = sinon.spy();
+  
+        imagekit.upload(fileOptions, callback);
+  
+        expect(server.requests.length).to.be.equal(1);
+        await sleep();
+        successUploadResponse();
+        await sleep();
+  
+        var arg = server.requests[0].requestBody;
+        expect(arg.get("file")).to.be.equal("test_file");
+        expect(arg.get("fileName")).to.be.equal("test_file_name");
+        expect(arg.get("responseFields")).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
+        expect(arg.get("useUniqueFileName")).to.be.equal("false");
+        expect(arg.get("publicKey")).to.be.equal("test_public_key");
+  
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+    });
+
+    it("Should return error for unsuccessfull check", async function () {
+        const fileOptions = {
+          ...securityParameters,
+          fileName: "test_file_name",
+          file: "test_file",
+          responseFields: "tags, customCoordinates, isPrivateFile, metadata",
+          useUniqueFileName: false,
+          checks: "'request.folder' : 'marketing/'",
+        };
+        var callback = sinon.spy();
+  
+        imagekit.upload(fileOptions, callback);
+  
+        expect(server.requests.length).to.be.equal(1);
+        await sleep();
+        var errRes = {
+          help: "For support kindly contact us at support@imagekit.io .",
+          message: "Your request failed 'checks' validation.",
+        };
+        errorUploadResponse(400, errRes);
+        await sleep();
+        expect(callback.calledOnce).to.be.true;
+        sinon.assert.calledWith(callback, errRes, null);
+    });
 });
