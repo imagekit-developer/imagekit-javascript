@@ -1334,6 +1334,7 @@ describe("File upload", function () {
         expect(arg.get("responseFields")).to.be.equal("tags, customCoordinates, isPrivateFile, metadata");
         expect(arg.get("useUniqueFileName")).to.be.equal("false");
         expect(arg.get("publicKey")).to.be.equal("test_public_key");
+        expect(arg.get('checks')).to.be.equal("'request.folder' : '/'");
   
         expect(callback.calledOnce).to.be.true;
         sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
