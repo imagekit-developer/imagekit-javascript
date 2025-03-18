@@ -1,7 +1,10 @@
 /**
  * @link https://imagekit.io/docs/transformations
  */
-const supportedTransforms: { [key: string]: string } = {
+export const supportedTransforms: { [key: string]: string } = {
+  // Basic sizing & layout
+  width: "w",
+  height: "h",
   aspectRatio: "ar",
   background: "bg",
   border: "b",
@@ -14,14 +17,11 @@ const supportedTransforms: { [key: string]: string } = {
   xCenter: "xc",
   y: "y",
   yCenter: "yc",
-  height: "h",
-  width: "w",
   format: "f",
   videoCodec: "vc",
   audioCodec: "ac",
   radius: "r",
   rotation: "rt",
-  rotate: "rt",
   blur: "bl",
   named: "n",
   defaultImage: "di",
@@ -31,25 +31,31 @@ const supportedTransforms: { [key: string]: string } = {
   endOffset: "eo",
   duration: "du",
   streamingResolutions: "sr",
-  eGrayscale: "e-grayscale",
-  eRemoveDotBg: "e-removedotbg",
-  eUpscale: "e-upscale",
-  eRetouch: "e-retouch",
-  eGenvar: "e-genvar",
-  eDropshadow: "e-dropshadow",
-  eChangeBg: "e-changebg",
-  eBgRemove: "e-bgremove",
-  eContrast: "e-contrast",
-  eShadow: "e-shadow",
-  eSharpen: "e-sharpen",
-  eUSM: "e-usm",
-  eGradient: "e-gradient",
-  effectContrast: "e-contrast",
-  effectShadow: "e-shadow",
+
+  // Old deprecated mappings
   effectSharpen: "e-sharpen",
   effectUSM: "e-usm",
-  effectGradient: "e-gradient",
+  effectContrast: "e-contrast",
   effectGray: "e-grayscale",
+  effectShadow: "e-shadow",
+  effectGradient: "e-gradient",
+
+  // AI & advanced effects
+  grayscale: "e-grayscale",
+  aiBGRemoveExternal: "e-removedotbg",
+  aiUpscale: "e-upscale",
+  aiRetouch: "e-retouch",
+  aiVariation: "e-genvar",
+  aiDropShadow: "e-dropshadow",
+  aiChangeBackground: "e-changebg",
+  aiRemoveBackground: "e-bgremove",
+  contrastStretch: "e-contrast",
+  shadow: "e-shadow",
+  sharpen: "e-sharpen",
+  unsharpMask: "e-usm",
+  gradient: "e-gradient",
+
+  // Other flags & finishing
   progressive: "pr",
   lossless: "lo",
   colorProfile: "cp",
@@ -58,8 +64,13 @@ const supportedTransforms: { [key: string]: string } = {
   trim: "t",
   zoom: "z",
   page: "pg",
+
+  
+
+  // Raw pass-through
   raw: "raw",
-}
+};
+
 
 
 export default supportedTransforms

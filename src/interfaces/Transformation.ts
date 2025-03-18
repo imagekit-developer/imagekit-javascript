@@ -173,45 +173,45 @@ export interface Transformation {
     /**
      * Enable grayscale effect for images.
      */
-    grayScale?: true;
+    grayscale?: true;
 
     /**
      * Use third-party background removal. 
      * See also `removeBackground` for ImageKit's in-house background removal which is 90% cheaper.
      */
-    removeBackgroundThirdParty?: true
+    aiBGRemoveExternal?: true
 
     /**
      * Upscale images beyond their original dimensions with AI.
      */
-    upscale?: true
+    aiUpscale?: true
 
     /**
      * Retouch (AI-based) for improving faces or product shots.
      */
-    retouch?: true
+    aiRetouch?: true
 
     /**
      * Generate variation of an image using AI. This will generate a new image with slight variations from the original image. The variations include changes in color, texture, and other visual elements. However, the model will try to preserve the structure and essence of the original image.
      */
-    generateVariation?: true
+    aiVariation?: true
 
     /**
      * Add an AI-based drop shadow around a foreground object on a transparent or removed background.
      * You can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
      * @link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow
      */
-    AIDropshadow?: string
+    aiDropShadow?: string
 
     /**
      * Change background using AI. Provide a prompt or base64-encoded prompt. e.g. `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
      */
-    changeBackground?: string;
+    aiChangeBackground?: string;
 
     /**
      * ImageKit’s in-house background removal.
      */
-    removeBackground?: true
+    aiRemoveBackground?: true
 
     /**
      * Auto-enhance contrast for an image (contrast stretch).
@@ -243,7 +243,7 @@ export interface Transformation {
     /**
      * Used to specify whether the output JPEG image must be rendered progressively. In progressive loading, the output image renders as a low-quality pixelated full image, which, over time, keeps on adding more pixels and information to the image.  This helps you maintain a fast perceived load time.
      */
-    progressiveJPEG?: boolean;
+    progressive?: boolean;
 
     /**
      * Used to specify whether the output image (if in JPEG or PNG) must be compressed losslessly.
@@ -291,5 +291,42 @@ export interface Transformation {
      * Pass any transformation that is not directly supported by the SDK. This transformation is passed as it is in the URL.
      */
     raw?: string;
+
+    // old as it is but deprecated
+
+    /**
+     * @deprecated Use `rotation` instead.
+     */
+    rotate?: string;
+
+    /**
+     * @deprecated Use `sharpen` instead.
+     */
+    effectSharpen?: string;
+
+    /**
+     * @deprecated Use `unsharpMask` instead.
+     */
+    effectUSM?: string;
+
+    /**
+     * @deprecated Use `contrastStretch` instead.
+     */
+    effectContrast?: string;
+
+    /**
+     * @deprecated Use `grayscale` instead.
+     */
+    effectGray?: string;
+
+    /**
+     * @deprecated Use `shadow` instead.
+     */
+    effectShadow?: string;
+
+    /**
+     * @deprecated Use `gradient` instead.
+     */
+    effectGradient?: string;
 }
 

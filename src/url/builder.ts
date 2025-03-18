@@ -82,19 +82,24 @@ function constructTransformationString(transformation: Transformation[] | undefi
   for (var i = 0, l = transformation.length; i < l; i++) {
     var parsedTransformStep = [];
     for (var key in transformation[i]) {
-      if(transformation[i][key as keyof Transformation] === undefined || transformation[i][key as keyof Transformation] === null )
-      continue;
+      let value = transformation[i][key as keyof Transformation];
+      if (value === undefined || value === null) {
+        continue;
+      }
+
       var transformKey = transformationUtils.getTransformKey(key);
       if (!transformKey) {
         transformKey = key;
       }
 
-      if (transformation[i][key as keyof Transformation] === "-") {
+      if (value === "-") value = true;
+
+      if (["e-grayscale", "e-contrast", "e-removedotbg", "e-bgremove", "e-upscale", "e-retouch", "e-genvar"].includes(transformKey) && value === true) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
         parsedTransformStep.push(transformation[i][key]);
       } else {
-        var value = transformation[i][key as keyof Transformation];
+        value = transformation[i][key as keyof Transformation];
         if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
           value = value.replace(/\//g, "@@");
