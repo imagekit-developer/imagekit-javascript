@@ -181,8 +181,7 @@ export interface Transformation {
     grayscale?: true;
 
     /**
-     * Use third-party background removal. 
-     * See also `removeBackground` for ImageKit's in-house background removal which is 90% cheaper.
+     * Use third-party background removal. Use `removeBackground` - ImageKit's in-house background removal which is 90% cheaper.
      */
     aiBGRemoveExternal?: true
 
