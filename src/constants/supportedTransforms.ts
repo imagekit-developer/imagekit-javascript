@@ -65,8 +65,6 @@ export const supportedTransforms: { [key: string]: string } = {
   zoom: "z",
   page: "pg",
 
-  
-
   // Raw pass-through
   raw: "raw",
 };

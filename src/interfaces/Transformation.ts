@@ -141,7 +141,7 @@ export interface Transformation {
     /**
      * Whether to serve the original file without any transformations if `true`.
      */
-    original?: true
+    original?: boolean;
 
     /**
      * Start offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`. 
