@@ -98,7 +98,7 @@ function constructTransformationString(transformation: Transformation[] | undefi
         if (value === true || value === "-" || value === "true") {
           parsedTransformStep.push(transformKey);
         } else {
-          // Any other value means that the effect should be applied
+          // Any other value means that the effect should not be applied
           continue;
         }
       } else if (
@@ -109,7 +109,6 @@ function constructTransformationString(transformation: Transformation[] | undefi
       } else if (key === "raw") {
         parsedTransformStep.push(transformation[i][key]);
       } else {
-        value = transformation[i][key as keyof Transformation];
         if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
           value = value.replace(/\//g, "@@");
