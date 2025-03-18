@@ -1,5 +1,5 @@
 /**
- * @link https://imagekit.io/docs/transformations
+ * {@link https://imagekit.io/docs/transformations}
  */
 export const supportedTransforms: { [key: string]: string } = {
   // Basic sizing & layout

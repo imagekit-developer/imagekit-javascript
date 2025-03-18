@@ -5,7 +5,8 @@ export interface UrlOptionsBase {
   /**
    * An array of objects specifying the transformations to be applied in the URL.
    * The transformation name and the value should be specified as a key-value pair in each object.
-   * @link https://docs.imagekit.io/features/image-transformations/chained-transformations
+   * 
+   * {@link https://imagekit.io/docs/transformations#chained-transformations}
    */
   transformation?: Array<Transformation>;
   /**
@@ -49,6 +50,6 @@ export interface UrlOptionsPath extends UrlOptionsBase {
 /**
  * Options for generating an URL
  *
- * @link https://github.com/imagekit-developer/imagekit-javascript#url-generation
+ * {@link https://github.com/imagekit-developer/imagekit-javascript#url-generation}
  */
 export type UrlOptions = UrlOptionsSrc | UrlOptionsPath;

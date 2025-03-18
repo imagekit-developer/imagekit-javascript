@@ -3,7 +3,8 @@ export type TransformationPosition = "path" | "query";
 /**
  * The SDK provides easy to use names for transformations. These names are converted to the corresponding transformation string before being added to the URL.
  * SDKs are updated regularly to support new transformations. If you want to use a transformation that is not supported by the SDK, you can use the `raw` parameter to pass the transformation string directly.
- * @link https://imagekit.io/docs/transformations
+ * 
+ * {@link https://imagekit.io/docs/transformations}
  */
 export interface Transformation {
     /**
@@ -42,24 +43,26 @@ export interface Transformation {
     border?: string;
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus
+     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus}
      */
     crop?: "force" | "at_max" | "at_max_enlarge" | "at_least" | "maintain_ratio";
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus
+     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus}
      */
     cropMode?: "pad_resize" | "extract" | "pad_extract";
 
     /**
      * Possible values 0.1  to 5 or `auto` for automatic DPR calculation.
-     * @link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr}
      */
     dpr?: number
 
     /**
      * This parameter can be used along with pad resize, maintain ratio, or extract crop to change the behavior of padding or cropping
-     * @link https://imagekit.io/docs/image-resize-and-crop#focus---fo
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#focus---fo}
      */
     focus?: string;
 
@@ -69,22 +72,22 @@ export interface Transformation {
     quality?: number;
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
      */
     x?: number | string;
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
      */
     xCenter?: number | string;
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
      */
     y?: number | string;
 
     /**
-     * @link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
      */
     yCenter?: number | string;
 
@@ -122,13 +125,14 @@ export interface Transformation {
     blur?: number;
 
     /**
-     * @link https://imagekit.io/docs/transformations#named-transformations
+     * {@link https://imagekit.io/docs/transformations#named-transformations}
      */
     named?: string;
 
     /**
      * Fallback image if the resource is not found, e.g., a URL or path.
-     * @link https://imagekit.io/docs/image-transformation#default-image---di
+     * 
+     * {@link https://imagekit.io/docs/image-transformation#default-image---di}
      */
     defaultImage?: string;
 
@@ -166,7 +170,8 @@ export interface Transformation {
     /**
      * Resolutions for adaptive bitrate streaming (videos).
      * e.g., `240_360_480_720_1080` will generate 5 representations and manifest. 
-     * @link https://imagekit.io/docs/adaptive-bitrate-streaming
+     * 
+     * {@link https://imagekit.io/docs/adaptive-bitrate-streaming}
      */
     streamingResolutions?: string;
 
@@ -199,7 +204,8 @@ export interface Transformation {
     /**
      * Add an AI-based drop shadow around a foreground object on a transparent or removed background.
      * You can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
-     * @link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow}
      */
     aiDropShadow?: string
 
@@ -219,24 +225,28 @@ export interface Transformation {
     contrastStretch?: true
 
     /**
-     * Add a drop shadow under non-transparent pixels (non-AI method). Check `eDropshadow` for AI-based shadows.
-     * @link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow
+     * This adds a shadow under solid objects in an input image with a transparent background. Check `eDropshadow` for AI-based shadows.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow}
      */
     shadow?: string
 
     /**
-     * Sharpen the image or specify intensity, e.g., `e-sharpen-10`.
+     * It is used to sharpen the input image. It is useful when highlighting the edges and finer details within an image.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen}
      */
     sharpen?: true | number
 
     /**
-     * Unsharp mask for advanced sharpening, e.g., `"2-2-0.8-0.024"`.
+     * Unsharp Masking (USM) is an image sharpening technique. This transform allows you to apply and control unsharp masks on your images.
      */
     unsharpMask?: string;
 
     /**
-     * Add a linear gradient overlay. e.g.,
-     * @link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient
+     * The gradient formed is a linear gradient containing two colors, and it can be customized.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient}
      */
     gradient?: string;
 
@@ -262,20 +272,23 @@ export interface Transformation {
 
     /**
      * It is used to specify the opacity level of the output image.
-     * @link https://imagekit.io/docs/effects-and-enhancements#opacity---o
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#opacity---o}
      */
     opacity?: number;
 
     /**
      * Useful with images that have a solid or nearly solid background with the object in the center. This parameter trims the background from the image, leaving only the central object in the output image.
-     * @link https://imagekit.io/docs/effects-and-enhancements#trim-edges---t
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#trim-edges---t}
      */
     trim?: true | number;
 
     /**
      * This parameter accepts a number that determines how much to zoom in or out of the cropped area.
      * It must be used along with fo-face or fo-<object_name>
-     * @link https://imagekit.io/docs/image-resize-and-crop#zoom---z
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#zoom---z}
      */
     zoom?: number;
 
@@ -283,7 +296,8 @@ export interface Transformation {
      * Extract specific page/frame from multi-page or layered files (PDF, PSD, AI),
      * Pick by number e.g., `2`. Or 2nd and 3rd layers combined using `3-4`.
      * Or pick a layer from PSD by name, e.g., `name-layer-4`.
-     * @link https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files
+     * 
+     * {@link https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files}
      */
     page?: number | string;
 

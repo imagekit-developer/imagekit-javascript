@@ -23,7 +23,7 @@ interface Transformation{
 /**
  * Options used when uploading a file
  *
- * @link https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload#request-structure-multipart-form-data
+ * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#Request}
  */
 export interface UploadOptions {
   /**

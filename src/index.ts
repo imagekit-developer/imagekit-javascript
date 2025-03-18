@@ -55,27 +55,16 @@ class ImageKit {
   }
 
   /**
-   * You can add multiple origins in the same ImageKit.io account.
-   * URL endpoints allow you to configure which origins are accessible through your account and set their preference order as well.
-   *
-   * @see {@link https://github.com/imagekit-developer/imagekit-nodejs#url-generation}
-   * @see {@link https://docs.imagekit.io/integration/url-endpoints}
-   *
-   * @param urlOptions
+   * A utility function to generate asset URL. It applies the specified transformations and other parameters to the URL.
    */
   url(urlOptions: UrlOptions): string {
     return url(urlOptions, this.options);
   }
 
   /**
-   * You can upload files to ImageKit.io media library from your server-side using private API key authentication.
+   * For uploading files directly from the browser to ImageKit.io.
    *
-   * File size limit
-   * The maximum upload file size is limited to 25MB.
-   *
-   * @see {@link https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload}
-   *
-   * @param uploadOptions
+   * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#how-to-implement-client-side-file-upload}
    */
   upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<IKResponse<UploadResponse>>
   upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): void;
