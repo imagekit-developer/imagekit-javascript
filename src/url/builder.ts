@@ -92,9 +92,19 @@ function constructTransformationString(transformation: Transformation[] | undefi
         transformKey = key;
       }
 
-      if (value === "-") value = true;
-
-      if (["e-grayscale", "e-contrast", "e-removedotbg", "e-bgremove", "e-upscale", "e-retouch", "e-genvar"].includes(transformKey) && value === true) {
+      if (
+        ["e-grayscale", "e-contrast", "e-removedotbg", "e-bgremove", "e-upscale", "e-retouch", "e-genvar"].includes(transformKey)
+      ) {
+        if (value === true || value === "-" || value === "true") {
+          parsedTransformStep.push(transformKey);
+        } else {
+          // Any other value means that the effect should be applied
+          continue;
+        }
+      } else if (
+        ["e-sharpen", "e-shadow", "e-gradient", "e-usm", "e-dropshadow"].includes(transformKey) &&
+        value.toString().trim() === ""
+      ) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
         parsedTransformStep.push(transformation[i][key]);

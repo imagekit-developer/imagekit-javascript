@@ -49,7 +49,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the url without sdk-version', function () {
-        const ik = new ImageKit({...initializationParams, sdkVersion: ""})
+        const ik = new ImageKit({ ...initializationParams, sdkVersion: "" })
 
         const url = ik.url({
             path: "/test_path.jpg",
@@ -231,7 +231,7 @@ describe("URL generation", function () {
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:-/test_path.jpg`);
     });
-    
+
     /**
      * Provided to provide support to a new transform without sdk update
      */
@@ -279,6 +279,99 @@ describe("URL generation", function () {
         })
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
+    });
+
+    it('skip transformation if it is false', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                defaultImage: "/test_path.jpg",
+                effectContrast: false
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
+    });
+
+    it('include just key if value is empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                defaultImage: "/test_path.jpg",
+                shadow: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow/test_path1.jpg`);
+    });
+
+    it('include value if set', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                defaultImage: "/test_path.jpg",
+                shadow: "bl-15_st-40_x-10_y-N5"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
+    });
+
+    it('trim with true as boolean', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                defaultImage: "/test_path.jpg",
+                trim: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
+    });
+
+    it('trim with true as string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                defaultImage: "/test_path.jpg",
+                trim: "true"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
+    });
+
+    it('ai remove background', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackground: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
+    });
+
+    it('ai remove background true as string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackground: "true"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
+    });
+
+    it('ai remove background other than true', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackground: "false"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
     it('All combined', function () {
