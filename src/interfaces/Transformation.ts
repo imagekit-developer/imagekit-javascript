@@ -44,12 +44,12 @@ export interface Transformation {
     /**
      * @link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus
      */
-    crop?: string;
+    crop?: "force" | "at_max" | "at_max_enlarge" | "at_least" | "maintain_ratio";
 
     /**
      * @link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus
      */
-    cropMode?: string;
+    cropMode?: "pad_resize" | "extract" | "pad_extract";
 
     /**
      * Possible values 0.1  to 5 or `auto` for automatic DPR calculation.
@@ -117,12 +117,6 @@ export interface Transformation {
     rotation?: number | string;
 
     /**
-     * @deprecated Alias of `rotation`.
-     *             Prefer using `rotation` for clarity.
-     */
-    rotate?: number | string;
-
-    /**
      * Gaussian blur level. Ranges 1–100 or an expression like `"bl-10"`. Possible values include integers between 1 and 100.
      */
     blur?: number;
@@ -147,7 +141,7 @@ export interface Transformation {
     /**
      * Whether to serve the original file without any transformations if `true`.
      */
-    original?: boolean
+    original?: true
 
     /**
      * Start offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`. 
@@ -179,107 +173,77 @@ export interface Transformation {
     /**
      * Enable grayscale effect for images.
      */
-    eGrayscale?: true;
+    grayScale?: true;
 
     /**
      * Use third-party background removal. 
-     * See also `eBgRemove` for ImageKit's in-house background removal which is 90% cheaper.
+     * See also `removeBackground` for ImageKit's in-house background removal which is 90% cheaper.
      */
-    eRemoveDotBg?: true
+    removeBackgroundThirdParty?: true
 
     /**
      * Upscale images beyond their original dimensions with AI.
      */
-    eUpscale?: true
+    upscale?: true
 
     /**
      * Retouch (AI-based) for improving faces or product shots.
      */
-    eRetouch?: true
+    retouch?: true
 
     /**
-     * Generate variations of an image using AI.
+     * Generate variation of an image using AI. This will generate a new image with slight variations from the original image. The variations include changes in color, texture, and other visual elements. However, the model will try to preserve the structure and essence of the original image.
      */
-    eGenvar?: true
+    generateVariation?: true
 
     /**
      * Add an AI-based drop shadow around a foreground object on a transparent or removed background.
      * You can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
      * @link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow
      */
-    eDropshadow?: true | string
+    AIDropshadow?: string
 
     /**
      * Change background using AI. Provide a prompt or base64-encoded prompt. e.g. `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
      */
-    eChangeBg?: string;
+    changeBackground?: string;
 
     /**
      * ImageKit’s in-house background removal.
      */
-    eBgRemove?: true
+    removeBackground?: true
 
     /**
      * Auto-enhance contrast for an image (contrast stretch).
      */
-    eContrast?: true
+    contrastStretch?: true
 
     /**
      * Add a drop shadow under non-transparent pixels (non-AI method). Check `eDropshadow` for AI-based shadows.
      * @link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow
      */
-    eShadow?: true | string
+    shadow?: string
 
     /**
      * Sharpen the image or specify intensity, e.g., `e-sharpen-10`.
      */
-    eSharpen?: true | number
+    sharpen?: true | number
 
     /**
      * Unsharp mask for advanced sharpening, e.g., `"2-2-0.8-0.024"`.
      */
-    eUSM?: true | string;
+    unsharpMask?: string;
 
     /**
      * Add a linear gradient overlay. e.g.,
      * @link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient
      */
-    eGradient?: true | string;
-
-    /**
-     * @deprecated Use `eContrast` instead.
-     */
-    effectContrast?: number | string;
-
-    /**
-     * @deprecated Use `eShadow` instead.
-     */
-    effectShadow?: number | string;
-
-    /**
-     * @deprecated Use `eSharpen` instead.
-     */
-    effectSharpen?: number | string;
-
-    /**
-     * @deprecated Use `eUSM` instead.
-     */
-    effectUSM?: number | string;
-
-    /**
-     * @deprecated Use `eGradient` instead.
-     */
-    effectGradient?: string;
-
-    /**
-     * @deprecated Use `eGrayscale` instead.
-     */
-    effectGray?: boolean | string;
+    gradient?: string;
 
     /**
      * Used to specify whether the output JPEG image must be rendered progressively. In progressive loading, the output image renders as a low-quality pixelated full image, which, over time, keeps on adding more pixels and information to the image.  This helps you maintain a fast perceived load time.
      */
-    progressive?: boolean;
+    progressiveJPEG?: boolean;
 
     /**
      * Used to specify whether the output image (if in JPEG or PNG) must be compressed losslessly.
