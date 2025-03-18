@@ -10,7 +10,7 @@ export const supportedTransforms: { [key: string]: string } = {
   border: "b",
   crop: "c",
   cropMode: "cm",
-  DPR: "dpr",
+  dpr: "dpr",
   focus: "fo",
   quality: "q",
   x: "x",
@@ -39,6 +39,7 @@ export const supportedTransforms: { [key: string]: string } = {
   effectGray: "e-grayscale",
   effectShadow: "e-shadow",
   effectGradient: "e-gradient",
+  rotate: "rt",
 
   // AI & advanced effects
   grayscale: "e-grayscale",

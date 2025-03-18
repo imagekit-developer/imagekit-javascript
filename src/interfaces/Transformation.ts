@@ -55,7 +55,7 @@ export interface Transformation {
      * Possible values 0.1  to 5 or `auto` for automatic DPR calculation.
      * @link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr
      */
-    DPR?: number
+    dpr?: number
 
     /**
      * This parameter can be used along with pad resize, maintain ratio, or extract crop to change the behavior of padding or cropping
