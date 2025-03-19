@@ -92,6 +92,10 @@ function constructTransformationString(transformation: Transformation[] | undefi
         transformKey = key;
       }
 
+      if (transformKey === "") {
+        continue;
+      }
+
       if (
         ["e-grayscale", "e-contrast", "e-removedotbg", "e-bgremove", "e-upscale", "e-retouch", "e-genvar"].includes(transformKey)
       ) {
@@ -123,7 +127,9 @@ function constructTransformationString(transformation: Transformation[] | undefi
         parsedTransformStep.push([transformKey, value].join(transformationUtils.getTransformKeyValueDelimiter()));
       }
     }
-    parsedTransforms.push(parsedTransformStep.join(transformationUtils.getTransformDelimiter()));
+    if (parsedTransformStep.length) {
+      parsedTransforms.push(parsedTransformStep.join(transformationUtils.getTransformDelimiter()));
+    }
   }
 
   return parsedTransforms.join(transformationUtils.getChainTransformDelimiter());
