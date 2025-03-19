@@ -867,6 +867,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:yc-40/test_path1.jpg`);
     });
 
+    // This is done just to test how SDK constructs URL, the actual transformation is not valid.
     it('Including deprecated properties', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
@@ -906,6 +907,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast,e-grayscale,e-shadow-bl-15_st-40_x-10_y-N5,e-gradient-from-red_to-white,orig-true,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
     });
 
+    // This is done just to test how SDK constructs URL, the actual transformation is not valid
     it('should generate the correct URL when comprehensive transformations, including video and AI transformations, are applied', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",

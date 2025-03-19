@@ -338,17 +338,9 @@ imagekit.upload({
 
 ## Demo Application
 
-For the fastest way to get started, check out the demo application in the [samples/sample-app](https://github.com/imagekit-developer/imagekit-javascript/tree/master/samples/sample-app) folder.
-
-To run the demo locally:
-```bash
-git clone https://github.com/imagekit-developer/imagekit-javascript.git
-cd imagekit-javascript
-```
-Then, create a `.env` file in the `samples/sample-app` directory based on `sample.env` and provide your `PRIVATE_KEY`, `PUBLIC_KEY`, and `URL_ENDPOINT` from your ImageKit dashboard. Finally, start the demo:
-```bash
-yarn startSampleApp
-```
+For a quick demonstration of the SDK features, refer to our test examples:
+- URL Generation examples can be found in [test/url-generation.js](./test/url-generation.js)
+- File Upload examples can be found in [test/upload.js](./test/upload.js)
 
 ## Changelog
 
