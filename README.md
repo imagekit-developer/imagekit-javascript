@@ -311,6 +311,8 @@ If you want to generate transformations in your application and add them to the 
 | cropMode                      | cm                                                            |
 | x                             | x                                                             |
 | y                             | y                                                             |
+| xCenter                       | xc                                                            |
+| yCenter                       | yc                                                            |
 | focus                         | fo                                                            |
 | format                        | f                                                             |
 | radius                        | r                                                             |
@@ -337,12 +339,13 @@ If you want to generate transformations in your application and add them to the 
 | gradient                      | e-gradient                                                    |
 | opacity                       | o                                                             |
 | zoom                          | z                                                             |
-| page                          | pg                                                             |
+| page                          | pg                                                            |
 | startOffset                   | so                                                            |
 | endOffset                     | eo                                                            |
 | duration                      | du                                                            |
 | streamingResolutions          | sr                                                            |
 | raw                           | The string provided in raw will be added in the URL as it is. |
+| flip                          | fl                                                            |
 
 ### File Upload
 

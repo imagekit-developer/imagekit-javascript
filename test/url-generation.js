@@ -9,19 +9,19 @@ describe("URL generation", function () {
 
     var imagekit = new ImageKit(initializationParams);
 
-    it('no path no src', function () {
+    it('should return an empty string when neither path nor src is provided', function () {
         const url = imagekit.url({});
 
         expect(url).equal("");
     });
 
-    it('invalid src url', function () {
+    it('should return an empty string for an invalid src URL', function () {
         const url = imagekit.url({ src: "/" });
 
         expect(url).equal("");
     });
 
-    it('no transformation path', function () {
+    it('should generate a valid URL when a path is provided without transformation', function () {
         const url = imagekit.url({
             path: "/test_path.jpg"
         });
@@ -29,7 +29,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
     });
 
-    it('no transformation src', function () {
+    it('should generate a valid URL when a src is provided without transformation', function () {
         const url = imagekit.url({
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg"
         });
@@ -37,7 +37,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
-    it('Undefined parameters with path', function () {
+    it('should generate a valid URL when undefined transformation parameters are provided with path', function () {
         const url = imagekit.url({
             path: "/test_path_alt.jpg",
             transformation: undefined,
@@ -48,7 +48,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
-    it('should generate the url without sdk-version', function () {
+    it('should generate the URL without sdk version', function () {
         const ik = new ImageKit({ ...initializationParams, sdkVersion: "" })
 
         const url = ik.url({
@@ -62,7 +62,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
     });
 
-    it('should generate the correct url with path param', function () {
+    it('should generate the correct URL with a valid path and transformation', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -74,7 +74,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
     });
 
-    it('should generate the correct url with path param with multiple leading slash', function () {
+    it('should generate the correct URL when the provided path contains multiple leading slashes', function () {
         const url = imagekit.url({
             path: "///test_path.jpg",
             transformation: [{
@@ -87,7 +87,7 @@ describe("URL generation", function () {
 
     });
 
-    it('should generate the correct url with path param with overidden urlEndpoint', function () {
+    it('should generate the correct URL when the urlEndpoint is overridden', function () {
         const url = imagekit.url({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint_alt",
             path: "/test_path.jpg",
@@ -101,7 +101,7 @@ describe("URL generation", function () {
 
     });
 
-    it('should generate the correct url with path param with transformationPostion as query', function () {
+    it('should generate the correct URL with transformationPosition as query parameter when path is provided', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformationPosition: "query",
@@ -114,7 +114,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300%2Cw-400`);
     });
 
-    it('should generate the correct url with src param', function () {
+    it('should generate the correct URL with a valid src parameter and transformation', function () {
         const url = imagekit.url({
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
             transformation: [{
@@ -126,7 +126,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
     });
 
-    it('should generate the correct url with transformationPostion as query', function () {
+    it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
         const url = imagekit.url({
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
             transformationPosition: "query",
@@ -139,7 +139,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
     });
 
-    it('should generate the correct url with query params properly merged', function () {
+    it('should merge query parameters correctly in the generated URL', function () {
         const url = imagekit.url({
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1",
             queryParameters: { t2: "v2", t3: "v3" },
@@ -153,7 +153,7 @@ describe("URL generation", function () {
     });
 
 
-    it('should generate the correct chained transformation', function () {
+    it('should generate the correct URL with chained transformations', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -168,7 +168,7 @@ describe("URL generation", function () {
     });
 
 
-    it('should generate the correct chained transformation url with new undocumented tranforamtion parameter', function () {
+    it('should generate the correct URL with chained transformations including a new undocumented transformation parameter', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -182,7 +182,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg`);
     });
 
-    it('Overlay image', function () {
+    it('should generate the correct URL when overlay image transformation is provided', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -195,7 +195,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,l-image,i-overlay.jpg,w-100,b-10_CDDC39,l-end/test_path.jpg`);
     });
 
-    it('Overlay image with slash in path', function () {
+    it('should generate the correct URL when overlay image transformation contains a slash in the overlay path', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -208,7 +208,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,l-image,i-/path/to/overlay.jpg,w-100,b-10_CDDC39,l-end/test_path.jpg`);
     });
 
-    it('Border', function () {
+    it('should generate the correct URL when border transformation is applied', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -221,7 +221,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg`);
     });
 
-    it('transformation with empty key and empty value', function () {
+    it('should generate the correct URL when transformation has empty key and value', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -229,13 +229,13 @@ describe("URL generation", function () {
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:-/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
     });
 
     /**
      * Provided to provide support to a new transform without sdk update
      */
-    it('transformation with undefined transform', function () {
+    it('should generate the correct URL when an undefined transform is provided', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -246,7 +246,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg`);
     });
 
-    it('transformation with empty value', function () {
+    it('should generate the correct URL when transformation key has an empty value', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -257,7 +257,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-/test_path.jpg`);
     });
 
-    it('transformation with - value', function () {
+    it('should generate the correct URL when transformation key has \'-\' as its value', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
@@ -268,7 +268,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg`);
     });
 
-    it('skip transformation if it is undefined or null', function () {
+    it('should skip transformation parameters that are undefined or null', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -281,7 +281,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
     });
 
-    it('skip transformation if it is false', function () {
+    it('should skip transformation parameters that are false', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -293,7 +293,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
     });
 
-    it('include just key if value is empty string', function () {
+    it('should include only the key when transformation value is an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -305,7 +305,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow/test_path1.jpg`);
     });
 
-    it('include value if set', function () {
+    it('should include both key and value when transformation parameter value is provided', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -317,7 +317,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
     });
 
-    it('trim with true as boolean', function () {
+    it('should generate the correct URL when trim transformation is set to true as a boolean', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -329,7 +329,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
     });
 
-    it('trim with true as string', function () {
+    it('should generate the correct URL when trim transformation is set to true as a string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -341,7 +341,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
     });
 
-    it('ai remove background', function () {
+    it('should generate the correct URL for AI background removal when set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -352,7 +352,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
     });
 
-    it('ai remove background true as string', function () {
+    it('should generate the correct URL for AI background removal when \'true\' is provided as a string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -363,7 +363,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
     });
 
-    it('ai remove background other than true', function () {
+    it('should not apply AI background removal when value is not true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -374,7 +374,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
-    it('ai remove background external', function () {
+    it('should generate the correct URL for external AI background removal when set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -385,7 +385,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
     });
 
-    it('ai remove background external true as string', function () {
+    it('should generate the correct URL for external AI background removal when \'true\' is provided as a string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -396,7 +396,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
     });
 
-    it('ai remove background external other than true', function () {
+    it('should not apply external AI background removal when value is not true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -407,7 +407,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
-    it('gradient with string value', function () {
+    it('should generate the correct URL when gradient transformation is provided as a string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -418,7 +418,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient-ld-top_from-green_to-00FF0010_sp-1/test_path1.jpg`);
     });
 
-    it('gradient with empty string', function () {
+    it('should generate the correct URL when gradient transformation is provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -429,7 +429,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
     });
 
-    it('gradient with true value', function () {
+    it('should generate the correct URL when gradient transformation is set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -440,7 +440,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
     });
 
-    it('aiDropShadow with true value', function () {
+    it('should generate the correct URL when AI drop shadow transformation is set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -451,7 +451,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
     });
 
-    it('aiDropShadow with empty string', function () {
+    it('should generate the correct URL when AI drop shadow transformation is provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -462,7 +462,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
     });
 
-    it('aiDropShadow with string value', function () {
+    it('should generate the correct URL when AI drop shadow transformation is provided with a specific string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -473,7 +473,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow-az-45/test_path1.jpg`);
     });
 
-    it('shadow with true value', function () {
+    it('should generate the correct URL when shadow transformation is set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -484,7 +484,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
     });
 
-    it('shadow with empty string', function () {
+    it('should generate the correct URL when shadow transformation is provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -495,7 +495,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
     });
 
-    it('shadow with string value', function () {
+    it('should generate the correct URL when shadow transformation is provided with a specific string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -506,7 +506,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
     });
 
-    it('sharpen with true value', function () {
+    it('should generate the correct URL when sharpen transformation is set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -517,7 +517,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
     });
 
-    it('sharpen with empty string', function () {
+    it('should generate the correct URL when sharpen transformation is provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -528,7 +528,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
     });
 
-    it('sharpen with number value', function () {
+    it('should generate the correct URL when sharpen transformation is provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -539,7 +539,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen-10/test_path1.jpg`);
     });
 
-    it('unsharpMask with true value', function () {
+    it('should generate the correct URL when unsharpMask transformation is set to true', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -550,7 +550,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
     });
 
-    it('unsharpMask with empty string', function () {
+    it('should generate the correct URL when unsharpMask transformation is provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -561,7 +561,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
     });
 
-    it('unsharpMask with string value', function () {
+    it('should generate the correct URL when unsharpMask transformation is provided with a string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -572,7 +572,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm-2-2-0.8-0.024/test_path1.jpg`);
     });
 
-    it('trim with true value', function () {
+    it('should generate the correct URL for trim transformation when set to true (boolean)', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -583,7 +583,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
     });
 
-    it('trim with empty string', function () {
+    it('should generate the correct URL for trim transformation when provided as an empty string', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -594,7 +594,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
     });
 
-    it('trim with number value', function () {
+    it('should generate the correct URL for trim transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -606,7 +606,7 @@ describe("URL generation", function () {
     });
 
     // Width parameter tests
-    it('width with number value', function () {
+    it('should generate the correct URL for width transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -617,7 +617,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
     });
 
-    it('width with string value', function () {
+    it('should generate the correct URL for width transformation when provided with a string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -628,7 +628,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
     });
 
-    it('width with arithmetic expression', function () {
+    it('should generate the correct URL for width transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -640,7 +640,7 @@ describe("URL generation", function () {
     });
 
     // Height parameter tests
-    it('height with number value', function () {
+    it('should generate the correct URL for height transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -651,7 +651,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
     });
 
-    it('height with string value', function () {
+    it('should generate the correct URL for height transformation when provided with a string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -662,7 +662,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
     });
 
-    it('height with arithmetic expression', function () {
+    it('should generate the correct URL for height transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -674,7 +674,7 @@ describe("URL generation", function () {
     });
 
     // AspectRatio parameter tests
-    it('aspectRatio with string value', function () {
+    it('should generate the correct URL for aspectRatio transformation when provided with a string value in colon format', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -685,7 +685,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4:3/test_path1.jpg`);
     });
 
-    it('aspectRatio with alternate format', function () {
+    it('should generate the correct URL for aspectRatio transformation when provided with an alternate underscore format', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -696,7 +696,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4_3/test_path1.jpg`);
     });
 
-    it('aspectRatio with expression', function () {
+    it('should generate the correct URL for aspectRatio transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -708,7 +708,7 @@ describe("URL generation", function () {
     });
 
     // Background parameter tests
-    it('background with solid color', function () {
+    it('should generate the correct URL for background transformation when provided with a solid color', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -719,7 +719,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-FF0000/test_path1.jpg`);
     });
 
-    it('background with blurred option', function () {
+    it('should generate the correct URL for background transformation when provided with the blurred option', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -730,7 +730,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-blurred/test_path1.jpg`);
     });
 
-    it('background with genfill option', function () {
+    it('should generate the correct URL for background transformation when provided with the genfill option', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -742,7 +742,7 @@ describe("URL generation", function () {
     });
 
     // Crop parameter tests
-    it('crop with force value', function () {
+    it('should generate the correct URL for crop transformation when provided with force value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -753,7 +753,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:c-force/test_path1.jpg`);
     });
 
-    it('crop with at_max value', function () {
+    it('should generate the correct URL for crop transformation when provided with at_max value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -765,7 +765,7 @@ describe("URL generation", function () {
     });
 
     // CropMode parameter tests
-    it('cropMode with pad_resize value', function () {
+    it('should generate the correct URL for cropMode transformation when provided with pad_resize', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -776,7 +776,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:cm-pad_resize/test_path1.jpg`);
     });
 
-    it('cropMode with extract value', function () {
+    it('should generate the correct URL for cropMode transformation when provided with extract value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -788,7 +788,7 @@ describe("URL generation", function () {
     });
 
     // Focus parameter tests
-    it('focus with string value', function () {
+    it('should generate the correct URL for focus transformation when provided with a string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -799,7 +799,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:fo-center/test_path1.jpg`);
     });
 
-    it('focus with face detection', function () {
+    it('should generate the correct URL for focus transformation when face detection is specified', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -811,7 +811,7 @@ describe("URL generation", function () {
     });
 
     // Quality parameter test
-    it('quality with number value', function () {
+    it('should generate the correct URL for quality transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -823,7 +823,7 @@ describe("URL generation", function () {
     });
 
     // Coordinate parameters tests
-    it('x with number value', function () {
+    it('should generate the correct URL for x coordinate transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -834,7 +834,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:x-10/test_path1.jpg`);
     });
 
-    it('y with number value', function () {
+    it('should generate the correct URL for y coordinate transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -845,7 +845,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:y-20/test_path1.jpg`);
     });
 
-    it('xCenter with number value', function () {
+    it('should generate the correct URL for xCenter transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -856,7 +856,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:xc-30/test_path1.jpg`);
     });
 
-    it('yCenter with number value', function () {
+    it('should generate the correct URL for yCenter transformation when provided with a number value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
             transformation: [{
@@ -867,7 +867,46 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:yc-40/test_path1.jpg`);
     });
 
-    it('All combined', function () {
+    it('Including deprecated properties', function () {
+        const url = imagekit.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                height: 300,
+                width: 400,
+                aspectRatio: '4-3',
+                quality: 40,
+                crop: 'force',
+                cropMode: 'extract',
+                focus: 'left',
+                format: 'jpeg',
+                radius: 50,
+                bg: "A94D34",
+                border: "5-A94D34",
+                rotation: 90,
+                blur: 10,
+                named: "some_name",
+                progressive: true,
+                lossless: true,
+                trim: 5,
+                metadata: true,
+                colorProfile: true,
+                defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
+                dpr: 3,
+                effectSharpen: 10,
+                effectUSM: "2-2-0.8-0.024",
+                effectContrast: true,
+                effectGray: true,
+                effectShadow: 'bl-15_st-40_x-10_y-N5',
+                effectGradient: 'from-red_to-white',
+                original: true,
+                raw: "h-200,w-300,l-image,i-logo.png,l-end"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast,e-grayscale,e-shadow-bl-15_st-40_x-10_y-N5,e-gradient-from-red_to-white,orig-true,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
+    });
+
+    it('should generate the correct URL when comprehensive transformations, including video and AI transformations, are applied', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
