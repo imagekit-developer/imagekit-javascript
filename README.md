@@ -61,7 +61,7 @@ And include it in your HTML:
 
 ## Initialization
 
-Initialize the SDK with your URL endpoint. For URL generation:
+Initialize the SDK by specifying your URL endpoint. You can obtain your URL endpoint from [https://imagekit.io/dashboard/url-endpoints](https://imagekit.io/dashboard/url-endpoints) and your public API key from [https://imagekit.io/dashboard/developer/api-keys](https://imagekit.io/dashboard/developer/api-keys). For URL generation:
 ```js
 var imagekit = new ImageKit({
     urlEndpoint: "https://ik.imagekit.io/your_imagekit_id"
@@ -201,7 +201,11 @@ var imageURL = imagekit.url({
 
 ### Supported Transformations
 
-The SDK supports various transformations which are translated to URL parameters as follows:
+The SDK gives a name to each transformation parameter e.g. height for h and width for w parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
+
+If you want to generate transformations in your application and add them to the URL as it is, use the raw parameter.
+
+Check ImageKit [transformation documentation](https://imagekit.io/docs/transformations) for more details.
 
 | Transformation Name        | URL Parameter                                                 |
 | -------------------------- | ------------------------------------------------------------- |
@@ -209,8 +213,8 @@ The SDK supports various transformations which are translated to URL parameters 
 | height                     | h                                                             |
 | aspectRatio                | ar                                                            |
 | quality                    | q                                                             |
-| aiRemoveBackground         | e-bgremove                                                    |
-| aiRemoveBackgroundExternal | e-removedotbg                                                 |
+| aiRemoveBackground         | e-bgremove (ImageKit powered)                                 |
+| aiRemoveBackgroundExternal | e-removedotbg (Using third party)                             |
 | aiUpscale                  | e-upscale                                                     |
 | aiRetouch                  | e-retouch                                                     |
 | aiVariation                | e-genvar                                                      |
@@ -246,6 +250,7 @@ The SDK supports various transformations which are translated to URL parameters 
 | sharpen                    | e-sharpen                                                     |
 | unsharpMask                | e-usm                                                         |
 | gradient                   | e-gradient                                                    |
+| flip                       | fl                                                            |
 | opacity                    | o                                                             |
 | zoom                       | z                                                             |
 | page                       | pg                                                            |
@@ -254,11 +259,21 @@ The SDK supports various transformations which are translated to URL parameters 
 | duration                   | du                                                            |
 | streamingResolutions       | sr                                                            |
 | raw                        | The string provided in raw will be added in the URL as it is. |
-| flip                       | fl                                                            |
 
 ### Handling Unsupported Transformations
 
 If you specify a transformation parameter that is not explicitly supported by the SDK, it is added “as-is” in the generated URL. This provides flexibility for using new or custom transformations without waiting for an SDK update.
+
+For example:
+```js
+var imageURL = imagekit.url({
+    path: "/test_path.jpg",
+    transformation: [{
+        "newparam": "cool"
+    }]
+});
+// Generated URL: https://ik.imagekit.io/test_url_endpoint/tr:newparam-cool/test_path.jpg
+```
 
 ## File Upload
 
