@@ -11,6 +11,8 @@ export interface Transformation {
      * The width of the output. If a value between 0 and 1 is used, it’s treated
      * as a percentage (e.g., `0.4` -> 40% of original width). You can also supply
      * arithmetic expressions (e.g., `"iw_div_2"`).
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#width---w}
      */
     width?: number | string;
 
@@ -18,6 +20,8 @@ export interface Transformation {
      * The height of the output. If a value between 0 and 1 is used, it’s treated
      * as a percentage (e.g., `0.5` -> 50% of original height). You can also supply
      * arithmetic expressions (e.g., `"ih_mul_0.5"`).
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#height---h}
      */
     height?: number | string;
 
@@ -25,20 +29,32 @@ export interface Transformation {
      * Specifies the aspect ratio for the output, e.g., `"ar-4-3"`.
      * Typically used with either width or height (not both).
      * Example usage: `aspectRatio = "4:3"` or `"4_3"` or an expression like `"iar_div_2"`.
+     * 
+     * {@link https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar}
      */
     aspectRatio?: number | string;
 
     /**
      * Specify the background that can be used along with some cropping strategies while resizing an image:
      * - A solid color: `"red"`, `"F3F3F3"`, `"AAFF0010"`.
+     * 
+     *   {@link https://imagekit.io/docs/effects-and-enhancements#solid-color-background}
+     * 
      * - A blurred background: `"blurred"`, `"blurred_25_N15"`, etc.
+     * 
+     *   {@link https://imagekit.io/docs/effects-and-enhancements#blurred-background}
+     * 
      * - Expand the image boundaries using generative fill: `genfill`. Optionally control the background scene by passing text prompt: `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
+     *   
+     *   {@link https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill}
      */
     background?: string;
 
     /**
      * Add a border to the output media. Accepts `<border-width>_<hex-code>`,
      * e.g. `"5_FFF000"` (5px yellow border), or an expression like `"ih_div_20_FF00FF"`.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#border---b}
      */
     border?: string;
 
@@ -68,6 +84,8 @@ export interface Transformation {
 
     /**
      * Used to specify the quality of the output image for lossy formats like JPEG, WebP, and AVIF.  A large quality number indicates a larger output image size with high quality. A small quality number indicates a smaller output image size with lower quality.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#quality---q}
      */
     quality?: number;
 
@@ -94,21 +112,29 @@ export interface Transformation {
     /**
      * Output format for images or videos, e.g., `"jpg"`, `"png"`, `"webp"`, `"mp4"`, `"auto"`.
      * ImageKit will automatically determine the format based on device support even if you do not specify it.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#format---f}
      */
     format?: string;
 
     /**
      * Video codec, e.g., `"h264"`, `"vp9"`, `"av1"`.
+     * 
+     * {@link https://imagekit.io/docs/video-optimization#video-codec---vc}
      */
     videoCodec?: string;
 
     /**
      * Audio codec, e.g., `"aac"`, `"opus"`.
+     * 
+     * {@link https://imagekit.io/docs/video-optimization#audio-codec---ac}
      */
     audioCodec?: string;
 
     /**
      * Corner radius for rounded corners (e.g., `20`) or `"max"` for circular/oval shapes.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#radius---r}
      */
     radius?: number | "max";
 
@@ -116,11 +142,15 @@ export interface Transformation {
      * Rotation in degrees. Positive values rotate clockwise; you can
      * also use e.g. `"N40"` for counterclockwise or `"auto"` to read EXIF data.
      * For videos only 0 , 90 , 180 , 270 and 360 values are supported.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#rotate---rt}
      */
     rotation?: number | string;
 
     /**
      * Gaussian blur level. Ranges 1–100 or an expression like `"bl-10"`. Possible values include integers between 1 and 100.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#blur---bl}
      */
     blur?: number;
 
@@ -139,17 +169,23 @@ export interface Transformation {
     /**
      * It is used to flip/mirror an image horizontally, vertically, or in both directions.
      * Possible values - h (horizontal), v (vertical), h_v (horizontal and vertical)
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#flip---fl}
      */
     flip?: "h" | "v" | "h_v" | "v_h";
 
     /**
      * Whether to serve the original file without any transformations if `true`.
+     * 
+     * {@link https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true}
      */
     original?: boolean;
 
     /**
      * Start offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`. 
      * Also supports arithmetic expressions.
+     * 
+     * {@link https://imagekit.io/docs/trim-videos#start-offset---so}
      */
     startOffset?: number | string;
 
@@ -157,6 +193,8 @@ export interface Transformation {
      * End offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`.
      * Usually used with `startOffset` to define a time window. 
      * Also supports arithmetic expressions.
+     * 
+     * {@link https://imagekit.io/docs/trim-videos#end-offset---eo}
      */
     endOffset?: number | string;
 
@@ -164,6 +202,8 @@ export interface Transformation {
      * Duration (in seconds) for trimming videos. e.g., `5` or `"10.5"`.
      * Typically used with `startOffset` to specify length from the start point. 
      * Also supports arithmetic expressions.
+     * 
+     * {@link https://imagekit.io/docs/trim-videos#duration---du}
      */
     duration?: number | string;
 
@@ -177,26 +217,36 @@ export interface Transformation {
 
     /**
      * Enable grayscale effect for images.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale}
      */
     grayscale?: true;
 
     /**
      * Use third-party background removal. Use `removeBackground` - ImageKit's in-house background removal which is 90% cheaper.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg}
      */
     aiBGRemoveExternal?: true
 
     /**
      * Upscale images beyond their original dimensions with AI.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#upscale-e-upscale}
      */
     aiUpscale?: true
 
     /**
      * Retouch (AI-based) for improving faces or product shots.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#retouch-e-retouch}
      */
     aiRetouch?: true
 
     /**
      * Generate variation of an image using AI. This will generate a new image with slight variations from the original image. The variations include changes in color, texture, and other visual elements. However, the model will try to preserve the structure and essence of the original image.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar}
      */
     aiVariation?: true
 
@@ -210,16 +260,22 @@ export interface Transformation {
 
     /**
      * Change background using AI. Provide a prompt or base64-encoded prompt. e.g. `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#change-background-e-changebg}
      */
     aiChangeBackground?: string;
 
     /**
      * ImageKit’s in-house background removal.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove}
      */
     aiRemoveBackground?: true
 
     /**
      * Auto-enhance contrast for an image (contrast stretch).
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast}
      */
     contrastStretch?: true
 
@@ -239,6 +295,8 @@ export interface Transformation {
 
     /**
      * Unsharp Masking (USM) is an image sharpening technique. This transform allows you to apply and control unsharp masks on your images.
+     * 
+     * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm}
      */
     unsharpMask?: string;
 
@@ -251,21 +309,29 @@ export interface Transformation {
 
     /**
      * Used to specify whether the output JPEG image must be rendered progressively. In progressive loading, the output image renders as a low-quality pixelated full image, which, over time, keeps on adding more pixels and information to the image.  This helps you maintain a fast perceived load time.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#progressive-image---pr}
      */
     progressive?: boolean;
 
     /**
      * Used to specify whether the output image (if in JPEG or PNG) must be compressed losslessly.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo}
      */
     lossless?: boolean
 
     /**
      * It specifies whether the output image should contain the color profile initially available with the original image.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#color-profile---cp}
      */
     colorProfile?: boolean;
 
     /**
      * By default, ImageKit removes all metadata as part of automatic image compression. Set this to `true` to preserve metadata.
+     * 
+     * {@link https://imagekit.io/docs/image-optimization#image-metadata---md}
      */
     metadata?: boolean;
 
@@ -342,4 +408,5 @@ export interface Transformation {
      */
     effectGradient?: string;
 }
+
 
