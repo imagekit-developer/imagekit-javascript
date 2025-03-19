@@ -4,13 +4,14 @@
  * image - only search in image type files
  * non-image - only search in files which are not image, e.g., JS or CSS or video files.
  *
- * @link https://docs.imagekit.io/api-reference/media-api/list-and-search-files
+ * {@link https://imagekit.io/docs/api-reference/digital-asset-management-dam/list-and-search-assets}
  */
 export type FileType = "all" | "image" | "non-image";
 
 /**
  * Metadata object structure
- * @link https://docs.imagekit.io/api-reference/metadata-api#metadata-object-structure
+ * 
+ * {@link https://imagekit.io/docs/api-reference/file-metadata/get-uploaded-file-metadata#Responses}
  * 
  * Contents of Object
  * 
@@ -96,7 +97,7 @@ export interface Metadata {
 /**
  * Response from uploading a file
  *
- * @link https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload#response-code-and-structure-json
+ * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#Responses}
  */
 export interface UploadResponse {
   /**

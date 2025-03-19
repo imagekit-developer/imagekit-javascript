@@ -82,27 +82,54 @@ function constructTransformationString(transformation: Transformation[] | undefi
   for (var i = 0, l = transformation.length; i < l; i++) {
     var parsedTransformStep = [];
     for (var key in transformation[i]) {
-      if(transformation[i][key] === undefined || transformation[i][key] === null )
-      continue;
+      let value = transformation[i][key as keyof Transformation];
+      if (value === undefined || value === null) {
+        continue;
+      }
+
       var transformKey = transformationUtils.getTransformKey(key);
       if (!transformKey) {
         transformKey = key;
       }
 
-      if (transformation[i][key] === "-") {
+      if (transformKey === "") {
+        continue;
+      }
+
+      if (
+        ["e-grayscale", "e-contrast", "e-removedotbg", "e-bgremove", "e-upscale", "e-retouch", "e-genvar"].includes(transformKey)
+      ) {
+        if (value === true || value === "-" || value === "true") {
+          parsedTransformStep.push(transformKey);
+        } else {
+          // Any other value means that the effect should not be applied
+          continue;
+        }
+      } else if (
+        ["e-sharpen", "e-shadow", "e-gradient", "e-usm", "e-dropshadow"].includes(transformKey) &&
+        (value.toString().trim() === "" || value === true || value === "true")
+      ) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
         parsedTransformStep.push(transformation[i][key]);
       } else {
-        var value = transformation[i][key];
         if (transformKey === "di") {
-          value = removeTrailingSlash(removeLeadingSlash(value || ""));
+          value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
           value = value.replace(/\//g, "@@");
+        }
+        if (transformKey === "sr" && Array.isArray(value)) {
+          value = value.join("_");
+        }
+        // Special case for trim with empty string - should be treated as true
+        if (transformKey === "t" && value.toString().trim() === "") {
+          value = "true";
         }
         parsedTransformStep.push([transformKey, value].join(transformationUtils.getTransformKeyValueDelimiter()));
       }
     }
-    parsedTransforms.push(parsedTransformStep.join(transformationUtils.getTransformDelimiter()));
+    if (parsedTransformStep.length) {
+      parsedTransforms.push(parsedTransformStep.join(transformationUtils.getTransformDelimiter()));
+    }
   }
 
   return parsedTransforms.join(transformationUtils.getChainTransformDelimiter());

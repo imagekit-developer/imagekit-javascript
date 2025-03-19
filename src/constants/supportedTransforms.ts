@@ -1,167 +1,75 @@
 /**
- * @link https://docs.imagekit.io/features/image-transformations
+ * {@link https://imagekit.io/docs/transformations}
  */
-const supportedTransforms: { [key: string]: string } = {
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#width-w
-   */
+export const supportedTransforms: { [key: string]: string } = {
+  // Basic sizing & layout
   width: "w",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#height-h
-   */
   height: "h",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#aspect-ratio-ar
-   */
   aspectRatio: "ar",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#quality-q
-   */
-  quality: "q",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#crop-crop-modes-and-focus
-   */
-  crop: "c",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#crop-crop-modes-and-focus
-   */
-  cropMode: "cm",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#focus-fo
-   */
-  focus: "fo",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#examples-focus-using-cropped-image-coordinates
-   */
-  x: "x",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#examples-focus-using-cropped-image-coordinates
-   */
-  y: "y",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#format-f
-   */
-  format: "f",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#radius-r
-   */
-  radius: "r",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#background-color-bg
-   */
   background: "bg",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#border-b
-   */
   border: "b",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#rotate-rt
-   */
+  crop: "c",
+  cropMode: "cm",
+  dpr: "dpr",
+  focus: "fo",
+  quality: "q",
+  x: "x",
+  xCenter: "xc",
+  y: "y",
+  yCenter: "yc",
+  format: "f",
+  videoCodec: "vc",
+  audioCodec: "ac",
+  radius: "r",
   rotation: "rt",
+  blur: "bl",
+  named: "n",
+  defaultImage: "di",
+  flip: "fl",
+  original: "orig",
+  startOffset: "so",
+  endOffset: "eo",
+  duration: "du",
+  streamingResolutions: "sr",
 
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#rotate-rt
-   */
+  // Old deprecated mappings
+  effectSharpen: "e-sharpen",
+  effectUSM: "e-usm",
+  effectContrast: "e-contrast",
+  effectGray: "e-grayscale",
+  effectShadow: "e-shadow",
+  effectGradient: "e-gradient",
   rotate: "rt",
 
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#blur-bl
-   */
-  blur: "bl",
+  // AI & advanced effects
+  grayscale: "e-grayscale",
+  aiUpscale: "e-upscale",
+  aiRetouch: "e-retouch",
+  aiVariation: "e-genvar",
+  aiDropShadow: "e-dropshadow",
+  aiChangeBackground: "e-changebg",
+  aiRemoveBackground: "e-bgremove",
+  aiRemoveBackgroundExternal: "e-removedotbg",
+  contrastStretch: "e-contrast",
+  shadow: "e-shadow",
+  sharpen: "e-sharpen",
+  unsharpMask: "e-usm",
+  gradient: "e-gradient",
 
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#named-transformation-n
-   */
-  named: "n",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#progressive-image-pr
-   */
+  // Other flags & finishing
   progressive: "pr",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#lossless-webp-and-png-lo
-   */
   lossless: "lo",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#trim-edges-t
-   */
-  trim: "t",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#image-metadata-md
-   */
-  metadata: "md",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#color-profile-cp
-   */
   colorProfile: "cp",
+  metadata: "md",
+  opacity: "o",
+  trim: "t",
+  zoom: "z",
+  page: "pg",
 
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#default-image-di
-   */
-  defaultImage: "di",
+  // Raw pass-through
+  raw: "raw",
+};
 
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#dpr-dpr
-   */
-  dpr: "dpr",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#sharpen-e-sharpen
-   */
-  effectSharpen: "e-sharpen",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#unsharp-mask-e-usm
-   */
-  effectUSM: "e-usm",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#contrast-stretch-e-contrast
-   */
-  effectContrast: "e-contrast",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#grayscale-e-grayscale
-   */
-  effectGray: "e-grayscale",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations#original-image-orig
-   */
-  original: "orig",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#shadow-e-shadow
-   */
-  effectShadow: "e-shadow",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation#gradient-e-gradient
-   */
-  effectGradient: "e-gradient",
-
-  /**
-   * @link https://docs.imagekit.io/features/image-transformations/conditional-transformations
-   */
-   raw: "raw",
-}
 
 
 export default supportedTransforms
