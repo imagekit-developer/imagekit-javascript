@@ -43,13 +43,13 @@ export const supportedTransforms: { [key: string]: string } = {
 
   // AI & advanced effects
   grayscale: "e-grayscale",
-  aiBGRemoveExternal: "e-removedotbg",
   aiUpscale: "e-upscale",
   aiRetouch: "e-retouch",
   aiVariation: "e-genvar",
   aiDropShadow: "e-dropshadow",
   aiChangeBackground: "e-changebg",
   aiRemoveBackground: "e-bgremove",
+  aiRemoveBackgroundExternal: "e-removedotbg",
   contrastStretch: "e-contrast",
   shadow: "e-shadow",
   sharpen: "e-sharpen",

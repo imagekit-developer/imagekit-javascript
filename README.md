@@ -150,14 +150,14 @@ https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=h-300%2Cw-
 
 The `.url()` method accepts the following parameters
 
-| Option           | Description                    |
-| :----------------| :----------------------------- |
-| urlEndpoint      | Optional. The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/endpoint/ |
-| path             | Conditional. This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation. |
-| src              | Conditional. This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation. |
-| transformation   | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
-| transformationPostion | Optional. The default value is `path`, which places the transformation string as a path parameter in the URL. It can also be specified as `query`, which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter. |
-| queryParameters  | Optional. These are the other query parameters that you want to add to the final URL. These can be any query parameters and are not necessarily related to ImageKit. Especially useful if you want to add some versioning parameters to your URLs. |
+| Option                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| urlEndpoint           | Optional. The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/endpoint/                                                                                                                                                                                                                                                                                                                                                               |
+| path                  | Conditional. This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                                                                                                               |
+| src                   | Conditional. This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                                          |
+| transformation        | Optional. An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
+| transformationPostion | Optional. The default value is `path`, which places the transformation string as a path parameter in the URL. It can also be specified as `query`, which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                   |
+| queryParameters       | Optional. These are the other query parameters that you want to add to the final URL. These can be any query parameters and are not necessarily related to ImageKit. Especially useful if you want to add some versioning parameters to your URLs.                                                                                                                                                                                                                                                                                                                                       |
 
 #### Examples of generating URLs
 
@@ -294,40 +294,55 @@ See the complete list of transformations supported in ImageKit [here](https://do
 
 If you want to generate transformations in your application and add them to the URL as it is, use the `raw` parameter.
 
-| Supported Transformation Name | Translates to parameter |
-|-------------------------------|-------------------------|
-| height | h |
-| width | w |
-| aspectRatio | ar |
-| quality | q |
-| crop | c |
-| cropMode | cm |
-| x | x |
-| y | y |
-| focus | fo |
-| format | f |
-| radius | r |
-| background | bg |
-| border | b |
-| rotation | rt |
-| blur | bl |
-| named | n |
-| progressive | pr |
-| lossless | lo |
-| trim | t |
-| metadata | md |
-| colorProfile | cp |
-| defaultImage | di |
-| dpr | dpr |
-| effectSharpen | e-sharpen |
-| effectUSM | e-usm |
-| effectContrast | e-contrast |
-| effectGray | e-grayscale |
-| effectShadow | e-shadow |
-| effectGradient | e-gradient |
-| original | orig |
-| raw | The string provided in raw will be added in the URL as it is. |
-
+| Supported Transformation Name | Translates to parameter                                       |
+| ----------------------------- | ------------------------------------------------------------- |
+| width                         | w                                                             |
+| height                        | h                                                             |
+| aspectRatio                   | ar                                                            |
+| quality                       | q                                                             |
+| aiRemoveBackground            | e-bgremove (ImageKit powered)                                 |
+| aiRemoveBackgroundExternal    | e-removedotbg (Using third party)                             |
+| aiUpscale                     | e-upscale                                                     |
+| aiRetouch                     | e-retouch                                                     |
+| aiVariation                   | e-genvar                                                      |
+| aiDropShadow                  | e-dropshadow                                                  |
+| aiChangeBackground            | e-changebg                                                    |
+| crop                          | c                                                             |
+| cropMode                      | cm                                                            |
+| x                             | x                                                             |
+| y                             | y                                                             |
+| focus                         | fo                                                            |
+| format                        | f                                                             |
+| radius                        | r                                                             |
+| background                    | bg                                                            |
+| border                        | b                                                             |
+| rotation                      | rt                                                            |
+| blur                          | bl                                                            |
+| named                         | n                                                             |
+| dpr                           | dpr                                                           |
+| progressive                   | pr                                                            |
+| lossless                      | lo                                                            |
+| trim                          | t                                                             |
+| metadata                      | md                                                            |
+| colorProfile                  | cp                                                            |
+| defaultImage                  | di                                                            |
+| original                      | orig                                                          |
+| videoCodec                    | vc                                                            |
+| audioCodec                    | ac                                                            |
+| grayscale                     | e-grayscale                                                   |
+| contrastStretch               | e-contrast                                                    |
+| shadow                        | e-shadow                                                      |
+| sharpen                       | e-sharpen                                                     |
+| unsharpMask                   | e-usm                                                         |
+| gradient                      | e-gradient                                                    |
+| opacity                       | o                                                             |
+| zoom                          | z                                                             |
+| page                          | pg                                                             |
+| startOffset                   | so                                                            |
+| endOffset                     | eo                                                            |
+| duration                      | du                                                            |
+| streamingResolutions          | sr                                                            |
+| raw                           | The string provided in raw will be added in the URL as it is. |
 
 ### File Upload
 

@@ -374,6 +374,204 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
+    it('gradient with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                gradient: "ld-top_from-green_to-00FF0010_sp-1"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient-ld-top_from-green_to-00FF0010_sp-1/test_path1.jpg`);
+    });
+
+    it('gradient with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                gradient: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
+    });
+
+    it('gradient with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                gradient: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
+    });
+
+    it('aiDropShadow with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiDropShadow: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
+    });
+
+    it('aiDropShadow with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiDropShadow: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
+    });
+
+    it('aiDropShadow with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiDropShadow: "az-45"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow-az-45/test_path1.jpg`);
+    });
+
+    it('shadow with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                shadow: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
+    });
+
+    it('shadow with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                shadow: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
+    });
+
+    it('shadow with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                shadow: "bl-15_st-40_x-10_y-N5"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
+    });
+
+    it('sharpen with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                sharpen: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
+    });
+
+    it('sharpen with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                sharpen: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
+    });
+
+    it('sharpen with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                sharpen: 10
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen-10/test_path1.jpg`);
+    });
+
+    it('unsharpMask with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                unsharpMask: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
+    });
+
+    it('unsharpMask with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                unsharpMask: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
+    });
+
+    it('unsharpMask with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                unsharpMask: "2-2-0.8-0.024"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm-2-2-0.8-0.024/test_path1.jpg`);
+    });
+
+    it('trim with true value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                trim: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
+    });
+
+    it('trim with empty string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                trim: ""
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
+    });
+
+    it('trim with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                trim: 5
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-5/test_path1.jpg`);
+    });
+
     it('All combined', function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
@@ -399,20 +597,39 @@ describe("URL generation", function () {
                 colorProfile: true,
                 defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
                 dpr: 3,
-                effectSharpen: 10,
-                effectUSM: "2-2-0.8-0.024",
-                effectContrast: true,
-                effectGray: true,
-                effectShadow: 'bl-15_st-40_x-10_y-N5',
-                effectGradient: 'from-red_to-white',
+                x: 10,
+                y: 20,
+                xCenter: 30,
+                yCenter: 40,
+                flip: "h",
+                opacity: 0.8,
+                zoom: 2,
+                // Video transformations
+                videoCodec: "h264",
+                audioCodec: "aac",
+                startOffset: 5,
+                endOffset: 15,
+                duration: 10,
+                streamingResolutions: ["1440", "1080"],
+                // AI transformations
+                grayscale: true,
+                aiUpscale: true,
+                aiRetouch: true,
+                aiVariation: true,
+                aiDropShadow: true,
+                aiChangeBackground: "prompt-car",
+                aiRemoveBackground: true,
+                contrastStretch: true,
+                shadow: 'bl-15_st-40_x-10_y-N5',
+                sharpen: 10,
+                unsharpMask: "2-2-0.8-0.024",
+                gradient: 'from-red_to-white',
                 original: true,
                 page: "2_4",
                 raw: "h-200,w-300,l-image,i-logo.png,l-end"
             }]
         })
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast,e-grayscale,e-shadow-bl-15_st-40_x-10_y-N5,e-gradient-from-red_to-white,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,x-10,y-20,xc-30,yc-40,fl-h,o-0.8,z-2,vc-h264,ac-aac,so-5,eo-15,du-10,sr-1440_1080,e-grayscale,e-upscale,e-retouch,e-genvar,e-dropshadow,e-changebg-prompt-car,e-bgremove,e-contrast,e-shadow-bl-15_st-40_x-10_y-N5,e-sharpen-10,e-usm-2-2-0.8-0.024,e-gradient-from-red_to-white,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
     });
 });
-
-

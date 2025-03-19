@@ -1,5 +1,7 @@
 export type TransformationPosition = "path" | "query";
 
+type StreamingResolution = "240" | "360" | "480" | "720" | "1080" | "1440" | "2160";
+
 /**
  * The SDK provides easy to use names for transformations. These names are converted to the corresponding transformation string before being added to the URL.
  * SDKs are updated regularly to support new transformations. If you want to use a transformation that is not supported by the SDK, you can use the `raw` parameter to pass the transformation string directly.
@@ -110,26 +112,29 @@ export interface Transformation {
     yCenter?: number | string;
 
     /**
-     * Output format for images or videos, e.g., `"jpg"`, `"png"`, `"webp"`, `"mp4"`, `"auto"`.
-     * ImageKit will automatically determine the format based on device support even if you do not specify it.
+     * Output format for images or videos, e.g., `"jpg"`, `"png"`, `"webp"`, `"mp4"`, `"auto"`. You can also pass `orig` which works only for images and will return the image in the original format.
+     * 
+     * ImageKit will automatically deliver images and videos in best possible format based on the device support unless you disable it from the dashboard settings or override it using the `format` parameter.
      * 
      * {@link https://imagekit.io/docs/image-optimization#format---f}
+     * 
+     * {@link https://imagekit.io/docs/video-optimization#format---f}}
      */
-    format?: string;
+    format?: "auto" | "webp" | "jpg" | "jpeg" | "png" | "gif" | "svg" | "mp4" | "webm" | "avif" | "orig";
 
     /**
-     * Video codec, e.g., `"h264"`, `"vp9"`, `"av1"`.
+     * Video codec, e.g., `"h264"`, `"vp9"`, `"av1"` or `"none"`.
      * 
      * {@link https://imagekit.io/docs/video-optimization#video-codec---vc}
      */
-    videoCodec?: string;
+    videoCodec?: "h264" | "vp9" | "av1" | "none";
 
     /**
-     * Audio codec, e.g., `"aac"`, `"opus"`.
+     * Audio codec, e.g., `"aac"`, `"opus"` or `"none"`.
      * 
      * {@link https://imagekit.io/docs/video-optimization#audio-codec---ac}
      */
-    audioCodec?: string;
+    audioCodec?: "aac" | "opus" | "none";
 
     /**
      * Corner radius for rounded corners (e.g., `20`) or `"max"` for circular/oval shapes.
@@ -208,12 +213,11 @@ export interface Transformation {
     duration?: number | string;
 
     /**
-     * Resolutions for adaptive bitrate streaming (videos).
-     * e.g., `240_360_480_720_1080` will generate 5 representations and manifest. 
+     * Provide an array of resolutions (e.g. `["240", "360", "480", "720", "1080"]`).
      * 
      * {@link https://imagekit.io/docs/adaptive-bitrate-streaming}
      */
-    streamingResolutions?: string;
+    streamingResolutions?: StreamingResolution[];
 
     /**
      * Enable grayscale effect for images.
@@ -221,13 +225,6 @@ export interface Transformation {
      * {@link https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale}
      */
     grayscale?: true;
-
-    /**
-     * Use third-party background removal. Use `removeBackground` - ImageKit's in-house background removal which is 90% cheaper.
-     * 
-     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg}
-     */
-    aiBGRemoveExternal?: true
 
     /**
      * Upscale images beyond their original dimensions with AI.
@@ -252,11 +249,13 @@ export interface Transformation {
 
     /**
      * Add an AI-based drop shadow around a foreground object on a transparent or removed background.
-     * You can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
+     * Optionally, you can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
+     * 
+     * Pass `true` for default drop shadow or a string for custom drop shadow.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow}
      */
-    aiDropShadow?: string
+    aiDropShadow?: true | string
 
     /**
      * Change background using AI. Provide a prompt or base64-encoded prompt. e.g. `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
@@ -273,6 +272,13 @@ export interface Transformation {
     aiRemoveBackground?: true
 
     /**
+     * Use third-party background removal. Use `aiRemoveBackground` - ImageKit's in-house background removal which is 90% cheaper.
+     * 
+     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg}
+     */
+    aiRemoveBackgroundExternal?: true
+
+    /**
      * Auto-enhance contrast for an image (contrast stretch).
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast}
@@ -282,12 +288,16 @@ export interface Transformation {
     /**
      * This adds a shadow under solid objects in an input image with a transparent background. Check `eDropshadow` for AI-based shadows.
      * 
+     * Pass `true` for default shadow or a string for custom shadow.
+     * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow}
      */
-    shadow?: string
+    shadow?: true | string
 
     /**
      * It is used to sharpen the input image. It is useful when highlighting the edges and finer details within an image.
+     * 
+     * Pass `true` for default sharpening or a number for custom sharpening.
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen}
      */
@@ -296,16 +306,20 @@ export interface Transformation {
     /**
      * Unsharp Masking (USM) is an image sharpening technique. This transform allows you to apply and control unsharp masks on your images.
      * 
+     * Pass `true` for default unsharp mask or a string for custom unsharp mask.
+     * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm}
      */
-    unsharpMask?: string;
+    unsharpMask?: true | string;
 
     /**
      * The gradient formed is a linear gradient containing two colors, and it can be customized.
      * 
+     * Pass `true` for default gradient or a string for custom gradient.
+     * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient}
      */
-    gradient?: string;
+    gradient?: true | string;
 
     /**
      * Used to specify whether the output JPEG image must be rendered progressively. In progressive loading, the output image renders as a low-quality pixelated full image, which, over time, keeps on adding more pixels and information to the image.  This helps you maintain a fast perceived load time.

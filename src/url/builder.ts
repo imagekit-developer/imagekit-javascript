@@ -103,7 +103,7 @@ function constructTransformationString(transformation: Transformation[] | undefi
         }
       } else if (
         ["e-sharpen", "e-shadow", "e-gradient", "e-usm", "e-dropshadow"].includes(transformKey) &&
-        value.toString().trim() === ""
+        (value.toString().trim() === "" || value === true || value === "true")
       ) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
@@ -112,6 +112,13 @@ function constructTransformationString(transformation: Transformation[] | undefi
         if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
           value = value.replace(/\//g, "@@");
+        }
+        if (transformKey === "sr" && Array.isArray(value)) {
+          value = value.join("_");
+        }
+        // Special case for trim with empty string - should be treated as true
+        if (transformKey === "t" && value.toString().trim() === "") {
+          value = "true";
         }
         parsedTransformStep.push([transformKey, value].join(transformationUtils.getTransformKeyValueDelimiter()));
       }
