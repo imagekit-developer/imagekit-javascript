@@ -23,7 +23,7 @@ Lightweight JavaScript SDK for generating optimized URLs for images and videos, 
 - [File Upload](#file-upload)
   - [Basic Upload Example](#basic-upload-example)
   - [Promise-based Upload Example](#promise-based-upload-example)
-- [Demo Application](#demo-application)
+- [Test Examples](#test-examples)
 - [Changelog](#changelog)
 
 ## Installation
@@ -336,7 +336,7 @@ imagekit.upload({
 });
 ```
 
-## Demo Application
+## Test Examples
 
 For a quick demonstration of the SDK features, refer to our test examples:
 - URL Generation examples can be found in [test/url-generation.js](./test/url-generation.js)
