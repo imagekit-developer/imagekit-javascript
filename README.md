@@ -2,6 +2,13 @@
 
 # ImageKit.io Javascript SDK
 
+## Table of Contents
+- [Changelog](#changelog)
+- [Installation](#installation)
+- [Initialization](#initialization)
+- [Demo Application](#demo-application)
+- [Usage](#usage)
+
 ![gzip size](https://img.badgesize.io/https://unpkg.com/imagekit-javascript/dist/imagekit.min.js?compression=gzip&label=gzip)
 ![brotli size](https://img.badgesize.io/https://unpkg.com/imagekit-javascript/dist/imagekit.min.js?compression=brotli&label=brotli)
 ![Node CI](https://github.com/imagekit-developer/imagekit-javascript/workflows/Node%20CI/badge.svg)
@@ -15,16 +22,7 @@ Javascript SDK for [ImageKit](https://imagekit.io/) provides URL generation for 
 ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io/features/imagekit-infrastructure). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
 ## Changelog
-### SDK Version 3.0.0
-#### Breaking changes
-**1. Overlay syntax update**
-* In version 3.0.0, we've removed the old overlay syntax parameters for transformations, such as `oi`, `ot`, `obg`, and [more](https://docs.imagekit.io/features/image-transformations/overlay). These parameters are deprecated and will start returning errors when used in URLs. Please migrate to the new layers syntax that supports overlay nesting, provides better positional control, and allows more transformations at the layer level. You can start with [examples](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#examples) to learn quickly.
-* You can migrate to the new layers syntax using the `raw` transformation parameter.
-### SDK Version 2.0.0
-#### Breaking changes
-**1. Authentication Process Update:**
-* Previously, when using client side file upload, the SDK required the `publicKey` and `authenticationEndpoint` parameters during SDK initialization to fetch security parameters (`signature`, `token`, and `expire`).
-* In version 2.0.0, we've updated the authentication process for the SDK. As a user of the SDK, you are now responsible for generating the security parameters (`signature`, `token`, and `expire`) yourself. This means you no longer need to provide the `authenticationEndpoint`. When using the SDK's upload method, make sure to pass these security parameters explicitly along with other [upload options](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload). For guidance on generating these security parameters, please refer to the documentation available [here](https://docs.imagekit.io/api-reference/upload-file-api/client-side-file-upload#signature-generation-for-client-side-file-upload).
+For a detailed history of changes, please refer to [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation
 
@@ -288,7 +286,48 @@ var imageURL = imagekit.url({
 https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-iw_div_4,h-ih_div_2,b-cw_mul_0.05_yellow
 ```
 
-#### List of supported transformations
+### Key Advanced Transformations
+
+#### Background Removal
+
+```js
+var imageURL = imagekit.url({
+  path: "/sample-image.jpg",
+  transformation: [{
+    aiRemoveBackground: true
+  }]
+});
+console.log("Background Removed Image URL:", imageURL);
+// Expected: https://ik.imagekit.io/your_imagekit_id/tr:e-bgremove/sample-image.jpg
+```
+
+#### Upscaling
+
+```js
+var upscaledURL = imagekit.url({
+  path: "/sample-image.jpg",
+  transformation: [{
+    aiUpscale: true
+  }]
+});
+console.log("Upscaled Image URL:", upscaledURL);
+// Expected: https://ik.imagekit.io/your_imagekit_id/tr:e-upscale/sample-image.jpg
+```
+
+#### AI Drop Shadow
+
+```js
+var dropShadowURL = imagekit.url({
+  path: "/sample-image.jpg",
+  transformation: [{
+    aiDropShadow: "az-45"
+  }]
+});
+console.log("Image URL with Drop Shadow:", dropShadowURL);
+// Expected: https://ik.imagekit.io/your_imagekit_id/tr:e-dropshadow-az-45/sample-image.jpg
+```
+
+### List of supported transformations
 
 See the complete list of transformations supported in ImageKit [here](https://docs.imagekit.io/features/image-transformations). The SDK gives a name to each transformation parameter e.g. `height` for `h` and `width` for `w` parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
 
