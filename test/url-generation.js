@@ -374,6 +374,39 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
+    it('ai remove background external', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackgroundExternal: true
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
+    });
+
+    it('ai remove background external true as string', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackgroundExternal: "true"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
+    });
+
+    it('ai remove background external other than true', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aiRemoveBackgroundExternal: "false"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
+    });
+
     it('gradient with string value', function () {
         const url = imagekit.url({
             path: "/test_path1.jpg",
@@ -570,6 +603,268 @@ describe("URL generation", function () {
         })
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-5/test_path1.jpg`);
+    });
+
+    // Width parameter tests
+    it('width with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                width: 400
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
+    });
+
+    it('width with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                width: "400"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
+    });
+
+    it('width with arithmetic expression', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                width: "iw_div_2"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-iw_div_2/test_path1.jpg`);
+    });
+
+    // Height parameter tests
+    it('height with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                height: 300
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
+    });
+
+    it('height with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                height: "300"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
+    });
+
+    it('height with arithmetic expression', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                height: "ih_mul_0.5"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-ih_mul_0.5/test_path1.jpg`);
+    });
+
+    // AspectRatio parameter tests
+    it('aspectRatio with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aspectRatio: "4:3"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4:3/test_path1.jpg`);
+    });
+
+    it('aspectRatio with alternate format', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aspectRatio: "4_3"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4_3/test_path1.jpg`);
+    });
+
+    it('aspectRatio with expression', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                aspectRatio: "iar_div_2"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-iar_div_2/test_path1.jpg`);
+    });
+
+    // Background parameter tests
+    it('background with solid color', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                background: "FF0000"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-FF0000/test_path1.jpg`);
+    });
+
+    it('background with blurred option', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                background: "blurred"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-blurred/test_path1.jpg`);
+    });
+
+    it('background with genfill option', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                background: "genfill"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-genfill/test_path1.jpg`);
+    });
+
+    // Crop parameter tests
+    it('crop with force value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                crop: "force"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:c-force/test_path1.jpg`);
+    });
+
+    it('crop with at_max value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                crop: "at_max"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:c-at_max/test_path1.jpg`);
+    });
+
+    // CropMode parameter tests
+    it('cropMode with pad_resize value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                cropMode: "pad_resize"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:cm-pad_resize/test_path1.jpg`);
+    });
+
+    it('cropMode with extract value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                cropMode: "extract"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:cm-extract/test_path1.jpg`);
+    });
+
+    // Focus parameter tests
+    it('focus with string value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                focus: "center"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:fo-center/test_path1.jpg`);
+    });
+
+    it('focus with face detection', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                focus: "face"
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:fo-face/test_path1.jpg`);
+    });
+
+    // Quality parameter test
+    it('quality with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                quality: 80
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:q-80/test_path1.jpg`);
+    });
+
+    // Coordinate parameters tests
+    it('x with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                x: 10
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:x-10/test_path1.jpg`);
+    });
+
+    it('y with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                y: 20
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:y-20/test_path1.jpg`);
+    });
+
+    it('xCenter with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                xCenter: 30
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:xc-30/test_path1.jpg`);
+    });
+
+    it('yCenter with number value', function () {
+        const url = imagekit.url({
+            path: "/test_path1.jpg",
+            transformation: [{
+                yCenter: 40
+            }]
+        })
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:yc-40/test_path1.jpg`);
     });
 
     it('All combined', function () {
