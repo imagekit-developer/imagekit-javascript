@@ -8,6 +8,7 @@ const path = require('path');
 const pugTemplatePath = path.join(__dirname, "../views/index.pug");
 
 const app = express();
+app.use(express.static('static'))
 app.use(cors());
 app.set('view engine', 'pug');
 

@@ -1,5 +1,6 @@
 html
     body
+        img(id="my-image")
         h3 Imagekit Demo
         form(action='#' onSubmit='upload(event)')
             input(type='file' id='file1')
@@ -18,7 +19,8 @@ html
                     p
                         img(src="")    
 
-        script(type='text/javascript' src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js")
+        // Copy paste manually from dist
+        script(type='text/javascript' src="./imagekit.min.js")
         script.
             try {
                 var imagekit = new ImageKit({
@@ -26,7 +28,19 @@ html
                     urlEndpoint: "!{urlEndpoint}",
                 });
 
+
                 window.imagekit = imagekit;
+
+                var url = imagekit.url({
+                    src: "https://ik.imagekit.io/demo/default-image.jpg",
+                    transformation: [{
+                        height: 100
+                    }]
+                })
+
+                var img = document.getElementById("my-image");
+                console.log(url);
+                img.src = url;
 
 
                 function upload(e) {
