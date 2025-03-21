@@ -3,385 +3,382 @@ export type TransformationPosition = "path" | "query";
 export type StreamingResolution = "240" | "360" | "480" | "720" | "1080" | "1440" | "2160";
 
 /**
- * The SDK provides easy to use names for transformations. These names are converted to the corresponding transformation string before being added to the URL.
+ * The SDK provides easy-to-use names for transformations. These names are converted to the corresponding transformation string before being added to the URL.
  * SDKs are updated regularly to support new transformations. If you want to use a transformation that is not supported by the SDK, you can use the `raw` parameter to pass the transformation string directly.
  * 
- * {@link https://imagekit.io/docs/transformations}
+ * {@link https://imagekit.io/docs/transformations|Transformations Documentation}
  */
 export interface Transformation {
     /**
-     * The width of the output. If a value between 0 and 1 is used, it’s treated
-     * as a percentage (e.g., `0.4` -> 40% of original width). You can also supply
-     * arithmetic expressions (e.g., `"iw_div_2"`).
+     * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated as a percentage
+     * (e.g., `0.4` represents 40% of the original width). You can also supply arithmetic expressions (e.g., `iw_div_2`).
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#width---w}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#width---w|Image Resize and Crop - Width}
      */
     width?: number | string;
 
     /**
-     * The height of the output. If a value between 0 and 1 is used, it’s treated
-     * as a percentage (e.g., `0.5` -> 50% of original height). You can also supply
-     * arithmetic expressions (e.g., `"ih_mul_0.5"`).
+     * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated as a percentage
+     * (e.g., `0.5` represents 50% of the original height). You can also supply arithmetic expressions (e.g., `ih_mul_0.5`).
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#height---h}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#height---h|Image Resize and Crop - Height}
      */
     height?: number | string;
 
     /**
-     * Specifies the aspect ratio for the output, e.g., `"ar-4-3"`.
-     * Typically used with either width or height (not both).
-     * Example usage: `aspectRatio = "4:3"` or `"4_3"` or an expression like `"iar_div_2"`.
+     * Specifies the aspect ratio for the output, e.g., "ar-4-3". Typically used with either width or height (but not both).
+     * For example: aspectRatio = `4:3`, `4_3`, or an expression like `iar_div_2`.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar|Image Resize and Crop - Aspect Ratio}
      */
     aspectRatio?: number | string;
 
     /**
-     * Specify the background that can be used along with some cropping strategies while resizing an image:
-     * - A solid color: `"red"`, `"F3F3F3"`, `"AAFF0010"`.
+     * Specifies the background to be used in conjunction with certain cropping strategies when resizing an image.
+     * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`.
      * 
-     *   {@link https://imagekit.io/docs/effects-and-enhancements#solid-color-background}
+     *   {@link https://imagekit.io/docs/effects-and-enhancements#solid-color-background|Effects and Enhancements - Solid Color Background}
      * 
-     * - A blurred background: `"blurred"`, `"blurred_25_N15"`, etc.
+     * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc.
      * 
-     *   {@link https://imagekit.io/docs/effects-and-enhancements#blurred-background}
+     *   {@link https://imagekit.io/docs/effects-and-enhancements#blurred-background|Effects and Enhancements - Blurred Background}
      * 
-     * - Expand the image boundaries using generative fill: `genfill`. Optionally control the background scene by passing text prompt: `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
+     * - Expand the image boundaries using generative fill: `genfill`. Optionally, control the background scene by passing a text prompt:
+     *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
      *   
-     *   {@link https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill}
+     *   {@link https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill|AI Transformations - Generative Fill Background}
      */
     background?: string;
 
     /**
-     * Add a border to the output media. Accepts `<border-width>_<hex-code>`,
-     * e.g. `"5_FFF000"` (5px yellow border), or an expression like `"ih_div_20_FF00FF"`.
+     * Adds a border to the output media. Accepts a string in the format `<border-width>_<hex-code>`
+     * (e.g., `5_FFF000` for a 5px yellow border), or an expression like `ih_div_20_FF00FF`.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#border---b}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#border---b|Effects and Enhancements - Border}
      */
     border?: string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus|Image Resize and Crop - Crop Modes}
      */
     crop?: "force" | "at_max" | "at_max_enlarge" | "at_least" | "maintain_ratio";
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus|Image Resize and Crop - Crop Modes}
      */
     cropMode?: "pad_resize" | "extract" | "pad_extract";
 
     /**
-     * Possible values 0.1  to 5 or `auto` for automatic DPR calculation.
+     * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR) calculation.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr|Image Resize and Crop - DPR}
      */
     dpr?: number
 
     /**
-     * This parameter can be used along with pad resize, maintain ratio, or extract crop to change the behavior of padding or cropping
+     * This parameter can be used with pad resize, maintain ratio, or extract crop to modify the padding or cropping behavior.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#focus---fo}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#focus---fo|Image Resize and Crop - Focus}
      */
     focus?: string;
 
     /**
-     * Used to specify the quality of the output image for lossy formats like JPEG, WebP, and AVIF.  A large quality number indicates a larger output image size with high quality. A small quality number indicates a smaller output image size with lower quality.
+     * Specifies the quality of the output image for lossy formats such as JPEG, WebP, and AVIF.
+     * A higher quality value results in a larger file size with better quality, while a lower value produces a smaller file size with reduced quality.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#quality---q}
+     * {@link https://imagekit.io/docs/image-optimization#quality---q|Image Optimization - Quality}
      */
     quality?: number;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
      */
     x?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
      */
     xCenter?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
      */
     y?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
      */
     yCenter?: number | string;
 
     /**
-     * Output format for images or videos, e.g., `"jpg"`, `"png"`, `"webp"`, `"mp4"`, `"auto"`. You can also pass `orig` which works only for images and will return the image in the original format.
+     * Specifies the output format for images or videos, e.g., `jpg`, `png`, `webp`, `mp4`, or `auto`.
+     * You can also pass `orig` for images to return the original format.
+     * ImageKit automatically delivers images and videos in the optimal format based on device support unless overridden by the dashboard settings or the format parameter.
      * 
-     * ImageKit will automatically deliver images and videos in best possible format based on the device support unless you disable it from the dashboard settings or override it using the `format` parameter.
-     * 
-     * {@link https://imagekit.io/docs/image-optimization#format---f}
-     * 
-     * {@link https://imagekit.io/docs/video-optimization#format---f}}
+     * {@link https://imagekit.io/docs/image-optimization#format---f|Image Optimization - Format} & {@link https://imagekit.io/docs/video-optimization#format---f|Video Optimization - Format}
      */
     format?: "auto" | "webp" | "jpg" | "jpeg" | "png" | "gif" | "svg" | "mp4" | "webm" | "avif" | "orig";
 
     /**
-     * Video codec, e.g., `"h264"`, `"vp9"`, `"av1"` or `"none"`.
+     * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`.
      * 
-     * {@link https://imagekit.io/docs/video-optimization#video-codec---vc}
+     * {@link https://imagekit.io/docs/video-optimization#video-codec---vc|Video Optimization - Video Codec}
      */
     videoCodec?: "h264" | "vp9" | "av1" | "none";
 
     /**
-     * Audio codec, e.g., `"aac"`, `"opus"` or `"none"`.
+     * Specifies the audio codec, e.g., `aac`, `opus`, or `none`.
      * 
-     * {@link https://imagekit.io/docs/video-optimization#audio-codec---ac}
+     * {@link https://imagekit.io/docs/video-optimization#audio-codec---ac|Video Optimization - Audio Codec}
      */
     audioCodec?: "aac" | "opus" | "none";
 
     /**
-     * Corner radius for rounded corners (e.g., `20`) or `"max"` for circular/oval shapes.
+     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular/oval shapes.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#radius---r}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#radius---r|Effects and Enhancements - Radius}
      */
     radius?: number | "max";
 
     /**
-     * Rotation in degrees. Positive values rotate clockwise; you can
-     * also use e.g. `"N40"` for counterclockwise or `"auto"` to read EXIF data.
-     * For videos only 0 , 90 , 180 , 270 and 360 values are supported.
+     * Specifies the rotation angle in degrees. Positive values rotate the image clockwise; you can also use, for example, `N40` for counterclockwise rotation
+     * or `auto` to use the orientation specified in the image's EXIF data.
+     * For videos, only the following values are supported: 0, 90, 180, 270, or 360.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#rotate---rt}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#rotate---rt|Effects and Enhancements - Rotate}
      */
     rotation?: number | string;
 
     /**
-     * Gaussian blur level. Ranges 1–100 or an expression like `"bl-10"`. Possible values include integers between 1 and 100.
+     * Specifies the Gaussian blur level. Accepts an integer value between 1 and 100, or an expression like `bl-10`.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#blur---bl}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#blur---bl|Effects and Enhancements - Blur}
      */
     blur?: number;
 
     /**
-     * {@link https://imagekit.io/docs/transformations#named-transformations}
+     * {@link https://imagekit.io/docs/transformations#named-transformations|Transformations - Named Transformations}
      */
     named?: string;
 
     /**
-     * Fallback image if the resource is not found, e.g., a URL or path.
+     * Specifies a fallback image if the resource is not found, e.g., a URL or file path.
      * 
-     * {@link https://imagekit.io/docs/image-transformation#default-image---di}
+     * {@link https://imagekit.io/docs/image-transformation#default-image---di|Image Transformation - Default Image}
      */
     defaultImage?: string;
 
     /**
-     * It is used to flip/mirror an image horizontally, vertically, or in both directions.
-     * Possible values - h (horizontal), v (vertical), h_v (horizontal and vertical)
+     * Flips or mirrors an image either horizontally, vertically, or both.
+     * Acceptable values: `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#flip---fl}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#flip---fl|Effects and Enhancements - Flip}
      */
     flip?: "h" | "v" | "h_v" | "v_h";
 
     /**
-     * Whether to serve the original file without any transformations if `true`.
+     * If set to true, serves the original file without applying any transformations.
      * 
-     * {@link https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true}
+     * {@link https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true|Core Delivery Features - Deliver Original File As Is}
      */
     original?: boolean;
 
     /**
-     * Start offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`. 
-     * Also supports arithmetic expressions.
+     * Specifies the start offset (in seconds) for trimming videos, e.g., `5` or `10.5`.
+     * Arithmetic expressions are also supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#start-offset---so}
+     * {@link https://imagekit.io/docs/trim-videos#start-offset---so|Trim Videos - Start Offset}
      */
     startOffset?: number | string;
 
     /**
-     * End offset (in seconds) for trimming videos. e.g., `5` or `"10.5"`.
-     * Usually used with `startOffset` to define a time window. 
-     * Also supports arithmetic expressions.
+     * Specifies the end offset (in seconds) for trimming videos, e.g., `5` or `10.5`.
+     * Typically used with startOffset to define a time window. Arithmetic expressions are supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#end-offset---eo}
+     * {@link https://imagekit.io/docs/trim-videos#end-offset---eo|Trim Videos - End Offset}
      */
     endOffset?: number | string;
 
     /**
-     * Duration (in seconds) for trimming videos. e.g., `5` or `"10.5"`.
-     * Typically used with `startOffset` to specify length from the start point. 
-     * Also supports arithmetic expressions.
+     * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`.
+     * Typically used with startOffset to indicate the length from the start offset. Arithmetic expressions are supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#duration---du}
+     * {@link https://imagekit.io/docs/trim-videos#duration---du|Trim Videos - Duration}
      */
     duration?: number | string;
 
     /**
-     * Provide an array of resolutions (e.g. `["240", "360", "480", "720", "1080"]`).
+     * An array of resolutions for adaptive bitrate streaming, e.g., [`240`, `360`, `480`, `720`, `1080`].
      * 
-     * {@link https://imagekit.io/docs/adaptive-bitrate-streaming}
+     * {@link https://imagekit.io/docs/adaptive-bitrate-streaming|Adaptive Bitrate Streaming}
      */
     streamingResolutions?: StreamingResolution[];
 
     /**
-     * Enable grayscale effect for images.
+     * Enables a grayscale effect for images.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale|Effects and Enhancements - Grayscale}
      */
     grayscale?: true;
 
     /**
-     * Upscale images beyond their original dimensions with AI.
+     * Upscales images beyond their original dimensions using AI.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#upscale-e-upscale}
+     * {@link https://imagekit.io/docs/ai-transformations#upscale-e-upscale|AI Transformations - Upscale}
      */
     aiUpscale?: true
 
     /**
-     * Retouch (AI-based) for improving faces or product shots.
+     * Performs AI-based retouching to improve faces or product shots.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#retouch-e-retouch}
+     * {@link https://imagekit.io/docs/ai-transformations#retouch-e-retouch|AI Transformations - Retouch}
      */
     aiRetouch?: true
 
     /**
-     * Generate variation of an image using AI. This will generate a new image with slight variations from the original image. The variations include changes in color, texture, and other visual elements. However, the model will try to preserve the structure and essence of the original image.
+     * Generates a variation of an image using AI. This produces a new image with slight variations from the original,
+     * such as changes in color, texture, and other visual elements, while preserving the structure and essence of the original image.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar}
+     * {@link https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar|AI Transformations - Generate Variations}
      */
     aiVariation?: true
 
     /**
-     * Add an AI-based drop shadow around a foreground object on a transparent or removed background.
-     * Optionally, you can control the direction, elevation, and saturation of the light source. E.g. change light direction `az-45`.
+     * Adds an AI-based drop shadow around a foreground object on a transparent or removed background.
+     * Optionally, control the direction, elevation, and saturation of the light source (e.g., `az-45` to change light direction).
+     * Pass true for the default drop shadow, or provide a string for a custom drop shadow.
      * 
-     * Pass `true` for default drop shadow or a string for custom drop shadow.
-     * 
-     * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow}
+     * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow|AI Transformations - Drop Shadow}
      */
     aiDropShadow?: true | string
 
     /**
-     * Change background using AI. Provide a prompt or base64-encoded prompt. e.g. `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
+     * Uses AI to change the background. Provide a text prompt or a base64-encoded prompt,
+     * e.g., `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#change-background-e-changebg}
+     * {@link https://imagekit.io/docs/ai-transformations#change-background-e-changebg|AI Transformations - Change Background}
      */
     aiChangeBackground?: string;
 
     /**
-     * ImageKit’s in-house background removal.
+     * Applies ImageKit’s in-house background removal.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove}
+     * {@link https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove|AI Transformations - Background Removal}
      */
     aiRemoveBackground?: true
 
     /**
-     * Use third-party background removal. Use `aiRemoveBackground` - ImageKit's in-house background removal which is 90% cheaper.
+     * Uses third-party background removal.
+     * Note: It is recommended to use aiRemoveBackground, ImageKit’s in-house solution, which is more cost-effective.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg}
+     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg|AI Transformations - External Background Removal}
      */
     aiRemoveBackgroundExternal?: true
 
     /**
-     * Auto-enhance contrast for an image (contrast stretch).
+     * Automatically enhances the contrast of an image (contrast stretch).
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast|Effects and Enhancements - Contrast Stretch}
      */
     contrastStretch?: true
 
     /**
-     * This adds a shadow under solid objects in an input image with a transparent background. Check `eDropshadow` for AI-based shadows.
+     * Adds a shadow beneath solid objects in an image with a transparent background.
+     * For AI-based drop shadows, refer to aiDropShadow.
+     * Pass true for a default shadow, or provide a string for a custom shadow.
      * 
-     * Pass `true` for default shadow or a string for custom shadow.
-     * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow|Effects and Enhancements - Shadow}
      */
     shadow?: true | string
 
     /**
-     * It is used to sharpen the input image. It is useful when highlighting the edges and finer details within an image.
+     * Sharpens the input image, highlighting edges and finer details.
+     * Pass true for default sharpening, or provide a numeric value for custom sharpening.
      * 
-     * Pass `true` for default sharpening or a number for custom sharpening.
-     * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen|Effects and Enhancements - Sharpen}
      */
     sharpen?: true | number
 
     /**
-     * Unsharp Masking (USM) is an image sharpening technique. This transform allows you to apply and control unsharp masks on your images.
+     * Applies Unsharp Masking (USM), an image sharpening technique.
+     * Pass true for a default unsharp mask, or provide a string for a custom unsharp mask.
      * 
-     * Pass `true` for default unsharp mask or a string for custom unsharp mask.
-     * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm|Effects and Enhancements - Unsharp Mask}
      */
     unsharpMask?: true | string;
 
     /**
-     * The gradient formed is a linear gradient containing two colors, and it can be customized.
+     * Creates a linear gradient with two colors. Pass true for a default gradient, or provide a string for a custom gradient.
      * 
-     * Pass `true` for default gradient or a string for custom gradient.
-     * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient|Effects and Enhancements - Gradient}
      */
     gradient?: true | string;
 
     /**
-     * Used to specify whether the output JPEG image must be rendered progressively. In progressive loading, the output image renders as a low-quality pixelated full image, which, over time, keeps on adding more pixels and information to the image.  This helps you maintain a fast perceived load time.
+     * Specifies whether the output JPEG image should be rendered progressively. Progressive loading begins with a low-quality,
+     * pixelated version of the full image, which gradually improves to provide a faster perceived load time.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#progressive-image---pr}
+     * {@link https://imagekit.io/docs/image-optimization#progressive-image---pr|Image Optimization - Progressive Image}
      */
     progressive?: boolean;
 
     /**
-     * Used to specify whether the output image (if in JPEG or PNG) must be compressed losslessly.
+     * Specifies whether the output image (in JPEG or PNG) should be compressed losslessly.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo}
+     * {@link https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo|Image Optimization - Lossless Compression}
      */
     lossless?: boolean
 
     /**
-     * It specifies whether the output image should contain the color profile initially available with the original image.
+     * Indicates whether the output image should retain the original color profile.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#color-profile---cp}
+     * {@link https://imagekit.io/docs/image-optimization#color-profile---cp|Image Optimization - Color Profile}
      */
     colorProfile?: boolean;
 
     /**
-     * By default, ImageKit removes all metadata as part of automatic image compression. Set this to `true` to preserve metadata.
+     * By default, ImageKit removes all metadata during automatic image compression.
+     * Set this to true to preserve metadata.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#image-metadata---md}
+     * {@link https://imagekit.io/docs/image-optimization#image-metadata---md|Image Optimization - Image Metadata}
      */
     metadata?: boolean;
 
     /**
-     * It is used to specify the opacity level of the output image.
+     * Specifies the opacity level of the output image.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#opacity---o}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#opacity---o|Effects and Enhancements - Opacity}
      */
     opacity?: number;
 
     /**
-     * Useful with images that have a solid or nearly solid background with the object in the center. This parameter trims the background from the image, leaving only the central object in the output image.
+     * Useful for images with a solid or nearly solid background and a central object. This parameter trims the background,
+     * leaving only the central object in the output image.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#trim-edges---t}
+     * {@link https://imagekit.io/docs/effects-and-enhancements#trim-edges---t|Effects and Enhancements - Trim Edges}
      */
     trim?: true | number;
 
     /**
-     * This parameter accepts a number that determines how much to zoom in or out of the cropped area.
-     * It must be used along with fo-face or fo-<object_name>
+     * Accepts a numeric value that determines how much to zoom in or out of the cropped area.
+     * It should be used in conjunction with fo-face or fo-<object_name>.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#zoom---z}
+     * {@link https://imagekit.io/docs/image-resize-and-crop#zoom---z|Image Resize and Crop - Zoom}
      */
     zoom?: number;
 
     /**
-     * Extract specific page/frame from multi-page or layered files (PDF, PSD, AI),
-     * Pick by number e.g., `2`. Or 2nd and 3rd layers combined using `3-4`.
-     * Or pick a layer from PSD by name, e.g., `name-layer-4`.
+     * Extracts a specific page or frame from multi-page or layered files (PDF, PSD, AI).
+     * For example, specify by number (e.g., `2`), a range (e.g., `3-4` for the 2nd and 3rd layers),
+     * or by name (e.g., `name-layer-4` for a PSD layer).
      * 
-     * {@link https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files}
+     * {@link https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files|Vector and Animated Images - Thumbnail Extraction}
      */
     page?: number | string;
 
     /**
-     * Pass any transformation that is not directly supported by the SDK. This transformation is passed as it is in the URL.
+     * Pass any transformation not directly supported by the SDK.
+     * This transformation string is appended to the URL as provided.
      */
     raw?: string;
 
@@ -423,59 +420,67 @@ export interface Transformation {
     effectGradient?: string;
 
     /**
-     * Overlay to be applied on the parent image or video. ImageKit allows you to overlay images, text, videos, subtitles, and solid colors on the parent image or video.
+     * Specifies an overlay to be applied on the parent image or video.
+     * ImageKit supports overlays including images, text, videos, subtitles, and solid colors.
      * 
-     * {@link https://imagekit.io/docs/transformations#overlay-using-layers}
+     * {@link https://imagekit.io/docs/transformations#overlay-using-layers|Transformations - Overlay Using Layers}
      */
     overlay?: Overlay;
 }
 
 export interface OverlayPosition {
     /**
-     * `x` of the top-left corner in the base asset where the layer's top-left corner would be placed. It can also accept arithmetic expressions such as `bw_mul_0.4`, or `bw_sub_cw`.
+     * Specifies the x-coordinate of the top-left corner of the base asset where the overlay's top-left corner will be positioned.
+     * It also accepts arithmetic expressions such as `bw_mul_0.4` or `bw_sub_cw`.
+     * Maps to `lx` in the URL.
      * 
-     * It maps to `lx` in the URL.
-     * 
-     * Learn about [Arthmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     * Learn about [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
      */
     x?: number | string;
 
     /**
-     * `y` of the top-left corner in the base asset where the layer's top-left corner would be placed. It can also accept arithmetic expressions such as `bh_mul_0.4`, or `bh_sub_ch`.
+     * Specifies the y-coordinate of the top-left corner of the base asset where the overlay's top-left corner will be positioned.
+     * It also accepts arithmetic expressions such as `bh_mul_0.4` or `bh_sub_ch`.
+     * Maps to `ly` in the URL.
      * 
-     * It maps to `ly` in the URL.
-     * 
-     * Learn about [Arthmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     * Learn about [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
      */
     y?: number | string;
 
     /**
-     * Position of the overlay in relation to the parent image or video. The overlay can be positioned at the center, top, left, bottom, right, top_left, top_right, bottom_left, or bottom_right of the parent image or video.
-     * 
-     * This maps to `lfo` in the URL.
+     * Specifies the position of the overlay relative to the parent image or video.
+     * Acceptable values: `center`, `top`, `left`, `bottom`, `right`, `top_left`, `top_right`, `bottom_left`, or `bottom_right`.
+     * Maps to `lfo` in the URL.
      */
     focus?: `center` | `top` | `left` | `bottom` | `right` | `top_left` | `top_right` | `bottom_left` | `bottom_right`;
 }
 
 export interface OverlayTiming {
     /**
-     * Start time of the base video in seconds when the layer should appear. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * Specifies the start time (in seconds) for when the overlay should appear on the base video.
+     * Accepts a positive number up to two decimal places (e.g., `20` or `20.50`) and arithmetic expressions such as `bdu_mul_0.4` or `bdu_sub_idu`.
+     * Applies only if the base asset is a video.
      * 
-     * It maps to `lso` in the URL.
+     * Maps to `lso` in the URL.
      */
     start?: number | string;
 
     /**
-     * Duration in seconds during which layer should appear on the base video. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * Specifies the duration (in seconds) during which the overlay should appear on the base video.
+     * Accepts a positive number up to two decimal places (e.g., `20` or `20.50`) and arithmetic expressions such as `bdu_mul_0.4` or `bdu_sub_idu`.
+     * Applies only if the base asset is a video.
      * 
-     * It maps to `ldu` in the URL.
+     * Maps to `ldu` in the URL.
      */
     duration?: number | string;
 
     /**
-     * End time of the base video when this layer should disappear. In case both `end` and `duration` are present, `duration` is ignored. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * Specifies the end time (in seconds) for when the overlay should disappear from the base video.
+     * If both end and duration are provided, duration is ignored.
+     * Accepts a positive number up to two decimal places (e.g., `20` or `20.50`) and arithmetic expressions such as `bdu_mul_0.4` or `bdu_sub_idu`.
+     * Applies only if the base asset is a video.
      * 
-     * It maps to `leo` in the URL.
+     * Maps to `leo` in the URL.
      */
     end?: number | string;
 }
@@ -483,21 +488,24 @@ export interface OverlayTiming {
 
 interface BaseOverlay {
     /**
-     * Positioning relative to parent. Accepts a JSON object with `x` and `y` (or `focus`) properties.
+     * Specifies the overlay's position relative to the parent asset.
+     * Accepts a JSON object with `x` and `y` (or `focus`) properties.
      * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer}
+     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
      */
     position?: OverlayPosition;
 
     /**
-     * Timing (only valid if parent/base is a video). Accepts a JSON object with `start` (lso), `end` (leo), and `duration` (ldu) properties.
+     * Specifies timing information for the overlay (only applicable if the base asset is a video).
+     * Accepts a JSON object with `start` (`lso`), `end` (`leo`), and `duration` (`ldu`) properties.
      * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer}
+     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
      */
     timing?: OverlayTiming;
 
     /**
-     * Array of transformations to be applied to this overlay. Support of supported transformations also depends on the type of base and overlay asset. Refer to the docs below for more information.
+     * An array of transformations to be applied to the overlay.
+     * The supported transformations depend on the type of the base and overlay asset.
      */
     transformations?: Transformation[];
 }
@@ -507,7 +515,8 @@ export interface TextOverlay extends BaseOverlay {
     type: "text";
 
     /**
-     * Text to be displayed in the overlay. The SDK will automatically handle special characters and URL encoding for you.
+     * Specifies the text to be displayed in the overlay.
+     * The SDK automatically handles special characters and URL encoding.
      */
     text: string;
 }
@@ -516,7 +525,7 @@ export interface ImageOverlay extends BaseOverlay {
     type: "image";
 
     /**
-     * Relative path to the image to be used as an overlay.
+     * Specifies the relative path to the image used as an overlay.
      */
     input: string;
 }
@@ -524,7 +533,7 @@ export interface ImageOverlay extends BaseOverlay {
 export interface VideoOverlay extends BaseOverlay {
     type: "video";
     /**
-     * Relative path to the video to be used as an overlay.
+     * Specifies the relative path to the video used as an overlay.
      */
     input: string;
 }
@@ -532,7 +541,7 @@ export interface VideoOverlay extends BaseOverlay {
 export interface SubtitleOverlay extends BaseOverlay {
     type: "subtitle";
     /**
-     * Relative path to the subtitle file to be used as an overlay.
+     * Specifies the relative path to the subtitle file used as an overlay.
      */
     input: string;
 }
@@ -540,7 +549,8 @@ export interface SubtitleOverlay extends BaseOverlay {
 export interface SolidColorOverlay extends BaseOverlay {
     type: "solidColor";
     /**
-     * It is used to specify the color of the block in RGB Hex Code (e.g. `FF0000`), or an RGBA Code (e.g. `FFAABB50`), or a color name (e.g. `red`). If you specify an 8-character background, the last two characters must be a number between `00` and `99`, which indicates the opacity level of the background. `00` represents an opacity level of `0.00`, `01` represents an opacity level of `0.01`, and so on.
+     * Specifies the color of the block using an RGB hex code (e.g., `FF0000`), an RGBA code (e.g., `FFAABB50`), or a color name (e.g., `red`).
+     * If an 8-character value is provided, the last two characters represent the opacity level (from `00` for 0.00 to `99` for 0.99).
      */
     color: string;
 }
