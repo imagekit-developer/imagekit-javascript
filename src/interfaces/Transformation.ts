@@ -13,7 +13,7 @@ export interface Transformation {
      * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated as a percentage
      * (e.g., `0.4` represents 40% of the original width). You can also supply arithmetic expressions (e.g., `iw_div_2`).
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#width---w|Image Resize and Crop - Width}
+     * Width transformation - {@link https://imagekit.io/docs/image-resize-and-crop#width---w|Images} | {@link https://imagekit.io/docs/video-resize-and-crop#width---w|Videos}
      */
     width?: number | string;
 
@@ -21,7 +21,7 @@ export interface Transformation {
      * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated as a percentage
      * (e.g., `0.5` represents 50% of the original height). You can also supply arithmetic expressions (e.g., `ih_mul_0.5`).
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#height---h|Image Resize and Crop - Height}
+     * Height transformation - {@link https://imagekit.io/docs/image-resize-and-crop#height---h|Images} | {@link https://imagekit.io/docs/video-resize-and-crop#height---h|Videos}
      */
     height?: number | string;
 
@@ -43,7 +43,7 @@ export interface Transformation {
      * 
      *   {@link https://imagekit.io/docs/effects-and-enhancements#blurred-background|Effects and Enhancements - Blurred Background}
      * 
-     * - Expand the image boundaries using generative fill: `genfill`. Optionally, control the background scene by passing a text prompt:
+     * - Expand the image boundaries using generative fill: `genfill`. Not supported inside overlay. Optionally, control the background scene by passing a text prompt:
      *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
      *   
      *   {@link https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill|AI Transformations - Generative Fill Background}
@@ -222,14 +222,14 @@ export interface Transformation {
     grayscale?: true;
 
     /**
-     * Upscales images beyond their original dimensions using AI.
+     * Upscales images beyond their original dimensions using AI. Not supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#upscale-e-upscale|AI Transformations - Upscale}
      */
     aiUpscale?: true
 
     /**
-     * Performs AI-based retouching to improve faces or product shots.
+     * Performs AI-based retouching to improve faces or product shots. Not supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#retouch-e-retouch|AI Transformations - Retouch}
      */
@@ -237,7 +237,7 @@ export interface Transformation {
 
     /**
      * Generates a variation of an image using AI. This produces a new image with slight variations from the original,
-     * such as changes in color, texture, and other visual elements, while preserving the structure and essence of the original image.
+     * such as changes in color, texture, and other visual elements, while preserving the structure and essence of the original image. Not supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar|AI Transformations - Generate Variations}
      */
@@ -246,7 +246,8 @@ export interface Transformation {
     /**
      * Adds an AI-based drop shadow around a foreground object on a transparent or removed background.
      * Optionally, control the direction, elevation, and saturation of the light source (e.g., `az-45` to change light direction).
-     * Pass true for the default drop shadow, or provide a string for a custom drop shadow.
+     * Pass `true` for the default drop shadow, or provide a string for a custom drop shadow.
+     * Supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow|AI Transformations - Drop Shadow}
      */
@@ -255,6 +256,7 @@ export interface Transformation {
     /**
      * Uses AI to change the background. Provide a text prompt or a base64-encoded prompt,
      * e.g., `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
+     * Not supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#change-background-e-changebg|AI Transformations - Change Background}
      */
@@ -262,6 +264,7 @@ export interface Transformation {
 
     /**
      * Applies ImageKit’s in-house background removal.
+     * Supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove|AI Transformations - Background Removal}
      */
@@ -270,6 +273,7 @@ export interface Transformation {
     /**
      * Uses third-party background removal.
      * Note: It is recommended to use aiRemoveBackground, ImageKit’s in-house solution, which is more cost-effective.
+     * Supported inside overlay.
      * 
      * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg|AI Transformations - External Background Removal}
      */
@@ -285,7 +289,7 @@ export interface Transformation {
     /**
      * Adds a shadow beneath solid objects in an image with a transparent background.
      * For AI-based drop shadows, refer to aiDropShadow.
-     * Pass true for a default shadow, or provide a string for a custom shadow.
+     * Pass `true` for a default shadow, or provide a string for a custom shadow.
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow|Effects and Enhancements - Shadow}
      */
@@ -293,7 +297,7 @@ export interface Transformation {
 
     /**
      * Sharpens the input image, highlighting edges and finer details.
-     * Pass true for default sharpening, or provide a numeric value for custom sharpening.
+     * Pass `true` for default sharpening, or provide a numeric value for custom sharpening.
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen|Effects and Enhancements - Sharpen}
      */
@@ -301,14 +305,14 @@ export interface Transformation {
 
     /**
      * Applies Unsharp Masking (USM), an image sharpening technique.
-     * Pass true for a default unsharp mask, or provide a string for a custom unsharp mask.
+     * Pass `true` for a default unsharp mask, or provide a string for a custom unsharp mask.
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm|Effects and Enhancements - Unsharp Mask}
      */
     unsharpMask?: true | string;
 
     /**
-     * Creates a linear gradient with two colors. Pass true for a default gradient, or provide a string for a custom gradient.
+     * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a string for a custom gradient.
      * 
      * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient|Effects and Enhancements - Gradient}
      */
@@ -428,6 +432,31 @@ export interface Transformation {
     overlay?: Overlay;
 }
 
+export type Overlay =
+    | TextOverlay
+    | ImageOverlay
+    | VideoOverlay
+    | SubtitleOverlay
+    | SolidColorOverlay
+
+export interface BaseOverlay {
+    /**
+     * Specifies the overlay's position relative to the parent asset.
+     * Accepts a JSON object with `x` and `y` (or `focus`) properties.
+     * 
+     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
+     */
+    position?: OverlayPosition;
+
+    /**
+     * Specifies timing information for the overlay (only applicable if the base asset is a video).
+     * Accepts a JSON object with `start` (`lso`), `end` (`leo`), and `duration` (`ldu`) properties.
+     * 
+     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
+     */
+    timing?: OverlayTiming;
+}
+
 export interface OverlayPosition {
     /**
      * Specifies the x-coordinate of the top-left corner of the base asset where the overlay's top-left corner will be positioned.
@@ -485,32 +514,6 @@ export interface OverlayTiming {
     end?: number | string;
 }
 
-
-interface BaseOverlay {
-    /**
-     * Specifies the overlay's position relative to the parent asset.
-     * Accepts a JSON object with `x` and `y` (or `focus`) properties.
-     * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
-     */
-    position?: OverlayPosition;
-
-    /**
-     * Specifies timing information for the overlay (only applicable if the base asset is a video).
-     * Accepts a JSON object with `start` (`lso`), `end` (`leo`), and `duration` (`ldu`) properties.
-     * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
-     */
-    timing?: OverlayTiming;
-
-    /**
-     * An array of transformations to be applied to the overlay.
-     * The supported transformations depend on the type of the base and overlay asset.
-     */
-    transformations?: Transformation[];
-}
-
-
 export interface TextOverlay extends BaseOverlay {
     type: "text";
 
@@ -519,6 +522,11 @@ export interface TextOverlay extends BaseOverlay {
      * The SDK automatically handles special characters and URL encoding.
      */
     text: string;
+
+    /**
+     * Control styling of the text overlay.
+     */
+    transformations?: TextOverlayTransformation[];
 }
 
 export interface ImageOverlay extends BaseOverlay {
@@ -528,6 +536,13 @@ export interface ImageOverlay extends BaseOverlay {
      * Specifies the relative path to the image used as an overlay.
      */
     input: string;
+
+    /**
+     * List of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
+     * 
+     * {@link https://imagekit.io/docs/add-overlays-on-images#list-of-supported-image-transformations-in-image-layers|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#list-of-transformations-supported-on-image-overlay|Video}
+     */
+    transformations?: Transformation[];
 }
 
 export interface VideoOverlay extends BaseOverlay {
@@ -536,6 +551,13 @@ export interface VideoOverlay extends BaseOverlay {
      * Specifies the relative path to the video used as an overlay.
      */
     input: string;
+
+    /**
+     * List of transformations to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
+     * 
+     * {@link https://imagekit.io/docs/video-transformation|Video Transformations}
+     */
+    transformations?: Transformation[];
 }
 
 export interface SubtitleOverlay extends BaseOverlay {
@@ -544,6 +566,13 @@ export interface SubtitleOverlay extends BaseOverlay {
      * Specifies the relative path to the subtitle file used as an overlay.
      */
     input: string;
+
+    /**
+     * Control styling of the subtitle.
+     * 
+     * {@link https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer|Styling subtitles}
+     */
+    transformations?: SubtitleOverlayTransformation[];
 }
 
 export interface SolidColorOverlay extends BaseOverlay {
@@ -553,11 +582,131 @@ export interface SolidColorOverlay extends BaseOverlay {
      * If an 8-character value is provided, the last two characters represent the opacity level (from `00` for 0.00 to `99` for 0.99).
      */
     color: string;
+
+    /**
+     * Control width and height of the solid color overlay. Supported transformations depend on the base/parent asset.
+     * 
+     * {@link https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay|Video}
+     */
+    transformations?: SolidColorOverlayTransformation[];
 }
 
-export type Overlay =
-    | TextOverlay
-    | ImageOverlay
-    | VideoOverlay
-    | SubtitleOverlay
-    | SolidColorOverlay;
+export type TextOverlayTransformation = {
+    /**
+     * Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically, and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported. Useful when used in conjunction with the `backgroundColor`.
+     */
+    width?: number | string;
+
+    /**
+     * Specifies the font size of the overlaid text. Accepts a numeric value, a percentage, or an arithmetic expression.
+     */
+    fontSize?: number | string;
+
+    /**
+     * Specifies the font family of the overlaid text. Choose from the [supported fonts list](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list) or use a [custom font](https://imagekit.io/docs/add-overlays-on-images#change-font-family-in-text-overlay).
+     */
+    fontFamily?: string;
+
+    /**
+     * Specifies the font color of the overlaid text. Accepts an RGB hex code (e.g., `FF0000`), an RGBA code (e.g., `FFAABB50`), or a color name.
+     */
+    fontColor?: string;
+
+    /**
+     * Specifies the inner alignment of the text when width is more than the text length.
+     * Supported values: `left`, `right`, and `center` (default).
+     */
+    innerAlignment?: "left" | "right" | "center";
+
+    /**
+     * Specifies the padding around the overlaid text.
+     * Can be provided as a single positive integer or multiple values separated by underscores (following CSS shorthand order).
+     * Arithmetic expressions are also accepted.
+     */
+    padding?: number | string;
+
+    /**
+     * Specifies the transparency level of the text overlay. Accepts integers from `1` to `9`.
+     */
+    alpha?: number;
+
+    /**
+     * Specifies the typography style of the text.
+     * Supported values: `b` for bold, `i` for italics, and `b_i` for bold with italics.
+     */
+    typography?: "b" | "i" | "b_i";
+
+    /**
+     * Specifies the background color of the text overlay.
+     * Accepts an RGB hex code, an RGBA code, or a color name.
+     */
+    background?: string;
+
+    /**
+     * Specifies the corner radius of the text overlay.
+     * Set to `max` to achieve a circular or oval shape.
+     */
+    radius?: number | "max";
+
+    /**
+     * Specifies the rotation angle of the text overlay.
+     * Accepts a numeric value for clockwise rotation or a string prefixed with "N" for counter-clockwise rotation.
+     */
+    rotation?: number | string;
+
+    /**
+     * Flip/mirror the text horizontally, vertically, or in both directions.
+     * Acceptable values: `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+     */
+    flip?: "h" | "v" | "h_v" | "v_h";
+
+    /**
+     * Specifies the line height for multi-line text overlays. It will come into effect only if the text wraps over multiple lines.
+     * Accepts either an integer value or an arithmetic expression.
+     */
+    lineHeight?: number | string;
+}
+
+export type SubtitleOverlayTransformation = {
+    /**
+     * Specifies the subtitle background color using a standard color name, an RGB color code (e.g., `FF0000`), or an RGBA color code (e.g., `FFAABB50`).
+     */
+    background?: string;
+    /**
+     * Sets the font size of subtitle text.
+     */
+    fontSize?: number | string;
+    /**
+     * Sets the font family of subtitle text.
+     * Refer to the [supported fonts documented](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list) in the ImageKit transformations guide.
+     */
+    fontFamily?: string;
+    /**
+     * Sets the font color of the subtitle text using a standard color name, an RGB color code (e.g., `FF0000`), or an RGBA color code (e.g., `FFAABB50`).
+     */
+    color?: string;
+    /**
+     * Sets the typography style of the subtitle text.
+     * Supported values: `b` for bold, `i` for italics, and `b_i` for bold with italics.
+     */
+    typography?: "b" | "i" | "b_i";
+    /**
+     * Sets the font outline of the subtitle text.
+     * Requires the outline width (an integer) and the outline color (as an RGB color code, RGBA color code, or standard web color name) separated by an underscore.
+     * Examples: `2_blue`, `2_A1CCDD`, or `2_A1CCDD50`.
+     */
+    fontOutline?: string;
+    /**
+     * Sets the font shadow for the subtitle text.
+     * Requires the shadow color (as an RGB color code, RGBA color code, or standard web color name) and the shadow indent (an integer) separated by an underscore.
+     * Examples: `blue_2`, `A1CCDD_3`, or `A1CCDD50_3`.
+     */
+    fontShadow?: string;
+}
+
+export type SolidColorOverlayTransformation = Pick<Transformation, "width" | "height" | "radius"> & {
+    /**
+     * Specifies the transparency level of the overlaid solid color layer. Supports integers from `1` to `9`.
+     */
+    alpha?: number;
+}
