@@ -1,9 +1,9 @@
 const chai = require("chai");
-const pkg = require("../package.json");
+const pkg = require("../../package.json");
 global.FormData = require('formdata-node');
 const expect = chai.expect;
-const initializationParams = require("./data").initializationParams
-import ImageKit from "../src/index";
+const initializationParams = require("../data").initializationParams
+import ImageKit from "../../src/index";
 
 describe("URL generation", function () {
 
