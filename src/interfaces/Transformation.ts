@@ -1,6 +1,6 @@
 export type TransformationPosition = "path" | "query";
 
-type StreamingResolution = "240" | "360" | "480" | "720" | "1080" | "1440" | "2160";
+export type StreamingResolution = "240" | "360" | "480" | "720" | "1080" | "1440" | "2160";
 
 /**
  * The SDK provides easy to use names for transformations. These names are converted to the corresponding transformation string before being added to the URL.
@@ -421,6 +421,133 @@ export interface Transformation {
      * @deprecated Use `gradient` instead.
      */
     effectGradient?: string;
+
+    /**
+     * Overlay to be applied on the parent image or video. ImageKit allows you to overlay images, text, videos, subtitles, and solid colors on the parent image or video.
+     * 
+     * {@link https://imagekit.io/docs/transformations#overlay-using-layers}
+     */
+    overlay?: Overlay;
+}
+
+export interface OverlayPosition {
+    /**
+     * `x` of the top-left corner in the base asset where the layer's top-left corner would be placed. It can also accept arithmetic expressions such as `bw_mul_0.4`, or `bw_sub_cw`.
+     * 
+     * It maps to `lx` in the URL.
+     * 
+     * Learn about [Arthmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     */
+    x?: number | string;
+
+    /**
+     * `y` of the top-left corner in the base asset where the layer's top-left corner would be placed. It can also accept arithmetic expressions such as `bh_mul_0.4`, or `bh_sub_ch`.
+     * 
+     * It maps to `ly` in the URL.
+     * 
+     * Learn about [Arthmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     */
+    y?: number | string;
+
+    /**
+     * Position of the overlay in relation to the parent image or video. The overlay can be positioned at the center, top, left, bottom, right, top_left, top_right, bottom_left, or bottom_right of the parent image or video.
+     * 
+     * This maps to `lfo` in the URL.
+     */
+    focus?: `center` | `top` | `left` | `bottom` | `right` | `top_left` | `top_right` | `bottom_left` | `bottom_right`;
+}
+
+export interface OverlayTiming {
+    /**
+     * Start time of the base video in seconds when the layer should appear. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * 
+     * It maps to `lso` in the URL.
+     */
+    start?: number | string;
+
+    /**
+     * Duration in seconds during which layer should appear on the base video. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * 
+     * It maps to `ldu` in the URL.
+     */
+    duration?: number | string;
+
+    /**
+     * End time of the base video when this layer should disappear. In case both `end` and `duration` are present, `duration` is ignored. It accepts a positive number upto two decimal e.g. 20 or 20.50. Only applicable if parent layer or base is video. It can also accept arithmetic expressions such as `bdu_mul_0.4`, or `bdu_sub_idu`. Learn more about arithmetic expressions [here](/arithmetic-expressions-in-transformations).
+     * 
+     * It maps to `leo` in the URL.
+     */
+    end?: number | string;
 }
 
 
+interface BaseOverlay {
+    /**
+     * Positioning relative to parent. Accepts a JSON object with `x` and `y` (or `focus`) properties.
+     * 
+     * {@link https://imagekit.io/docs/transformations#position-of-layer}
+     */
+    position?: OverlayPosition;
+
+    /**
+     * Timing (only valid if parent/base is a video). Accepts a JSON object with `start` (lso), `end` (leo), and `duration` (ldu) properties.
+     * 
+     * {@link https://imagekit.io/docs/transformations#position-of-layer}
+     */
+    timing?: OverlayTiming;
+
+    /**
+     * Array of transformations to be applied to this overlay. Support of supported transformations also depends on the type of base and overlay asset. Refer to the docs below for more information.
+     */
+    transformations?: Transformation[];
+}
+
+
+export interface TextOverlay extends BaseOverlay {
+    type: "text";
+
+    /**
+     * Text to be displayed in the overlay. The SDK will automatically handle special characters and URL encoding for you.
+     */
+    text: string;
+}
+
+export interface ImageOverlay extends BaseOverlay {
+    type: "image";
+
+    /**
+     * Relative path to the image to be used as an overlay.
+     */
+    input: string;
+}
+
+export interface VideoOverlay extends BaseOverlay {
+    type: "video";
+    /**
+     * Relative path to the video to be used as an overlay.
+     */
+    input: string;
+}
+
+export interface SubtitleOverlay extends BaseOverlay {
+    type: "subtitle";
+    /**
+     * Relative path to the subtitle file to be used as an overlay.
+     */
+    input: string;
+}
+
+export interface SolidColorOverlay extends BaseOverlay {
+    type: "solidColor";
+    /**
+     * It is used to specify the color of the block in RGB Hex Code (e.g. `FF0000`), or an RGBA Code (e.g. `FFAABB50`), or a color name (e.g. `red`). If you specify an 8-character background, the last two characters must be a number between `00` and `99`, which indicates the opacity level of the background. `00` represents an opacity level of `0.00`, `01` represents an opacity level of `0.01`, and so on.
+     */
+    color: string;
+}
+
+export type Overlay =
+    | TextOverlay
+    | ImageOverlay
+    | VideoOverlay
+    | SubtitleOverlay
+    | SolidColorOverlay;
