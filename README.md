@@ -88,8 +88,8 @@ The SDK’s `.url()` method enables you to generate optimized image and video UR
         path: "/default-image.jpg",
         urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
         transformation: [{
-            "height": "300",
-            "width": "400"
+            height: 300,
+            width: 400
         }]
     });
     ```
@@ -103,8 +103,8 @@ The SDK’s `.url()` method enables you to generate optimized image and video UR
     var imageURL = imagekit.url({
         src: "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
         transformation: [{
-            "height": "300",
-            "width": "400"
+            height: 300,
+            width: 400
         }]
     });
     ```
@@ -121,10 +121,10 @@ Apply multiple transformations by passing an array:
 var imageURL = imagekit.url({
     path: "/default-image.jpg",
     transformation: [{
-        "height": "300",
-        "width": "400"
+        height: 300,
+        width: 400
     }, {
-        "rotation": 90
+        rotation: 90
     }],
     transformationPosition: "query" // Use query parameter for transformations
 });
@@ -140,20 +140,106 @@ https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300%2Cw-400%3Art-
 var imageURL = imagekit.url({
     src: "https://ik.imagekit.io/your_imagekit_id/default-image.jpg",
     transformation: [{
-        "width": 400,
-        "height": 300,
-        "raw": "l-text,i-Imagekit,fs-50,l-end"
+        width: 400,
+        height: 300,
+        overlay: {
+            text: "Imagekit",
+            fontSize: 50,
+            color: "red",
+            position: {
+                x: 10,
+                y: 20
+            }
+        }
     }]
 });
 ```
+
 *Image Overlay Example:*
+
 ```js
 var imageURL = imagekit.url({
     src: "https://ik.imagekit.io/your_imagekit_id/default-image.jpg",
     transformation: [{
-        "width": 400,
-        "height": 300,
-        "raw": "l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end"
+        width: 400,
+        height: 300,
+        overlay: {
+            type: "image",
+            input: "logo.png",
+            transformation: [{
+                width: 100,
+                border: "10_CDDC39"
+            }],
+            position: {
+                focus: "top_left"
+            }
+        }
+    }]
+});
+```
+
+*Video Overlay Example:*
+
+```js
+var videoOverlayURL = imagekit.url({
+    src: "https://ik.imagekit.io/your_imagekit_id/base-video.mp4",
+    transformation: [{
+        overlay: {
+            type: "video",
+            input: "overlay-video.mp4",
+            position: { 
+                x: "10", 
+                y: "20" 
+            },
+            timing: { 
+                start: 5, 
+                duration: 10 
+            }
+        }
+    }]
+});
+```
+
+*Subtitle Overlay Example:*
+
+```js
+var subtitleOverlayURL = imagekit.url({
+    src: "https://ik.imagekit.io/your_imagekit_id/base-video.mp4",
+    transformation: [{
+        overlay: {
+            type: "subtitle",
+            input: "subtitle.vtt",
+            transformation: [{
+                fontSize: 16,
+                fontFamily: "Arial"
+            }],
+            position: { 
+                focus: "bottom" 
+            },
+            timing: { 
+                start: 0, 
+                duration: 5 
+            }
+        }
+    }]
+});
+```
+
+*Solid Color Overlay Example:*
+```js
+var solidColorOverlayURL = imagekit.url({
+    src: "https://ik.imagekit.io/your_imagekit_id/base-image.jpg",
+    transformation: [{
+        overlay: {
+            type: "solidColor",
+            color: "FF0000",
+            transformation: [{
+                width: 100,
+                height: 50,
+                alpha: 5
+            }],
+            position: { x: 20, y: 20 }
+        }
     }]
 });
 ```
@@ -192,9 +278,9 @@ var dropShadowURL = imagekit.url({
 var imageURL = imagekit.url({
     src: "https://ik.imagekit.io/your_imagekit_id/default-image.jpg",
     transformation: [{
-        "width": "iw_div_4",
-        "height": "ih_div_2",
-        "border": "cw_mul_0.05_yellow"
+        width: "iw_div_4",
+        height: "ih_div_2",
+        border: "cw_mul_0.05_yellow"
     }]
 });
 ```
@@ -269,7 +355,7 @@ For example:
 var imageURL = imagekit.url({
     path: "/test_path.jpg",
     transformation: [{
-        "newparam": "cool"
+        newparam: "cool"
     }]
 });
 // Generated URL: https://ik.imagekit.io/test_url_endpoint/tr:newparam-cool/test_path.jpg
