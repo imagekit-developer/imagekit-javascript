@@ -66,6 +66,20 @@ export const supportedTransforms: { [key: string]: string } = {
   zoom: "z",
   page: "pg",
 
+  // Text overlay transformations which are not defined yet
+  fontSize: "fs",
+  fontFamily: "ff",
+  fontColor: "co",
+  innerAlignment: "ia",
+  padding: "pa",
+  alpha: "al",
+  typography: "tg",
+  lineHeight: "lh",
+
+  // Subtitles transformations which are not defined
+  fontOutline: "fol",
+  fontShadow: "fsh",
+
   // Raw pass-through
   raw: "raw",
 };

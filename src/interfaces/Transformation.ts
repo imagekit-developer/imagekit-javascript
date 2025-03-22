@@ -526,7 +526,7 @@ export interface TextOverlay extends BaseOverlay {
     /**
      * Control styling of the text overlay.
      */
-    transformations?: TextOverlayTransformation[];
+    transformation?: TextOverlayTransformation[];
 }
 
 export interface ImageOverlay extends BaseOverlay {
@@ -538,11 +538,11 @@ export interface ImageOverlay extends BaseOverlay {
     input: string;
 
     /**
-     * List of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
+     * Array of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
      * 
      * {@link https://imagekit.io/docs/add-overlays-on-images#list-of-supported-image-transformations-in-image-layers|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#list-of-transformations-supported-on-image-overlay|Video}
      */
-    transformations?: Transformation[];
+    transformation?: Transformation[];
 }
 
 export interface VideoOverlay extends BaseOverlay {
@@ -553,11 +553,11 @@ export interface VideoOverlay extends BaseOverlay {
     input: string;
 
     /**
-     * List of transformations to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
+     * Array of transformation to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
      * 
      * {@link https://imagekit.io/docs/video-transformation|Video Transformations}
      */
-    transformations?: Transformation[];
+    transformation?: Transformation[];
 }
 
 export interface SubtitleOverlay extends BaseOverlay {
@@ -572,7 +572,7 @@ export interface SubtitleOverlay extends BaseOverlay {
      * 
      * {@link https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer|Styling subtitles}
      */
-    transformations?: SubtitleOverlayTransformation[];
+    transformation?: SubtitleOverlayTransformation[];
 }
 
 export interface SolidColorOverlay extends BaseOverlay {
@@ -588,7 +588,7 @@ export interface SolidColorOverlay extends BaseOverlay {
      * 
      * {@link https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay|Video}
      */
-    transformations?: SolidColorOverlayTransformation[];
+    transformation?: SolidColorOverlayTransformation[];
 }
 
 export type TextOverlayTransformation = {

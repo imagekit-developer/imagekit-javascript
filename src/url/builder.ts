@@ -1,6 +1,7 @@
 import { ImageKitOptions, UrlOptions } from "../interfaces";
 import { Transformation } from "../interfaces/Transformation";
 import transformationUtils from "../utils/transformation";
+import { safeBtoa } from "../utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 
 function removeTrailingSlash(str: string) {
@@ -73,18 +74,104 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
   return urlObj.href;
 };
 
+
+function processOverlay(overlay: Transformation["overlay"]): string | undefined {
+  const entries = [];
+  if (!overlay) {
+    return;
+  }
+  const { type, position = {}, timing = {}, transformation = [] } = overlay;
+
+  if (!type) {
+    throw new Error("Overlay type is required");
+  }
+
+  switch (type) {
+    case "text":
+      entries.push("l-text");
+      if (overlay.text) {
+        entries.push(`ie-${encodeURIComponent(safeBtoa(overlay.text))}`);
+      }
+      break;
+    case "image":
+      entries.push("l-image");
+      if (overlay.input) {
+        entries.push(`i-${overlay.input}`);
+      }
+      break;
+    case "video":
+      entries.push("l-video");
+      if (overlay.input) {
+        entries.push(`i-${overlay.input}`);
+      }
+      break;
+    case "subtitle":
+      entries.push("l-subtitle");
+      if (overlay.input) {
+        entries.push(`i-${overlay.input}`);
+      }
+      break;
+    case "solidColor":
+      entries.push("l-image");
+      entries.push(`i-ik_canvas`);
+      if (overlay.color) {
+        entries.push(`bg-${overlay.color}`);
+      }
+      break;
+  }
+
+  const { x, y, focus } = position;
+  if (x) {
+    entries.push(`lxo-${x}`);
+  }
+  if (y) {
+    entries.push(`lyo-${y}`);
+  }
+  if (focus) {
+    entries.push(`lfo-${focus}`);
+  }
+
+  const { start, end, duration } = timing;
+
+  if (start) {
+    entries.push(`lso-${start}`);
+  }
+  if (end) {
+    entries.push(`leo-${end}`);
+  }
+  if (duration) {
+    entries.push(`ldu-${duration}`);
+  }
+
+  const transformationString = constructTransformationString(transformation);
+
+  if (transformationString && transformationString.trim() !== "") entries.push(transformationString);
+
+  entries.push("l-end");
+
+  return entries.join(transformationUtils.getTransformDelimiter());
+}
+
 function constructTransformationString(transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }
 
-  var parsedTransforms = [];
+  var parsedTransforms: string[] = [];
   for (var i = 0, l = transformation.length; i < l; i++) {
-    var parsedTransformStep = [];
+    var parsedTransformStep: string[] = [];
     for (var key in transformation[i]) {
       let value = transformation[i][key as keyof Transformation];
       if (value === undefined || value === null) {
         continue;
+      }
+
+      if (key === "overlay" && typeof value === "object") {
+        var rawString = processOverlay(value as Transformation["overlay"]);
+        if (rawString) {
+          parsedTransformStep.push(rawString);
+          continue;
+        }
       }
 
       var transformKey = transformationUtils.getTransformKey(key);
@@ -111,7 +198,7 @@ function constructTransformationString(transformation: Transformation[] | undefi
       ) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
-        parsedTransformStep.push(transformation[i][key]);
+        parsedTransformStep.push(transformation[i][key] as string);
       } else {
         if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
