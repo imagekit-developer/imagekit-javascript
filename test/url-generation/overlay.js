@@ -3,10 +3,10 @@ const expect = chai.expect;
 const initializationParams = require("../data").initializationParams;
 import ImageKit from "../../src/index";
 import { safeBtoa } from "../../src/utils/transformation";
-describe.only("Comprehensive Overlay Transformation Cases", function () {
+describe("Overlay Transformation Test Cases", function () {
     const imagekit = new ImageKit(initializationParams);
 
-    it('simple text overlay', function () {
+    it('Text overlay generates correct URL with encoded overlay text', function () {
         const url = imagekit.url({
             path: "/base-image.jpg",
             transformation: [{
@@ -19,7 +19,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,ie-${encodeURIComponent(safeBtoa("Minimal Text"))},l-end/base-image.jpg`);
     });
 
-    it('simple image overlay', function () {
+    it('Image overlay generates correct URL with input logo.png', function () {
         const url = imagekit.url({
             path: "/base-image.jpg",
             transformation: [{
@@ -32,7 +32,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-logo.png,l-end/base-image.jpg`);
     });
 
-    it('simple video overlay', function () {
+    it('Video overlay generates correct URL with input play-pause-loop.mp4', function () {
         const url = imagekit.url({
             path: "/base-video.mp4",
             transformation: [{
@@ -45,7 +45,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-video,i-play-pause-loop.mp4,l-end/base-video.mp4`);
     });
 
-    it("simple subtitle overlay", function () {
+    it("Subtitle overlay generates correct URL with input subtitle.srt", function () {
         const url = imagekit.url({
             path: "/base-video.mp4",
             transformation: [{
@@ -58,7 +58,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-subtitle,i-subtitle.srt,l-end/base-video.mp4`);
     });
 
-    it("simple solid color overlay", function () {
+    it("Solid color overlay generates correct URL with background color FF0000", function () {
         const url = imagekit.url({
             path: "/base-image.jpg",
             transformation: [{
@@ -71,7 +71,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-ik_canvas,bg-FF0000,l-end/base-image.jpg`);
     });
 
-    it('All combined', function () {
+    it('Combined overlay transformations generate correct URL including nested overlays', function () {
         const url = imagekit.url({
             path: "/base-image.jpg",
             transformation: [
@@ -90,7 +90,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
                             duration: "10",
                             end: 15
                         },
-                        transformations: [{
+                        transformation: [{
                             width: "bw_mul_0.5",
                             fontSize: 20,
                             fontFamily: "Arial",
@@ -122,7 +122,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
                             duration: "10",
                             end: 15
                         },
-                        transformations: [
+                        transformation: [
                             {
                                 width: "bw_mul_0.5",
                                 height: "bh_mul_0.5",
@@ -197,7 +197,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
                             duration: "10",
                             end: 15
                         },
-                        transformations: [{
+                        transformation: [{
                             width: "bw_mul_0.5",
                             height: "bh_mul_0.5",
                             rotation: "N45",
@@ -207,6 +207,7 @@ describe.only("Comprehensive Overlay Transformation Cases", function () {
                 }
             ]
         });
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,ie-${encodeURIComponent(safeBtoa("Every thing"))},lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,fs-20,ff-Arial,fc-0000ff,ia-left,pa-5,al-7,tg-b,bg-red,r-10,rt-N45,fl-h,lh-20,l-end:l-image,i-logo.png,lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-text,ie-${encodeURIComponent(safeBtoa("Nested text overlay"))},l-end,l-end:l-video,i-play-pause-loop.mp4,lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end:l-subtitle,i-subtitle.srt,lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end:l-image,i-ik_canvas,bg-FF0000,lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end:l-image,i-ik_canvas,bg-FF0000,lxo-10,lyo-20,lfo-center,lso-5,ldu-10,leo-15,w-bw_mul_0.5,l-end/base-image.jpg`);
+
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,ie-${encodeURIComponent(safeBtoa("Every thing"))},lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,fs-20,ff-Arial,co-0000ff,ia-left,pa-5,al-7,tg-b,bg-red,r-10,rt-N45,fl-h,lh-20,l-end:l-image,i-logo.png,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-text,ie-${encodeURIComponent(safeBtoa("Nested text overlay"))},l-end,l-end:l-video,i-play-pause-loop.mp4,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-subtitle,i-subtitle.srt,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-image,i-ik_canvas,bg-FF0000,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end/base-image.jpg`)
     });
 });
