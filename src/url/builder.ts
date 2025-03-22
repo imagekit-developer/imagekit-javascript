@@ -1,7 +1,6 @@
 import { ImageKitOptions, UrlOptions } from "../interfaces";
-import { Transformation } from "../interfaces/Transformation";
-import transformationUtils from "../utils/transformation";
-import { safeBtoa } from "../utils/transformation";
+import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "../interfaces/Transformation";
+import transformationUtils, { safeBtoa } from "../utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 
 function removeTrailingSlash(str: string) {
@@ -89,33 +88,48 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   switch (type) {
     case "text":
       entries.push("l-text");
-      if (overlay.text) {
-        entries.push(`ie-${encodeURIComponent(safeBtoa(overlay.text))}`);
+      {
+        const textOverlay = overlay as TextOverlay;
+        if (textOverlay.text) {
+          entries.push(`ie-${encodeURIComponent(safeBtoa(textOverlay.text))}`);
+        }
       }
       break;
     case "image":
       entries.push("l-image");
-      if (overlay.input) {
-        entries.push(`i-${overlay.input}`);
+      {
+        const imageOverlay = overlay as ImageOverlay;
+        if (imageOverlay.input) {
+          entries.push(`i-${imageOverlay.input}`);
+        }
       }
       break;
     case "video":
       entries.push("l-video");
-      if (overlay.input) {
-        entries.push(`i-${overlay.input}`);
+      {
+        const videoOverlay = overlay as VideoOverlay;
+        if (videoOverlay.input) {
+          entries.push(`i-${videoOverlay.input}`);
+        }
       }
       break;
     case "subtitle":
       entries.push("l-subtitle");
-      if (overlay.input) {
-        entries.push(`i-${overlay.input}`);
+      {
+        const subtitleOverlay = overlay as SubtitleOverlay;
+        if (subtitleOverlay.input) {
+          entries.push(`i-${subtitleOverlay.input}`);
+        }
       }
       break;
     case "solidColor":
       entries.push("l-image");
       entries.push(`i-ik_canvas`);
-      if (overlay.color) {
-        entries.push(`bg-${overlay.color}`);
+      {
+        const solidColorOverlay = overlay as SolidColorOverlay;
+        if (solidColorOverlay.color) {
+          entries.push(`bg-${solidColorOverlay.color}`);
+        }
       }
       break;
   }
