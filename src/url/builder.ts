@@ -86,14 +86,14 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   }
 
   switch (type) {
-    case "text":
-      entries.push("l-text");
-      {
-        const textOverlay = overlay as TextOverlay;
-        if (textOverlay.text) {
-          entries.push(`ie-${encodeURIComponent(safeBtoa(textOverlay.text))}`);
-        }
+    case "text": {
+      const textOverlay = overlay as TextOverlay;
+      if (!textOverlay.text) {
+        return;
       }
+      entries.push("l-text");
+      entries.push(`ie-${encodeURIComponent(safeBtoa(textOverlay.text))}`);
+    }
       break;
     case "image":
       entries.push("l-image");
@@ -101,6 +101,8 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         const imageOverlay = overlay as ImageOverlay;
         if (imageOverlay.input) {
           entries.push(`i-${imageOverlay.input}`);
+        } else {
+          return;
         }
       }
       break;
@@ -110,6 +112,8 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         const videoOverlay = overlay as VideoOverlay;
         if (videoOverlay.input) {
           entries.push(`i-${videoOverlay.input}`);
+        } else {
+          return;
         }
       }
       break;
@@ -119,6 +123,8 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         const subtitleOverlay = overlay as SubtitleOverlay;
         if (subtitleOverlay.input) {
           entries.push(`i-${subtitleOverlay.input}`);
+        } else {
+          return;
         }
       }
       break;
@@ -129,6 +135,8 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         const solidColorOverlay = overlay as SolidColorOverlay;
         if (solidColorOverlay.color) {
           entries.push(`bg-${solidColorOverlay.color}`);
+        } else {
+          return;
         }
       }
       break;
@@ -182,10 +190,10 @@ function constructTransformationString(transformation: Transformation[] | undefi
 
       if (key === "overlay" && typeof value === "object") {
         var rawString = processOverlay(value as Transformation["overlay"]);
-        if (rawString) {
+        if (rawString && rawString.trim() !== "") {
           parsedTransformStep.push(rawString);
-          continue;
         }
+        continue; // Always continue as overlay is processed.
       }
 
       var transformKey = transformationUtils.getTransformKey(key);

@@ -6,6 +6,66 @@ import { safeBtoa } from "../../src/utils/transformation";
 describe("Overlay Transformation Test Cases", function () {
     const imagekit = new ImageKit(initializationParams);
 
+    it('Ignore invalid values if text is missing', function () {
+        const url = imagekit.url({
+            path: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
+    it('Ignore invalid values if input', function () {
+        const url = imagekit.url({
+            path: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                    type: "image"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
+    it('Ignore invalid values if input', function () {
+        const url = imagekit.url({
+            path: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                    type: "video"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
+    it('Ignore invalid values if input', function () {
+        const url = imagekit.url({
+            path: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                    type: "subtitle"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
+    it('Ignore invalid values if color is missing', function () {
+        const url = imagekit.url({
+            path: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                    type: "solidColor"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
     it('Text overlay generates correct URL with encoded overlay text', function () {
         const url = imagekit.url({
             path: "/base-image.jpg",
