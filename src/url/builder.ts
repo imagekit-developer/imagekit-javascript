@@ -2,6 +2,8 @@ import { ImageKitOptions, UrlOptions } from "../interfaces";
 import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "../interfaces/Transformation";
 import transformationUtils, { safeBtoa } from "../utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
+const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._,/ ]*$')
+const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._, ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
 
 function removeTrailingSlash(str: string) {
   if (typeof str == "string" && str[str.length - 1] == "/") {
@@ -73,6 +75,34 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
   return urlObj.href;
 };
 
+function processInputPath(str: string, enccoding: string): string {
+  // Remove leading and trailing slashes
+  str = removeTrailingSlash(removeLeadingSlash(str));
+  if(enccoding === "plain") {
+    return `i-${str.replace(/\//g, "@@")}`;
+  }
+  if(enccoding === "base64") {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+  if (SIMPLE_OVERLAY_PATH_REGEX.test(str)) {
+    return `i-${str.replace(/\//g, "@@")}`;
+  } else {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+}
+
+function processText(str: string, enccoding: TextOverlay["encoding"]): string {
+  if (enccoding === "plain") {
+    return `i-${encodeURIComponent(str)}`;
+  }
+  if (enccoding === "base64") {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+  if (SIMPLE_OVERLAY_TEXT_REGEX.test(str)) {
+    return `i-${encodeURIComponent(str)}`;
+  }
+  return `ie-${encodeURIComponent(safeBtoa(str))}`;
+}
 
 function processOverlay(overlay: Transformation["overlay"]): string | undefined {
   const entries = [];
@@ -91,16 +121,19 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
       if (!textOverlay.text) {
         return;
       }
+      const enccoding = textOverlay.encoding || "auto";
+
       entries.push("l-text");
-      entries.push(`ie-${encodeURIComponent(safeBtoa(textOverlay.text))}`);
+      entries.push(processText(textOverlay.text, enccoding));
     }
       break;
     case "image":
       entries.push("l-image");
       {
         const imageOverlay = overlay as ImageOverlay;
+        const enccoding = imageOverlay.encoding || "auto";
         if (imageOverlay.input) {
-          entries.push(`i-${imageOverlay.input}`);
+          entries.push(processInputPath(imageOverlay.input, enccoding));
         } else {
           return;
         }
@@ -110,8 +143,9 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
       entries.push("l-video");
       {
         const videoOverlay = overlay as VideoOverlay;
+        const enccoding = videoOverlay.encoding || "auto";
         if (videoOverlay.input) {
-          entries.push(`i-${videoOverlay.input}`);
+          entries.push(processInputPath(videoOverlay.input, enccoding));
         } else {
           return;
         }
@@ -121,8 +155,9 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
       entries.push("l-subtitle");
       {
         const subtitleOverlay = overlay as SubtitleOverlay;
+        const enccoding = subtitleOverlay.encoding || "auto";
         if (subtitleOverlay.input) {
-          entries.push(`i-${subtitleOverlay.input}`);
+          entries.push(processInputPath(subtitleOverlay.input, enccoding));
         } else {
           return;
         }

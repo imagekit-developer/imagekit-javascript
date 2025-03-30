@@ -524,6 +524,17 @@ export interface TextOverlay extends BaseOverlay {
     text: string;
 
     /**
+     * Specifies how the overlay input text should be encoded. The default is `auto`, which means the SDK will initially treat the text as plain text to improve URL readability. If the text contains special characters, the SDK will automatically switch to `base64` encoding.
+     * 
+     * You can also explicitly set the encoding to either `plain` or `base64`.
+     * 
+     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * 
+     * * Regardless of the encoding method, the input text is always percent-encoded to ensure it is URL-safe.
+     */
+    encoding: "auto" | "plain" | "base64";
+
+    /**
      * Control styling of the text overlay.
      */
     transformation?: TextOverlayTransformation[];
@@ -536,6 +547,19 @@ export interface ImageOverlay extends BaseOverlay {
      * Specifies the relative path to the image used as an overlay.
      */
     input: string;
+
+    /**
+     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
+     * 
+     * You can also explicitly set the encoding to either `plain` or `base64`.
+     * 
+     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * 
+     * * Regardless of the encoding method:
+     * - Leading and trailing slashes are removed.
+     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     */
+    encoding: "auto" | "plain" | "base64";
 
     /**
      * Array of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
@@ -553,6 +577,19 @@ export interface VideoOverlay extends BaseOverlay {
     input: string;
 
     /**
+     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
+     * 
+     * You can also explicitly set the encoding to either `plain` or `base64`.
+     * 
+     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * 
+     * * Regardless of the encoding method:
+     * - Leading and trailing slashes are removed.
+     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     */
+    encoding: "auto" | "plain" | "base64";
+
+    /**
      * Array of transformation to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
      * 
      * {@link https://imagekit.io/docs/video-transformation|Video Transformations}
@@ -566,6 +603,19 @@ export interface SubtitleOverlay extends BaseOverlay {
      * Specifies the relative path to the subtitle file used as an overlay.
      */
     input: string;
+
+    /**
+     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
+     * 
+     * You can also explicitly set the encoding to either `plain` or `base64`.
+     * 
+     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * 
+     * * Regardless of the encoding method:
+     * - Leading and trailing slashes are removed.
+     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     */
+    encoding: "auto" | "plain" | "base64";
 
     /**
      * Control styling of the subtitle.

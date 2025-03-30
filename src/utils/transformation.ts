@@ -36,7 +36,7 @@ export default {
 }
 
 export const safeBtoa = function (str: string): string {
-    if (typeof btoa !== "undefined") {
+    if (typeof window !== "undefined") {
         return btoa(str);
     } else {
         // Node fallback

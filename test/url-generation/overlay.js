@@ -76,7 +76,7 @@ describe("Overlay Transformation Test Cases", function () {
                 }
             }]
         });
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,ie-${encodeURIComponent(safeBtoa("Minimal Text"))},l-end/base-image.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,i-${encodeURIComponent("Minimal Text")},l-end/base-image.jpg`);
     });
 
     it('Image overlay generates correct URL with input logo.png', function () {
@@ -268,6 +268,79 @@ describe("Overlay Transformation Test Cases", function () {
             ]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,ie-${encodeURIComponent(safeBtoa("Every thing"))},lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,fs-20,ff-Arial,co-0000ff,ia-left,pa-5,al-7,tg-b,bg-red,r-10,rt-N45,fl-h,lh-20,l-end:l-image,i-logo.png,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-text,ie-${encodeURIComponent(safeBtoa("Nested text overlay"))},l-end,l-end:l-video,i-play-pause-loop.mp4,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-subtitle,i-subtitle.srt,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-image,i-ik_canvas,bg-FF0000,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end/base-image.jpg`)
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-text,i-${encodeURIComponent("Every thing")},lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,fs-20,ff-Arial,co-0000ff,ia-left,pa-5,al-7,tg-b,bg-red,r-10,rt-N45,fl-h,lh-20,l-end:l-image,i-logo.png,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-text,i-${encodeURIComponent("Nested text overlay")},l-end,l-end:l-video,i-play-pause-loop.mp4,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-subtitle,i-subtitle.srt,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,l-end:l-image,i-ik_canvas,bg-FF0000,lxo-10,lyo-20,lfo-center,lso-5,leo-15,ldu-10,w-bw_mul_0.5,h-bh_mul_0.5,rt-N45,fl-h,l-end/base-image.jpg`)
+    });
+});
+
+
+describe("Edge cases", function () {
+    const imagekit = new ImageKit({
+        ...initializationParams,
+        urlEndpoint: "https://ik.imagekit.io/demo", // Using real url to test correctness quickly by clicking link
+    });
+
+    it('Nested simple path, should use i instead of ie, handle slash properly', function () {
+        const url = imagekit.url({
+            path: "/medium_cafe_B1iTdD0C.jpg",
+            transformation: [{
+                overlay: {
+                    type: "image",
+                    input: "/customer_logo/nykaa.png",
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-image,i-customer_logo@@nykaa.png,l-end/medium_cafe_B1iTdD0C.jpg`);
+    });
+
+    it('Nested non-simple path, should use ie instead of i', function () {
+        const url = imagekit.url({
+            path: "/medium_cafe_B1iTdD0C.jpg",
+            transformation: [{
+                overlay: {
+                    type: "image",
+                    input: "/customer_logo/Ñykaa.png"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-image,ie-Y3VzdG9tZXJfbG9nby9OzIN5a2FhLnBuZw%3D%3D,l-end/medium_cafe_B1iTdD0C.jpg`);
+    });
+
+    it('Simple text overlay, should use i instead of ie', function () {
+        const url = imagekit.url({
+            path: "/medium_cafe_B1iTdD0C.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "Manu",
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-Manu,l-end/medium_cafe_B1iTdD0C.jpg`);
+    });
+
+    it('Simple text overlay with spaces and comma, should use i instead of ie', function () {
+        const url = imagekit.url({
+            path: "/medium_cafe_B1iTdD0C.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "alnum123-._, ",
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-${encodeURIComponent("alnum123-._, ")},l-end/medium_cafe_B1iTdD0C.jpg`);
+    });
+
+    it('Non simple text overlay, should use ie instead of i', function () {
+        const url = imagekit.url({
+            path: "/medium_cafe_B1iTdD0C.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "Let's use ©, ®, ™, etc",
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,ie-TGV0J3MgdXNlIMKpLCDCriwg4oSiLCBldGM%3D,l-end/medium_cafe_B1iTdD0C.jpg`);
     });
 });
