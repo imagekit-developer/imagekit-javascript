@@ -530,7 +530,7 @@ export interface TextOverlay extends BaseOverlay {
      * 
      * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
      * 
-     * * Regardless of the encoding method, the input text is always percent-encoded to ensure it is URL-safe.
+     * Regardless of the encoding method, the input text is always percent-encoded to ensure it is URL-safe.
      */
     encoding: "auto" | "plain" | "base64";
 
@@ -555,7 +555,7 @@ export interface ImageOverlay extends BaseOverlay {
      * 
      * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
      * 
-     * * Regardless of the encoding method:
+     * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
      * - Any remaining slashes within the path are replaced with `@@` when using plain text.
      */
@@ -583,7 +583,7 @@ export interface VideoOverlay extends BaseOverlay {
      * 
      * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
      * 
-     * * Regardless of the encoding method:
+     * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
      * - Any remaining slashes within the path are replaced with `@@` when using plain text.
      */
@@ -611,7 +611,7 @@ export interface SubtitleOverlay extends BaseOverlay {
      * 
      * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
      * 
-     * * Regardless of the encoding method:
+     * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
      * - Any remaining slashes within the path are replaced with `@@` when using plain text.
      */
