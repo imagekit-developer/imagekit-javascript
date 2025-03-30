@@ -248,14 +248,14 @@ var solidColorOverlayURL = imagekit.url({
 });
 ```
 
-**Overlay Options**
+##### Overlay Options
 
 The following table details the overlay configuration options as defined in the SDK. These options are passed in the overlay object and directly map to URL parameters:
 
 | option   | Description                                                                                                                                                                                                                                                             | Example                                       |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| encoding | Specifies how the overlay input is encoded. The default is "auto", meaning the SDK automatically determines whether to use plain (`i-{input}`) or base64 (`ie-{base64_encoded_input}`) encoding based on the content. You can explicitly set it to "plain" or "base64". | `encoding: "plain"`                           |
-| position | Defines the overlay's placement relative to the parent asset. Accepts a JSON object with properties: `x` and `y` for coordinates (which can be arithmetic expressions) or a `focus` value such as "center", "top_left", etc.                                            | `position: { x: 10, y: 20, focus: "center" }` |
+| encoding | Specifies how the overlay input is encoded. The default is `auto`, meaning the SDK automatically determines whether to use plain (`i-{input}`) or base64 (`ie-{base64_encoded_input}`) encoding based on the content. You can explicitly set it to `plain` or `base64`. | `encoding: "plain"`                          |
+| position | Defines the overlay's placement relative to the parent asset. Accepts a JSON object with properties: `x` and `y` for coordinates (which can be arithmetic expressions) or a `focus` value such as `center`, `top_left`, etc.                                            | `position: { x: 10, y: 20, focus: "center" }` |
 | timing   | When the base asset is video, specifies when the overlay appears. It accepts a JSON object with values for `start`, `duration`, and `end`. If both `duration` and `end` are provided, `duration` is ignored.                                                            | `timing: { start: 5, duration: 10, end: 15 }` |
 
 These options provide developers with fine-grained control over overlay transformations, ensuring that the generated URL accurately reflects the desired overlay configuration.
