@@ -273,7 +273,7 @@ describe("Overlay Transformation Test Cases", function () {
 });
 
 
-describe("Edge cases", function () {
+describe("Overlay encoding test cases", function () {
     const imagekit = new ImageKit({
         ...initializationParams,
         urlEndpoint: "https://ik.imagekit.io/demo", // Using real url to test correctness quickly by clicking link
@@ -342,5 +342,103 @@ describe("Edge cases", function () {
             }]
         });
         expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,ie-TGV0J3MgdXNlIMKpLCDCriwg4oSiLCBldGM%3D,l-end/medium_cafe_B1iTdD0C.jpg`);
+    });
+
+    it('Text overlay with explicit plain encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "HelloWorld",
+                    encoding: "plain"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-HelloWorld,l-end/sample.jpg`);
+    });
+
+    it('Text overlay with explicit base64 encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "HelloWorld",
+                    encoding: "base64"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,ie-${encodeURIComponent(safeBtoa("HelloWorld"))},l-end/sample.jpg`);
+    });
+
+    it('Image overlay with explicit plain encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.jpg",
+            transformation: [{
+                overlay: {
+                    type: "image",
+                    input: "/customer/logo.png",
+                    encoding: "plain"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-image,i-customer@@logo.png,l-end/sample.jpg`);
+    });
+
+    it('Image overlay with explicit base64 encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.jpg",
+            transformation: [{
+                overlay: {
+                    type: "image",
+                    input: "/customer/logo.png",
+                    encoding: "base64"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-image,ie-${encodeURIComponent(safeBtoa("customer/logo.png"))},l-end/sample.jpg`);
+    });
+
+    it('Video overlay with explicit base64 encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.mp4",
+            transformation: [{
+                overlay: {
+                    type: "video",
+                    input: "/path/to/video.mp4",
+                    encoding: "base64"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-video,ie-${encodeURIComponent(safeBtoa("path/to/video.mp4"))},l-end/sample.mp4`);
+    });
+
+    it('Subtitle overlay with explicit plain encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.mp4",
+            transformation: [{
+                overlay: {
+                    type: "subtitle",
+                    input: "/sub.srt",
+                    encoding: "plain"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-subtitle,i-sub.srt,l-end/sample.mp4`);
+    });
+
+    it('Subtitle overlay with explicit base64 encoding', function () {
+        const url = imagekit.url({
+            path: "/sample.mp4",
+            transformation: [{
+                overlay: {
+                    type: "subtitle",
+                    input: "sub.srt",
+                    encoding: "base64"
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-subtitle,ie-${encodeURIComponent(safeBtoa("sub.srt"))},l-end/sample.mp4`);
     });
 });
