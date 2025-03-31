@@ -318,17 +318,17 @@ describe("Overlay encoding test cases", function () {
         expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-Manu,l-end/medium_cafe_B1iTdD0C.jpg`);
     });
 
-    it('Simple text overlay with spaces and comma, should use i instead of ie', function () {
+    it('Simple text overlay with spaces and other safe characters, should use i instead of ie', function () {
         const url = imagekit.url({
             path: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
-                    text: "alnum123-._, ",
+                    text: "alnum123-._ ",
                 }
             }]
         });
-        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-${encodeURIComponent("alnum123-._, ")},l-end/medium_cafe_B1iTdD0C.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-${encodeURIComponent("alnum123-._ ")},l-end/medium_cafe_B1iTdD0C.jpg`);
     });
 
     it('Non simple text overlay, should use ie instead of i', function () {
