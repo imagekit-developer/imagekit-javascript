@@ -54,10 +54,11 @@ Download a specific version:
 ```
 https://unpkg.com/imagekit-javascript@1.3.0/dist/imagekit.min.js
 ```
-Or for the latest version, remove the version number:
+Or for the latest version, remove the version number (don't use in production as it may break your code if a new major version is released):
 ```
 https://unpkg.com/imagekit-javascript/dist/imagekit.min.js
 ```
+
 And include it in your HTML:
 ```html
 <script type="text/javascript" src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js"></script>
@@ -250,6 +251,8 @@ var solidColorOverlayURL = imagekit.url({
 
 ##### Overlay Options
 
+ImageKit supports various overlay types, including text, image, video, subtitle, and solid color overlays. Each overlay type has specific configuration options to customize the overlay appearance and behavior. To learn more about how overlays work, refer to the [ImageKit documentation](https://imagekit.io/docs/transformations#overlay-using-layers).
+
 The table below outlines the available overlay configuration options:
 
 | Option         | Description                                                                                                                                                                                                                                                                                                                                                                                                      | Example                                                         |
@@ -260,8 +263,8 @@ The table below outlines the available overlay configuration options:
 | color          | (For solidColor overlays) RGB/RGBA hex code or color name for the overlay color.                                                                                                                                                                                                                                                                                                                                 | `color: "FF0000"`                                               |
 | encoding       | Defines how the overlay input is encoded. Accepted values: `auto`, `plain`, `base64`.                                                                                                                                                                                                                                                                                                                            | `encoding: "auto"`                                              |
 | transformation | An array of transformation objects to style the overlay. <br> - [Text Overlay Transformations](#text-overlay-transformations) <br> - [Subtitle Overlay Transformations](#subtitle-overlay-transformations) <br> - Image and video overlays support most [transformations](#supported-transformations). <br> See [ImageKit docs](https://imagekit.io/docs/transformations#overlay-using-layers) for more details. | `transformation: [{ fontSize: 50 }]`                            |
-| position       | Sets the overlay’s position relative to the base asset. Accepts an object with `x`, `y`, or `focus` (e.g., `center`).                                                                                                                                                                                                                                                                                            | `position: { x: 10, y: 20 }` or `position: { focus: "center" }` |
-| timing         | (When base is a video) Defines when the overlay appears. Accepts an object with `start`, `duration`, and `end` properties (in seconds).                                                                                                                                                                                                                                                                          | `timing: { start: 5, duration: 10 }`                            |
+| position       | Sets the overlay’s position relative to the base asset. Accepts an object with `x`, `y`, or `focus`. The `focus` value can be one of: `center`, `top`, `left`, `bottom`, `right`, `top_left`, `top_right`, `bottom_left`, or `bottom_right`.                                                                                                       | `position: { x: 10, y: 20 }` or `position: { focus: "center" }` |
+| timing         | (For video base) Specifies when the overlay appears using `start`, `duration`, and `end` (in seconds); if both `duration` and `end` are set, `duration` is ignored.                                                                                                                                                                                                                                              | `timing: { start: 5, duration: 10 }`                            |
 
 
 ##### Encoding Options
@@ -279,14 +282,6 @@ For image, video, and subtitle overlays:
 - For explicit behavior, use `plain` or `base64` to enforce the desired encoding.
 
 Use `auto` for most cases to let the SDK optimize encoding, and use `plain` or `base64` when a specific encoding method is required.
-
-Below is a table describing these options:
-
-| Option   | Description                                                                                  | Use Case                                                      |
-| -------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `auto`   | SDK automatically selects between plain and base64 encoding based on the input.              | Best for most cases when unsure or input is simple.           |
-| `plain`  | SDK treats the input as plain text.                                                          | Use for inputs that are already URL-safe.                     |
-| `base64` | SDK encodes the input using Base64 to ensure URL safety when special characters are present. | Use for complex inputs with characters that require encoding. |
 
 ##### Solid Color Overlay Transformations
 
@@ -326,8 +321,6 @@ Below is a table describing these options:
 | `typography`  | Sets the typography style of the subtitle text. Supported values: `b` for bold, `i` for italics, and `b_i` for bold with italics.                                                                                                    | `typography: "b"`       |
 | `fontOutline` | Specifies the font outline for subtitles. Requires the outline width (an integer) and the outline color (as a standard color name, RGB, or RGBA) separated by an underscore. Examples include `2_blue`, `2_A1CCDD`, or `2_A1CCDD50`. | `fontOutline: "2_blue"` |
 | `fontShadow`  | Specifies the font shadow for subtitles. Requires the shadow color (as a standard color name, RGB, or RGBA) and a shadow indent (an integer) separated by an underscore. Examples: `blue_2`, `A1CCDD_3`, or `A1CCDD50_3`.            | `fontShadow: "blue_2"`  |
-
-For image and video overlay transformation options, refer to the [ImageKit Transformations Documentation](https://imagekit.io/docs/transformations).
 
 #### AI and Advanced Transformations
 *Background Removal:*
