@@ -324,11 +324,11 @@ describe("Overlay encoding test cases", function () {
             transformation: [{
                 overlay: {
                     type: "text",
-                    text: "alnum123._ ",
+                    text: "alnum123-._ ",
                 }
             }]
         });
-        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-${encodeURIComponent("alnum123._ ")},l-end/medium_cafe_B1iTdD0C.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/demo/tr:l-text,i-${encodeURIComponent("alnum123-._ ")},l-end/medium_cafe_B1iTdD0C.jpg`);
     });
 
     it('Non simple text overlay, should use ie instead of i', function () {
