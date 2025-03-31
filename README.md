@@ -106,14 +106,14 @@ Optionally, you can include `transformationPosition` and `urlEndpoint` in the ob
 *A simple height and width transformation:*
 
 ```js
-    var imageURL = imagekit.url({
-        path: "/default-image.jpg",
-        urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
-        transformation: [{
-            height: 300,
-            width: 400
-        }]
-    });
+var imageURL = imagekit.url({
+    path: "/default-image.jpg",
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+    transformation: [{
+        height: 300,
+        width: 400
+    }]
+});
 ```
 
 *Result Example:*
@@ -266,7 +266,7 @@ The table below outlines the available overlay configuration options:
 | text           | (For text overlays) The text content to display.                                                                                                                                                                                                                                                                                                                                                                 | `text: "ImageKit"`                                              |
 | input          | (For image, video, or subtitle overlays) Relative path to the overlay asset.                                                                                                                                                                                                                                                                                                                                     | `input: "logo.png"` or `input: "overlay-video.mp4"`             |
 | color          | (For solidColor overlays) RGB/RGBA hex code or color name for the overlay color.                                                                                                                                                                                                                                                                                                                                 | `color: "FF0000"`                                               |
-| encoding       | Defines how the overlay input is encoded. Accepted values: `auto`, `plain`, `base64`.                                                                                                                                                                                                                                                                                                                            | `encoding: "auto"`                                              |
+| encoding       | Accepted values: `auto`, `plain`, `base64`. [Check this](#encoding-options) for more details.                                                                                                                                                                                                                                                                                                                    | `encoding: "auto"`                                              |
 | transformation | An array of transformation objects to style the overlay. <br> - [Text Overlay Transformations](#text-overlay-transformations) <br> - [Subtitle Overlay Transformations](#subtitle-overlay-transformations) <br> - Image and video overlays support most [transformations](#supported-transformations). <br> See [ImageKit docs](https://imagekit.io/docs/transformations#overlay-using-layers) for more details. | `transformation: [{ fontSize: 50 }]`                            |
 | position       | Sets the overlay’s position relative to the base asset. Accepts an object with `x`, `y`, or `focus`. The `focus` value can be one of: `center`, `top`, `left`, `bottom`, `right`, `top_left`, `top_right`, `bottom_left`, or `bottom_right`.                                                                                                                                                                     | `position: { x: 10, y: 20 }` or `position: { focus: "center" }` |
 | timing         | (For video base) Specifies when the overlay appears using `start`, `duration`, and `end` (in seconds); if both `duration` and `end` are set, `duration` is ignored.                                                                                                                                                                                                                                              | `timing: { start: 5, duration: 10 }`                            |
