@@ -29,7 +29,6 @@ Lightweight JavaScript SDK for generating optimized URLs for images and videos, 
   - [Promise-based Upload Example](#promise-based-upload-example)
 - [Test Examples](#test-examples)
 - [Changelog](#changelog)
-- [Options Reference](#options-reference)
 
 ## Installation
 
