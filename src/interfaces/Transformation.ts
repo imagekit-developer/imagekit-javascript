@@ -518,20 +518,19 @@ export interface TextOverlay extends BaseOverlay {
     type: "text";
 
     /**
-     * Specifies the text to be displayed in the overlay.
-     * The SDK automatically handles special characters and URL encoding.
+     * Specifies the text to be displayed in the overlay. The SDK automatically handles special characters and encoding.
      */
     text: string;
 
     /**
-     * Specifies how the overlay input text should be encoded. The default is `auto`, which means the SDK will initially treat the text as plain text to improve URL readability. If the text contains special characters, the SDK will automatically switch to `base64` encoding.
-     * 
-     * You can also explicitly set the encoding to either `plain` or `base64`.
-     * 
-     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * Text can be included in the layer as either `i-{input}` (plain text) or `ie-{base64_encoded_input}` (base64). 
+     * By default, the SDK selects the appropriate format based on the input text. 
+     * To always use base64 (`ie-{base64}`), set this parameter to `base64`. 
+     * To always use plain text (`i-{input}`), set it to `plain`.
      * 
      * Regardless of the encoding method, the input text is always percent-encoded to ensure it is URL-safe.
      */
+
     encoding: "auto" | "plain" | "base64";
 
     /**
@@ -549,15 +548,14 @@ export interface ImageOverlay extends BaseOverlay {
     input: string;
 
     /**
-     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
-     * 
-     * You can also explicitly set the encoding to either `plain` or `base64`.
-     * 
-     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * The input path can be included in the layer as either `i-{input}` or `ie-{base64_encoded_input}`. 
+     * By default, the SDK determines the appropriate format automatically. 
+     * To always use base64 encoding (`ie-{base64}`), set this parameter to `base64`. 
+     * To always use plain text (`i-{input}`), set it to `plain`.
      * 
      * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
-     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
     encoding: "auto" | "plain" | "base64";
 
@@ -577,15 +575,14 @@ export interface VideoOverlay extends BaseOverlay {
     input: string;
 
     /**
-     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
-     * 
-     * You can also explicitly set the encoding to either `plain` or `base64`.
-     * 
-     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * The input path can be included in the layer as either `i-{input}` or `ie-{base64_encoded_input}`. 
+     * By default, the SDK determines the appropriate format automatically. 
+     * To always use base64 encoding (`ie-{base64}`), set this parameter to `base64`. 
+     * To always use plain text (`i-{input}`), set it to `plain`.
      * 
      * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
-     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
     encoding: "auto" | "plain" | "base64";
 
@@ -605,15 +602,14 @@ export interface SubtitleOverlay extends BaseOverlay {
     input: string;
 
     /**
-     * Specifies how the overlay input path should be encoded. The default is `auto`, which means the SDK will initially treat the path as plain text to improve URL readability. If the path contains special characters, the SDK will automatically switch to `base64` encoding.
-     * 
-     * You can also explicitly set the encoding to either `plain` or `base64`.
-     * 
-     * The `plain` option uses the format `i-{input}`, while `base64` uses `ie-{base64_encoded_input}`.
+     * The input path can be included in the layer as either `i-{input}` or `ie-{base64_encoded_input}`. 
+     * By default, the SDK determines the appropriate format automatically. 
+     * To always use base64 encoding (`ie-{base64}`), set this parameter to `base64`. 
+     * To always use plain text (`i-{input}`), set it to `plain`.
      * 
      * Regardless of the encoding method:
      * - Leading and trailing slashes are removed.
-     * - Any remaining slashes within the path are replaced with `@@` when using plain text.
+     * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
     encoding: "auto" | "plain" | "base64";
 
@@ -643,12 +639,12 @@ export interface SolidColorOverlay extends BaseOverlay {
 
 export type TextOverlayTransformation = {
     /**
-     * Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically, and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported. Useful when used in conjunction with the `backgroundColor`.
+     * Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically, and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported. Useful when used in conjunction with the `background`.
      */
     width?: number | string;
 
     /**
-     * Specifies the font size of the overlaid text. Accepts a numeric value, a percentage, or an arithmetic expression.
+     * Specifies the font size of the overlaid text. Accepts a numeric value or an arithmetic expression.
      */
     fontSize?: number | string;
 
