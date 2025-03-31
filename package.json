@@ -56,13 +56,13 @@
         "javascript",
         "sdk",
         "js",
-        "sdk",
         "image",
         "optimization",
-        "image",
         "transformation",
-        "image",
-        "resize"
+        "resize",
+        "upload",
+        "video",
+        "overlay"
     ],
     "author": "ImageKit Developer",
     "license": "MIT",
