@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
-Lightweight JavaScript SDK for generating optimized URLs for images and videos, and for handling file uploads via ImageKit.
+A lightweight JavaScript SDK for generating optimized URLs for images and videos, and for uploading files using ImageKit.
 
 ## Table of Contents
 - [Installation](#installation)
@@ -65,26 +65,25 @@ And include it in your HTML:
 ```
 
 ## Initialization
-
-Initialize the SDK by specifying your URL endpoint. Obtain your URL endpoint from [here](https://imagekit.io/dashboard/url-endpoints) and your public API key from [developer section](https://imagekit.io/dashboard/developer/api-keys). For URL generation:
+To use the SDK, initialize it with your ImageKit URL endpoint. You can get the URL endpoint [here](https://imagekit.io/dashboard/url-endpoints) and your public API key from the [developer section](https://imagekit.io/dashboard/developer/api-keys):
 
 ```js
 var imagekit = new ImageKit({
     urlEndpoint: "https://ik.imagekit.io/your_imagekit_id", // Required
-    transformationPosition: "query", // Optional. Default is "query"
-    publicKey: "your_public_api_key", // Optional. Only needef for client-side file uploads.
+    transformationPosition: "query", // Optional, defaults to "query"
+    publicKey: "your_public_api_key", // Optional, required only for client-side file uploads
 });
 ```
 
-> Note: Never include your private key in client-side code. If provided, the SDK throws an error.
+> Note: Never include your private API key in client-side code. The SDK will throw an error if you do.
 
 ### Initialization Options
 
-| Option                 | Description                                                                                                                                                                                                                                                                                | Example                                         |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
-| urlEndpoint            | Required. It is always `https://ik.imagekit.io/your_imagekit_id` or configued custom domain name.                                                                                                                                                                                          | `urlEndpoint: "https://ik.imagekit.io/your_id"` |
-| transformationPosition | Optional. Determines the position of the transformation string in the URL. Accepts `path` (as URL segment) or `query` (as query parameter). Default value is `query` so that it is possible for you to issue a wild card purge to remove all generated transformations from the CDN cache. | `transformationPosition: "query"`               |
-| publicKey              | Optional. Your ImageKit public API key. Required for client-side file uploads.                                                                                                                                                                                                             | `publicKey: "your_public_api_key"`              |
+| Option                 | Description                                                                                                                                                                                                                                         | Example                                         |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| urlEndpoint            | Required. Your ImageKit URL endpoint or custom domain.                                                                                                                                                                                              | `urlEndpoint: "https://ik.imagekit.io/your_id"` |
+| transformationPosition | Optional. Specifies whether transformations are added as URL path segments (`path`) or query parameters (`query`). The default is `query`, which allows you to perform wildcard purges and remove all generated transformations from the CDN cache. | `transformationPosition: "query"`               |
+| publicKey              | Optional. Your public API key for client-side uploads.                                                                                                                                                                                              | `publicKey: "your_public_api_key"`              |
 
 
 ## URL Generation
@@ -93,14 +92,14 @@ The SDK’s `.url()` method enables you to generate optimized image and video UR
 
 The method accepts an object with the following parameters:
 
-| Option          | Description                                                                                                                                               | Example                                                       |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| path            | The relative path of the image. Either `src` or `path` must be provided.                                                                                  | `"/path/to/image.jpg"`                                        |
-| src             | The full URL of an image already mapped to ImageKit. Either `src` or `path` must be provided.                                                             | `"https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg"` |
-| transformation  | An array of objects specifying the transformations to be applied in the URL. Each object contains key-value pairs representing transformation parameters. | `[ { width: 300, height: 400 } ]`                             |
-| queryParameters | Additional query parameters to be appended to the URL.                                                                                                    | `{ v: 1 }`                                                    |
+| Option          | Description                                                                                                                                                                                                            | Example                                                       |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| path            | The relative path of the image. Either `src` or `path` must be provided.                                                                                                                                               | `"/path/to/image.jpg"`                                        |
+| src             | The full URL of an image already mapped to ImageKit. Either `src` or `path` must be provided.                                                                                                                          | `"https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg"` |
+| transformation  | An array of objects specifying the transformations to be applied in the URL. Each object contains key-value pairs representing transformation parameters. See [supported transformations](#supported-transformations). | `[ { width: 300, height: 400 } ]`                             |
+| queryParameters | Additional query parameters to be appended to the URL.                                                                                                                                                                 | `{ v: 1 }`                                                    |
 
-Optionally, you can include `transformationPosition` and `urlEndpoint` in the object to override the initialization settings on per `.url()` call basis.
+Optionally, you can include `transformationPosition` and `urlEndpoint` in the object to override the initialization settings for a specific `.url()` call.
 
 ### Basic URL Generation
 
@@ -116,6 +115,7 @@ Optionally, you can include `transformationPosition` and `urlEndpoint` in the ob
         }]
     });
 ```
+
 *Result Example:*
 ```
 https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=h-300,w-400
@@ -375,59 +375,59 @@ If you want to generate transformations without any modifications, use the `raw`
 
 Check ImageKit [transformation documentation](https://imagekit.io/docs/transformations) for more details.
 
-| Transformation Name        | URL Parameter                                                                |
-| -------------------------- | ---------------------------------------------------------------------------- |
-| width                      | w                                                                            |
-| height                     | h                                                                            |
-| aspectRatio                | ar                                                                           |
-| quality                    | q                                                                            |
-| aiRemoveBackground         | e-bgremove (ImageKit powered)                                                |
-| aiRemoveBackgroundExternal | e-removedotbg (Using third party)                                            |
-| aiUpscale                  | e-upscale                                                                    |
-| aiRetouch                  | e-retouch                                                                    |
-| aiVariation                | e-genvar                                                                     |
-| aiDropShadow               | e-dropshadow                                                                 |
-| aiChangeBackground         | e-changebg                                                                   |
-| crop                       | c                                                                            |
-| cropMode                   | cm                                                                           |
-| x                          | x                                                                            |
-| y                          | y                                                                            |
-| xCenter                    | xc                                                                           |
-| yCenter                    | yc                                                                           |
-| focus                      | fo                                                                           |
-| format                     | f                                                                            |
-| radius                     | r                                                                            |
-| background                 | bg                                                                           |
-| border                     | b                                                                            |
-| rotation                   | rt                                                                           |
-| blur                       | bl                                                                           |
-| named                      | n                                                                            |
-| dpr                        | dpr                                                                          |
-| progressive                | pr                                                                           |
-| lossless                   | lo                                                                           |
-| trim                       | t                                                                            |
-| metadata                   | md                                                                           |
-| colorProfile               | cp                                                                           |
-| defaultImage               | di                                                                           |
-| original                   | orig                                                                         |
-| videoCodec                 | vc                                                                           |
-| audioCodec                 | ac                                                                           |
-| grayscale                  | e-grayscale                                                                  |
-| contrastStretch            | e-contrast                                                                   |
-| shadow                     | e-shadow                                                                     |
-| sharpen                    | e-sharpen                                                                    |
-| unsharpMask                | e-usm                                                                        |
-| gradient                   | e-gradient                                                                   |
-| flip                       | fl                                                                           |
-| opacity                    | o                                                                            |
-| zoom                       | z                                                                            |
-| page                       | pg                                                                           |
-| startOffset                | so                                                                           |
-| endOffset                  | eo                                                                           |
-| duration                   | du                                                                           |
-| streamingResolutions       | sr                                                                           |
-| overlay                    | Generated correct layer syntax for image, video, text and subtitle overlays. |
-| raw                        | The string provided in raw will be added in the URL as is.                   |
+| Transformation Name        | URL Parameter                                                                                  |
+| -------------------------- | ---------------------------------------------------------------------------------------------- |
+| width                      | w                                                                                              |
+| height                     | h                                                                                              |
+| aspectRatio                | ar                                                                                             |
+| quality                    | q                                                                                              |
+| aiRemoveBackground         | e-bgremove (ImageKit powered)                                                                  |
+| aiRemoveBackgroundExternal | e-removedotbg (Using third party)                                                              |
+| aiUpscale                  | e-upscale                                                                                      |
+| aiRetouch                  | e-retouch                                                                                      |
+| aiVariation                | e-genvar                                                                                       |
+| aiDropShadow               | e-dropshadow                                                                                   |
+| aiChangeBackground         | e-changebg                                                                                     |
+| crop                       | c                                                                                              |
+| cropMode                   | cm                                                                                             |
+| x                          | x                                                                                              |
+| y                          | y                                                                                              |
+| xCenter                    | xc                                                                                             |
+| yCenter                    | yc                                                                                             |
+| focus                      | fo                                                                                             |
+| format                     | f                                                                                              |
+| radius                     | r                                                                                              |
+| background                 | bg                                                                                             |
+| border                     | b                                                                                              |
+| rotation                   | rt                                                                                             |
+| blur                       | bl                                                                                             |
+| named                      | n                                                                                              |
+| dpr                        | dpr                                                                                            |
+| progressive                | pr                                                                                             |
+| lossless                   | lo                                                                                             |
+| trim                       | t                                                                                              |
+| metadata                   | md                                                                                             |
+| colorProfile               | cp                                                                                             |
+| defaultImage               | di                                                                                             |
+| original                   | orig                                                                                           |
+| videoCodec                 | vc                                                                                             |
+| audioCodec                 | ac                                                                                             |
+| grayscale                  | e-grayscale                                                                                    |
+| contrastStretch            | e-contrast                                                                                     |
+| shadow                     | e-shadow                                                                                       |
+| sharpen                    | e-sharpen                                                                                      |
+| unsharpMask                | e-usm                                                                                          |
+| gradient                   | e-gradient                                                                                     |
+| flip                       | fl                                                                                             |
+| opacity                    | o                                                                                              |
+| zoom                       | z                                                                                              |
+| page                       | pg                                                                                             |
+| startOffset                | so                                                                                             |
+| endOffset                  | eo                                                                                             |
+| duration                   | du                                                                                             |
+| streamingResolutions       | sr                                                                                             |
+| overlay                    | Generates the correct layer syntax for image, video, text, subtitle, and solid color overlays. |
+| raw                        | The string provided in raw will be added in the URL as is.                                     |
 
 ### Handling Unsupported Transformations
 
@@ -532,9 +532,9 @@ imagekit.upload({
 
 ## Test Examples
 
-For a quick demonstration of the SDK features, refer to our test examples:
-- URL Generation examples can be found in [basic](./test/url-generation/basic.js) and [overlay](./test/url-generation/overlay.js)
-- File Upload examples can be found in [test/upload.js](./test/upload.js)
+For a quick demonstration of the SDK features, check the test suite:
+- URL generation examples can be found in [basic](./test/url-generation/basic.js) and [overlay](./test/url-generation/overlay.js)
+- File upload examples can be found in [test/upload.js](./test/upload.js)
 
 ## Changelog
 
