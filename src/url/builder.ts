@@ -3,7 +3,7 @@ import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transfor
 import transformationUtils, { safeBtoa } from "../utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
-const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
+const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
 
 function removeTrailingSlash(str: string) {
   if (typeof str == "string" && str[str.length - 1] == "/") {
