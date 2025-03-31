@@ -29,6 +29,7 @@ Lightweight JavaScript SDK for generating optimized URLs for images and videos, 
   - [Promise-based Upload Example](#promise-based-upload-example)
 - [Test Examples](#test-examples)
 - [Changelog](#changelog)
+- [Options Reference](#options-reference)
 
 ## Installation
 
@@ -66,29 +67,47 @@ And include it in your HTML:
 
 ## Initialization
 
-Initialize the SDK by specifying your URL endpoint. You can obtain your URL endpoint from [https://imagekit.io/dashboard/url-endpoints](https://imagekit.io/dashboard/url-endpoints) and your public API key from [https://imagekit.io/dashboard/developer/api-keys](https://imagekit.io/dashboard/developer/api-keys). For URL generation:
+Initialize the SDK by specifying your URL endpoint. Obtain your URL endpoint from [here](https://imagekit.io/dashboard/url-endpoints) and your public API key from [developer section](https://imagekit.io/dashboard/developer/api-keys). For URL generation:
+
 ```js
 var imagekit = new ImageKit({
-    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id"
+    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id", // Required
+    transformationPosition: "query", // Optional. Default is "query"
+    publicKey: "your_public_api_key", // Optional. Only needef for client-side file uploads.
 });
 ```
-For client-side file uploads, include your public key:
-```js
-var imagekit = new ImageKit({
-    publicKey: "your_public_api_key",
-    urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
-});
-```
-*Note: Never include your private key in client-side code. If provided, the SDK throws an error.*
+
+> Note: Never include your private key in client-side code. If provided, the SDK throws an error.
+
+### Initialization Options
+
+| Option                 | Description                                                                                                                                                                                                                                                                                | Example                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| urlEndpoint            | Required. It is always `https://ik.imagekit.io/your_imagekit_id` or configued custom domain name.                                                                                                                                                                                          | `urlEndpoint: "https://ik.imagekit.io/your_id"` |
+| transformationPosition | Optional. Determines the position of the transformation string in the URL. Accepts `path` (as URL segment) or `query` (as query parameter). Default value is `query` so that it is possible for you to issue a wild card purge to remove all generated transformations from the CDN cache. | `transformationPosition: "query"`               |
+| publicKey              | Optional. Your ImageKit public API key. Required for client-side file uploads.                                                                                                                                                                                                             | `publicKey: "your_public_api_key"`              |
+
 
 ## URL Generation
 
 The SDK’s `.url()` method enables you to generate optimized image and video URLs with a variety of transformations.
 
+The method accepts an object with the following parameters:
+
+| Option          | Description                                                                                                                                               | Example                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| path            | The relative path of the image. Either `src` or `path` must be provided.                                                                                  | `"/path/to/image.jpg"`                                        |
+| src             | The full URL of an image already mapped to ImageKit. Either `src` or `path` must be provided.                                                             | `"https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg"` |
+| transformation  | An array of objects specifying the transformations to be applied in the URL. Each object contains key-value pairs representing transformation parameters. | `[ { width: 300, height: 400 } ]`                             |
+| queryParameters | Additional query parameters to be appended to the URL.                                                                                                    | `{ v: 1 }`                                                    |
+
+Optionally, you can include `transformationPosition` and `urlEndpoint` in the object to override the initialization settings on per `.url()` call basis.
+
 ### Basic URL Generation
 
-1. **Using an Image Path with a URL Endpoint**
-    ```js
+*A simple height and width transformation:*
+
+```js
     var imageURL = imagekit.url({
         path: "/default-image.jpg",
         urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
@@ -97,26 +116,13 @@ The SDK’s `.url()` method enables you to generate optimized image and video UR
             width: 400
         }]
     });
-    ```
-    *Result Example:*
-    ```
-    https://ik.imagekit.io/your_imagekit_id/endpoint/tr:h-300,w-400/default-image.jpg
-    ```
+```
+*Result Example:*
+```
+https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=h-300,w-400
+```
 
-2. **Using a Full Image URL (src)**
-    ```js
-    var imageURL = imagekit.url({
-        src: "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg",
-        transformation: [{
-            height: 300,
-            width: 400
-        }]
-    });
-    ```
-    *Result Example:*
-    ```
-    https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=h-300%2Cw-400
-    ```
+SDK automatically generates the URL based on the provided parameters. The generated URL includes the base URL, path, and transformation parameters.
 
 ### Advanced URL Generation Examples
 
@@ -131,12 +137,12 @@ var imageURL = imagekit.url({
     }, {
         rotation: 90
     }],
-    transformationPosition: "query" // Use query parameter for transformations
 });
 ```
+
 *Result Example:*
 ```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300%2Cw-400%3Art-90
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400:rt-90
 ```
 
 #### Overlays and Effects
@@ -263,9 +269,8 @@ The table below outlines the available overlay configuration options:
 | color          | (For solidColor overlays) RGB/RGBA hex code or color name for the overlay color.                                                                                                                                                                                                                                                                                                                                 | `color: "FF0000"`                                               |
 | encoding       | Defines how the overlay input is encoded. Accepted values: `auto`, `plain`, `base64`.                                                                                                                                                                                                                                                                                                                            | `encoding: "auto"`                                              |
 | transformation | An array of transformation objects to style the overlay. <br> - [Text Overlay Transformations](#text-overlay-transformations) <br> - [Subtitle Overlay Transformations](#subtitle-overlay-transformations) <br> - Image and video overlays support most [transformations](#supported-transformations). <br> See [ImageKit docs](https://imagekit.io/docs/transformations#overlay-using-layers) for more details. | `transformation: [{ fontSize: 50 }]`                            |
-| position       | Sets the overlay’s position relative to the base asset. Accepts an object with `x`, `y`, or `focus`. The `focus` value can be one of: `center`, `top`, `left`, `bottom`, `right`, `top_left`, `top_right`, `bottom_left`, or `bottom_right`.                                                                                                       | `position: { x: 10, y: 20 }` or `position: { focus: "center" }` |
+| position       | Sets the overlay’s position relative to the base asset. Accepts an object with `x`, `y`, or `focus`. The `focus` value can be one of: `center`, `top`, `left`, `bottom`, `right`, `top_left`, `top_right`, `bottom_left`, or `bottom_right`.                                                                                                                                                                     | `position: { x: 10, y: 20 }` or `position: { focus: "center" }` |
 | timing         | (For video base) Specifies when the overlay appears using `start`, `duration`, and `end` (in seconds); if both `duration` and `end` are set, `duration` is ignored.                                                                                                                                                                                                                                              | `timing: { start: 5, duration: 10 }`                            |
-
 
 ##### Encoding Options
 
@@ -294,33 +299,33 @@ Use `auto` for most cases to let the SDK optimize encoding, and use `plain` or `
 
 ##### Text Overlay Transformations
 
-| Option           | Description                                                                                                                                                                                                                                                                      | Example                    |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `width`          | Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically, and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported.                                                                                                         | `width: 400`               |
-| `fontSize`       | Specifies the font size of the overlaid text. Accepts a numeric value or an arithmetic expression.                                                                                                                                                                               | `fontSize: 50`             |
-| `fontFamily`     | Specifies the font family of the overlaid text. Choose from the [supported fonts list](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list) or provide a [custom font](https://imagekit.io/docs/add-overlays-on-images#change-font-family-in-text-overlay). | `fontFamily: "Arial"`      |
-| `fontColor`      | Specifies the font color of the overlaid text. Accepts an RGB hex code (e.g., `FF0000`), an RGBA code (e.g., `FFAABB50`), or a standard color name.                                                                                                                              | `fontColor: "FF0000"`      |
-| `innerAlignment` | Specifies the inner alignment of the text when the content does not occupy the full width. Supported values: `left`, `right`, `center`.                                                                                                                                          | `innerAlignment: "center"` |
-| `padding`        | Specifies the padding around the text overlay. Can be a single integer or multiple values separated by underscores; arithmetic expressions are accepted.                                                                                                                         | `padding: 10`              |
-| `alpha`          | Specifies the transparency level of the text overlay. Accepts an integer between `1` and `9`.                                                                                                                                                                                    | `alpha: 5`                 |
-| `typography`     | Specifies the typography style of the text. Supported values: `b` for bold, `i` for italics, `b_i` for both bold and italics.                                                                                                                                                    | `typography: "b"`          |
-| `background`     | Specifies the background color of the text overlay. Accepts an RGB hex code (e.g., `FF0000`), an RGBA code (e.g., `FFAABB50`), or a color name.                                                                                                                                  | `background: "red"`        |
-| `radius`         | Specifies the corner radius of the text overlay. Accepts a numeric value or `max` to achieve a circular/oval shape.                                                                                                                                                              | `radius: "max"`            |
-| `rotation`       | Specifies the rotation angle of the text overlay. Accepts a numeric value for clockwise rotation or a string prefixed with `N` for counterclockwise rotation.                                                                                                                    | `rotation: 90`             |
-| `flip`           | Specifies the flip or mirror option for the text overlay. Supported values: `h` (horizontal), `v` (vertical), `h_v` (both horizontal and vertical), `v_h` (alternative order).                                                                                                   | `flip: "h"`                |
-| `lineHeight`     | Specifies the line height for multi-line text. Accepts a numeric value or an arithmetic expression.                                                                                                                                                                              | `lineHeight: 1.5`          |
+| Option         | Description                                                                                                                                                              | Example                    |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| width          | Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically, and arithmetic expressions are supported (e.g., `bw_mul_0.2` or `bh_div_2`). | `width: 400`               |
+| fontSize       | Specifies the font size of the overlaid text. Accepts a numeric value or an arithmetic expression.                                                                       | `fontSize: 50`             |
+| fontFamily     | Specifies the font family of the overlaid text. Choose from the supported fonts or provide a custom font.                                                                | `fontFamily: "Arial"`      |
+| fontColor      | Specifies the font color of the overlaid text. Accepts an RGB hex code, an RGBA code, or a standard color name.                                                          | `fontColor: "FF0000"`      |
+| innerAlignment | Specifies the inner alignment of the text when it doesn’t occupy the full width. Supported values: `left`, `right`, `center`.                                            | `innerAlignment: "center"` |
+| padding        | Specifies the padding around the text overlay. Can be a single integer or multiple values separated by underscores; arithmetic expressions are accepted.                 | `padding: 10`              |
+| alpha          | Specifies the transparency level of the text overlay. Accepts an integer between `1` and `9`.                                                                            | `alpha: 5`                 |
+| typography     | Specifies the typography style of the text. Supported values: `b` for bold, `i` for italics, and `b_i` for bold with italics.                                            | `typography: "b"`          |
+| background     | Specifies the background color of the text overlay. Accepts an RGB hex code, an RGBA code, or a color name.                                                              | `background: "red"`        |
+| radius         | Specifies the corner radius of the text overlay. Accepts a numeric value or `max` for circular/oval shape.                                                               | `radius: "max"`            |
+| rotation       | Specifies the rotation angle of the text overlay. Accepts a numeric value for clockwise rotation or a string prefixed with `N` for counterclockwise rotation.            | `rotation: 90`             |
+| flip           | Specifies the flip option for the text overlay. Supported values: `h`, `v`, `h_v`, `v_h`.                                                                                | `flip: "h"`                |
+| lineHeight     | Specifies the line height for multi-line text. Accepts a numeric value or an arithmetic expression.                                                                      | `lineHeight: 1.5`          |
 
 ##### Subtitle Overlay Transformations
 
-| Option        | Description                                                                                                                                                                                                                          | Example                 |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `background`  | Specifies the subtitle background color using a standard color name, an RGB color code (e.g., `FF0000`), or an RGBA color code (e.g., `FFAABB50`).                                                                                   | `background: "blue"`    |
-| `fontSize`    | Sets the font size of subtitle text. Can be specified as a number.                                                                                                                                                                   | `fontSize: 16`          |
-| `fontFamily`  | Sets the font family of subtitle text. Refer to the [supported fonts list](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list) for available options.                                                          | `fontFamily: "Arial"`   |
-| `color`       | Specifies the font color of the subtitle text using a standard color name, an RGB color code (e.g., `FF0000`), or an RGBA color code (e.g., `FFAABB50`).                                                                             | `color: "FF0000"`       |
-| `typography`  | Sets the typography style of the subtitle text. Supported values: `b` for bold, `i` for italics, and `b_i` for bold with italics.                                                                                                    | `typography: "b"`       |
-| `fontOutline` | Specifies the font outline for subtitles. Requires the outline width (an integer) and the outline color (as a standard color name, RGB, or RGBA) separated by an underscore. Examples include `2_blue`, `2_A1CCDD`, or `2_A1CCDD50`. | `fontOutline: "2_blue"` |
-| `fontShadow`  | Specifies the font shadow for subtitles. Requires the shadow color (as a standard color name, RGB, or RGBA) and a shadow indent (an integer) separated by an underscore. Examples: `blue_2`, `A1CCDD_3`, or `A1CCDD50_3`.            | `fontShadow: "blue_2"`  |
+| Option      | Description                                                                                               | Example                 |
+| ----------- | --------------------------------------------------------------------------------------------------------- | ----------------------- |
+| background  | Specifies the subtitle background color using a standard color name, RGB color code, or RGBA color code.  | `background: "blue"`    |
+| fontSize    | Sets the font size of subtitle text.                                                                      | `fontSize: 16`          |
+| fontFamily  | Sets the font family of subtitle text.                                                                    | `fontFamily: "Arial"`   |
+| color       | Specifies the font color of subtitle text using standard color name, RGB, or RGBA color code.             | `color: "FF0000"`       |
+| typography  | Sets the typography style of subtitle text. Supported values: `b`, `i`, `b_i`.                            | `typography: "b"`       |
+| fontOutline | Specifies the font outline for subtitles. Requires an outline width and color separated by an underscore. | `fontOutline: "2_blue"` |
+| fontShadow  | Specifies the font shadow for subtitles. Requires shadow color and indent separated by an underscore.     | `fontShadow: "blue_2"`  |
 
 #### AI and Advanced Transformations
 *Background Removal:*
@@ -365,64 +370,65 @@ var imageURL = imagekit.url({
 
 ### Supported Transformations
 
-The SDK gives a name to each transformation parameter e.g. height for h and width for w parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
+The SDK gives a name to each transformation parameter (e.g. `height` maps to `h`, `width` maps to `w`). If the property does not match any of the following supported options, it is added as is.
 
-If you want to generate transformations in your application and add them to the URL as it is, use the raw parameter.
+If you want to generate transformations without any modifications, use the `raw` parameter.
 
 Check ImageKit [transformation documentation](https://imagekit.io/docs/transformations) for more details.
 
-| Transformation Name        | URL Parameter                                                 |
-| -------------------------- | ------------------------------------------------------------- |
-| width                      | w                                                             |
-| height                     | h                                                             |
-| aspectRatio                | ar                                                            |
-| quality                    | q                                                             |
-| aiRemoveBackground         | e-bgremove (ImageKit powered)                                 |
-| aiRemoveBackgroundExternal | e-removedotbg (Using third party)                             |
-| aiUpscale                  | e-upscale                                                     |
-| aiRetouch                  | e-retouch                                                     |
-| aiVariation                | e-genvar                                                      |
-| aiDropShadow               | e-dropshadow                                                  |
-| aiChangeBackground         | e-changebg                                                    |
-| crop                       | c                                                             |
-| cropMode                   | cm                                                            |
-| x                          | x                                                             |
-| y                          | y                                                             |
-| xCenter                    | xc                                                            |
-| yCenter                    | yc                                                            |
-| focus                      | fo                                                            |
-| format                     | f                                                             |
-| radius                     | r                                                             |
-| background                 | bg                                                            |
-| border                     | b                                                             |
-| rotation                   | rt                                                            |
-| blur                       | bl                                                            |
-| named                      | n                                                             |
-| dpr                        | dpr                                                           |
-| progressive                | pr                                                            |
-| lossless                   | lo                                                            |
-| trim                       | t                                                             |
-| metadata                   | md                                                            |
-| colorProfile               | cp                                                            |
-| defaultImage               | di                                                            |
-| original                   | orig                                                          |
-| videoCodec                 | vc                                                            |
-| audioCodec                 | ac                                                            |
-| grayscale                  | e-grayscale                                                   |
-| contrastStretch            | e-contrast                                                    |
-| shadow                     | e-shadow                                                      |
-| sharpen                    | e-sharpen                                                     |
-| unsharpMask                | e-usm                                                         |
-| gradient                   | e-gradient                                                    |
-| flip                       | fl                                                            |
-| opacity                    | o                                                             |
-| zoom                       | z                                                             |
-| page                       | pg                                                            |
-| startOffset                | so                                                            |
-| endOffset                  | eo                                                            |
-| duration                   | du                                                            |
-| streamingResolutions       | sr                                                            |
-| raw                        | The string provided in raw will be added in the URL as it is. |
+| Transformation Name        | URL Parameter                                                                |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| width                      | w                                                                            |
+| height                     | h                                                                            |
+| aspectRatio                | ar                                                                           |
+| quality                    | q                                                                            |
+| aiRemoveBackground         | e-bgremove (ImageKit powered)                                                |
+| aiRemoveBackgroundExternal | e-removedotbg (Using third party)                                            |
+| aiUpscale                  | e-upscale                                                                    |
+| aiRetouch                  | e-retouch                                                                    |
+| aiVariation                | e-genvar                                                                     |
+| aiDropShadow               | e-dropshadow                                                                 |
+| aiChangeBackground         | e-changebg                                                                   |
+| crop                       | c                                                                            |
+| cropMode                   | cm                                                                           |
+| x                          | x                                                                            |
+| y                          | y                                                                            |
+| xCenter                    | xc                                                                           |
+| yCenter                    | yc                                                                           |
+| focus                      | fo                                                                           |
+| format                     | f                                                                            |
+| radius                     | r                                                                            |
+| background                 | bg                                                                           |
+| border                     | b                                                                            |
+| rotation                   | rt                                                                           |
+| blur                       | bl                                                                           |
+| named                      | n                                                                            |
+| dpr                        | dpr                                                                          |
+| progressive                | pr                                                                           |
+| lossless                   | lo                                                                           |
+| trim                       | t                                                                            |
+| metadata                   | md                                                                           |
+| colorProfile               | cp                                                                           |
+| defaultImage               | di                                                                           |
+| original                   | orig                                                                         |
+| videoCodec                 | vc                                                                           |
+| audioCodec                 | ac                                                                           |
+| grayscale                  | e-grayscale                                                                  |
+| contrastStretch            | e-contrast                                                                   |
+| shadow                     | e-shadow                                                                     |
+| sharpen                    | e-sharpen                                                                    |
+| unsharpMask                | e-usm                                                                        |
+| gradient                   | e-gradient                                                                   |
+| flip                       | fl                                                                           |
+| opacity                    | o                                                                            |
+| zoom                       | z                                                                            |
+| page                       | pg                                                                           |
+| startOffset                | so                                                                           |
+| endOffset                  | eo                                                                           |
+| duration                   | du                                                                           |
+| streamingResolutions       | sr                                                                           |
+| overlay                    | Generated correct layer syntax for image, video, text and subtitle overlays. |
+| raw                        | The string provided in raw will be added in the URL as is.                   |
 
 ### Handling Unsupported Transformations
 
@@ -436,7 +442,7 @@ var imageURL = imagekit.url({
         newparam: "cool"
     }]
 });
-// Generated URL: https://ik.imagekit.io/test_url_endpoint/tr:newparam-cool/test_path.jpg
+// Generated URL: https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=newparam-cool
 ```
 
 ## File Upload
@@ -447,6 +453,31 @@ The SDK offers a simple interface via the `.upload()` method to upload files to 
 - Security parameters: **signature**, **token**, and **expire**
 
 Before invoking the upload, generate the necessary security parameters as per the [ImageKit Upload API documentation](https://imagekit.io/docs/api-reference/upload-file/upload-file#how-to-implement-client-side-file-upload).
+
+### Upload Options
+| Option                  | Description                                                                                                                                             | Example                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| file                    | The file content to be uploaded. Accepts binary, base64 string, or URL.                                                                                 | `file: fileInput.files[0]`                               |
+| fileName                | The name to assign to the uploaded file. Supports alphanumeric characters, dot, underscore, and dash.                                                   | `fileName: "myImage.jpg"`                                |
+| signature               | HMAC-SHA1 digest computed using the private API key. Must be calculated on the server side.                                                             | `signature: "generated_signature"`                       |
+| token                   | A unique token to prevent duplicate upload retries. Typically a V4 UUID or similar unique string.                                                       | `token: "unique_upload_token"`                           |
+| expire                  | Unix timestamp (in seconds) indicating the signature expiry time (should be within 1 hour).                                                             | `expire: 1616161616`                                     |
+| useUniqueFileName       | Boolean flag to automatically generate a unique filename if set to true. Defaults to true.                                                              | `useUniqueFileName: true`                                |
+| folder                  | The folder path where the file will be uploaded. Automatically creates nested folders if they don’t exist.                                              | `folder: "/images/uploads"`                              |
+| isPrivateFile           | Boolean to mark the file as private, restricting access to the original file URL. Defaults to false.                                                    | `isPrivateFile: false`                                   |
+| tags                    | Tags to associate with the file. Can be a comma-separated string or an array of tags.                                                                   | `tags: "summer,holiday"` or `tags: ["summer","holiday"]` |
+| customCoordinates       | Specifies an area of interest in the image formatted as `x,y,width,height`.                                                                             | `customCoordinates: "10,10,100,100"`                     |
+| responseFields          | Comma-separated list of fields to include in the upload response.                                                                                       | `responseFields: "tags,customCoordinates"`               |
+| extensions              | Array of extension objects for additional image processing.                                                                                             | `extensions: [{ name: "auto-tagging" }]`                 |
+| webhookUrl              | URL to which the final status of extension processing will be sent.                                                                                     | `webhookUrl: "https://example.com/webhook"`              |
+| overwriteFile           | Boolean flag indicating whether to overwrite a file if it exists. Defaults to true.                                                                     | `overwriteFile: true`                                    |
+| overwriteAITags         | Boolean flag to remove AITags from a file if overwritten. Defaults to true.                                                                             | `overwriteAITags: true`                                  |
+| overwriteTags           | Boolean flag that determines if existing tags should be removed when new tags are not provided. Defaults to true when file is overwritten without tags. | `overwriteTags: true`                                    |
+| overwriteCustomMetadata | Boolean flag dictating if existing custom metadata should be removed when not provided. Defaults to true under similar conditions as tags.              | `overwriteCustomMetadata: true`                          |
+| customMetadata          | Stringified JSON or an object containing custom metadata key-value pairs to associate with the file.                                                    | `customMetadata: {author: "John Doe"}`                   |
+| transformation          | Optional transformation object to apply during the upload process. It follows the same structure as in URL generation.                                  | `transformation: { pre: "w-200,h-200", post: [...] }`    |
+| xhr                     | An optional XMLHttpRequest object provided to monitor upload progress.                                                                                  | `xhr: new XMLHttpRequest()`                              |
+| checks                  | Optional string value for specifying server-side checks to run before file upload.                                                                      | `checks: "file.size' < '1MB'"`                           |
 
 ### Basic Upload Example
 
@@ -503,7 +534,7 @@ imagekit.upload({
 ## Test Examples
 
 For a quick demonstration of the SDK features, refer to our test examples:
-- URL Generation examples can be found in [test/url-generation.js](./test/url-generation.js)
+- URL Generation examples can be found in [basic](./test/url-generation/basic.js) and [overlay](./test/url-generation/overlay.js)
 - File Upload examples can be found in [test/upload.js](./test/upload.js)
 
 ## Changelog

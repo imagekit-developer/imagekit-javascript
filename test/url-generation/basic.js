@@ -58,13 +58,15 @@ describe("URL generation", function () {
             transformation: [{
                 "height": "300",
                 "width": "400"
+            }, {
+                rotation: 90
             }]
         });
-        expect(url).equal("https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400");
+        expect(url).equal("https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400:rt-90");
     });
 
     it('should generate the URL without sdk version', function () {
-        const ik = new ImageKit({ ...initializationParams, sdkVersion: "" })
+        const ik = new ImageKit(initializationParams)
 
         const url = ik.url({
             path: "/test_path.jpg",
