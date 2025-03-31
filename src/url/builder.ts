@@ -45,10 +45,6 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     return "";
   }
 
-  // if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
-  //   urlObj.searchParams.append("ik-sdk-version", opts.sdkVersion.trim());
-  // }
-
   for (var i in opts.queryParameters) {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
   }
@@ -56,20 +52,29 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
   var transformationString = constructTransformationString(opts.transformation);
 
   if (transformationString && transformationString.length) {
-    if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-      urlObj.searchParams.append(TRANSFORMATION_PARAMETER, transformationString);
-    } else {
+    if (!transformationUtils.addAsQueryParameter(opts) && !isSrcParameterUsedForURL) {
       urlObj.pathname = pathJoin([
         TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
         urlObj.pathname,
       ]);
-    }
+    } 
   }
 
   if (urlEndpointPattern) {
     urlObj.pathname = pathJoin([urlEndpointPattern, urlObj.pathname]);
   } else {
     urlObj.pathname = pathJoin([urlObj.pathname]);
+  }
+
+  if (transformationString && transformationString.length) {
+    if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
+      if(urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
+        return `${urlObj.href}&${TRANSFORMATION_PARAMETER}=${transformationString}`;
+      }
+      else {
+        return `${urlObj.href}?${TRANSFORMATION_PARAMETER}=${transformationString}`;
+      }
+    }
   }
 
   return urlObj.href;

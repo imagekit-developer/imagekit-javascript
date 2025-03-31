@@ -441,4 +441,18 @@ describe("Overlay encoding test cases", function () {
         });
         expect(url).equal(`https://ik.imagekit.io/demo/tr:l-subtitle,ie-${encodeURIComponent(safeBtoa("sub.srt"))},l-end/sample.mp4`);
     });
+
+    it("Avoid double encoding when transformation string is in query params", function () {
+        const url = imagekit.url({
+            path: "/sample.jpg",
+            transformation: [{
+                overlay: {
+                    type: "text",
+                    text: "Minimal Text"
+                }
+            }],
+            transformationPosition: "query"
+        });
+        expect(url).equal(`https://ik.imagekit.io/demo/sample.jpg?tr=l-text,i-Minimal%20Text,l-end`);
+    });
 });

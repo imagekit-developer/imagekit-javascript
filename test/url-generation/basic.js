@@ -48,6 +48,21 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
+    it("By default transformationPosition should be query", function () {
+        var imagekitNew = new ImageKit({
+            publicKey: "test_public_key",
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+        });
+        const url = imagekitNew.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400"
+            }]
+        });
+        expect(url).equal("https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400");
+    });
+
     it('should generate the URL without sdk version', function () {
         const ik = new ImageKit({ ...initializationParams, sdkVersion: "" })
 
@@ -111,7 +126,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with a valid src parameter and transformation', function () {
@@ -123,7 +138,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
@@ -136,7 +151,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should merge query parameters correctly in the generated URL', function () {
@@ -149,7 +164,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300,w-400`);
     });
 
 
