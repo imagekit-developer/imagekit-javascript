@@ -386,42 +386,6 @@ export interface Transformation {
      */
     raw?: string;
 
-    // old as it is but deprecated
-
-    /**
-     * @deprecated Use `rotation` instead.
-     */
-    rotate?: string;
-
-    /**
-     * @deprecated Use `sharpen` instead.
-     */
-    effectSharpen?: string;
-
-    /**
-     * @deprecated Use `unsharpMask` instead.
-     */
-    effectUSM?: string;
-
-    /**
-     * @deprecated Use `contrastStretch` instead.
-     */
-    effectContrast?: string;
-
-    /**
-     * @deprecated Use `grayscale` instead.
-     */
-    effectGray?: string;
-
-    /**
-     * @deprecated Use `shadow` instead.
-     */
-    effectShadow?: string;
-
-    /**
-     * @deprecated Use `gradient` instead.
-     */
-    effectGradient?: string;
 
     /**
      * Specifies an overlay to be applied on the parent image or video.

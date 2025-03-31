@@ -278,7 +278,7 @@ describe("URL generation", function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
-                effectContrast: "-"
+                contrastStretch: "-"
             }]
         })
 
@@ -291,7 +291,7 @@ describe("URL generation", function () {
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 quality: undefined,
-                effectContrast: null
+                contrastStretch: null
             }]
         })
 
@@ -303,7 +303,7 @@ describe("URL generation", function () {
             path: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
-                effectContrast: false
+                contrastStretch: false
             }]
         })
 
@@ -910,12 +910,12 @@ describe("URL generation", function () {
                 colorProfile: true,
                 defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
                 dpr: 3,
-                effectSharpen: 10,
-                effectUSM: "2-2-0.8-0.024",
-                effectContrast: true,
-                effectGray: true,
-                effectShadow: 'bl-15_st-40_x-10_y-N5',
-                effectGradient: 'from-red_to-white',
+                sharpen: 10,
+                unsharpMask: "2-2-0.8-0.024",
+                contrastStretch: true,
+                grayscale: true,
+                shadow: 'bl-15_st-40_x-10_y-N5',
+                gradient: 'from-red_to-white',
                 original: true,
                 raw: "h-200,w-300,l-image,i-logo.png,l-end"
             }]

@@ -32,15 +32,6 @@ export const supportedTransforms: { [key: string]: string } = {
   duration: "du",
   streamingResolutions: "sr",
 
-  // Old deprecated mappings
-  effectSharpen: "e-sharpen",
-  effectUSM: "e-usm",
-  effectContrast: "e-contrast",
-  effectGray: "e-grayscale",
-  effectShadow: "e-shadow",
-  effectGradient: "e-gradient",
-  rotate: "rt",
-
   // AI & advanced effects
   grayscale: "e-grayscale",
   aiUpscale: "e-upscale",
