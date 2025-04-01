@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
-A lightweight JavaScript SDK for generating optimized URLs for images and videos, and for uploading files using ImageKit.
+A lightweight JavaScript SDK for generating image and video URLs with transformations, and for uploading files directly from the browser to ImageKit. This SDK is intended for use in the browser only. For Node.js, please refer to our official [Node.js SDK](https://github.com/imagekit-developer/imagekit-nodejs).
 
 ## Table of Contents
 - [Installation](#installation)
