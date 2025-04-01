@@ -1,7 +1,9 @@
 import { ImageKitOptions, UrlOptions } from "../interfaces";
-import { Transformation } from "../interfaces/Transformation";
-import transformationUtils from "../utils/transformation";
+import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "../interfaces/Transformation";
+import transformationUtils, { safeBtoa } from "../utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
+const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
+const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
 
 function removeTrailingSlash(str: string) {
   if (typeof str == "string" && str[str.length - 1] == "/") {
@@ -43,10 +45,6 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     return "";
   }
 
-  // if (opts.sdkVersion && opts.sdkVersion.trim() != "") {
-  //   urlObj.searchParams.append("ik-sdk-version", opts.sdkVersion.trim());
-  // }
-
   for (var i in opts.queryParameters) {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
   }
@@ -54,14 +52,12 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
   var transformationString = constructTransformationString(opts.transformation);
 
   if (transformationString && transformationString.length) {
-    if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-      urlObj.searchParams.append(TRANSFORMATION_PARAMETER, transformationString);
-    } else {
+    if (!transformationUtils.addAsQueryParameter(opts) && !isSrcParameterUsedForURL) {
       urlObj.pathname = pathJoin([
         TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
         urlObj.pathname,
       ]);
-    }
+    } 
   }
 
   if (urlEndpointPattern) {
@@ -70,21 +66,174 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     urlObj.pathname = pathJoin([urlObj.pathname]);
   }
 
+  if (transformationString && transformationString.length) {
+    if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
+      if(urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
+        return `${urlObj.href}&${TRANSFORMATION_PARAMETER}=${transformationString}`;
+      }
+      else {
+        return `${urlObj.href}?${TRANSFORMATION_PARAMETER}=${transformationString}`;
+      }
+    }
+  }
+
   return urlObj.href;
 };
+
+function processInputPath(str: string, enccoding: string): string {
+  // Remove leading and trailing slashes
+  str = removeTrailingSlash(removeLeadingSlash(str));
+  if(enccoding === "plain") {
+    return `i-${str.replace(/\//g, "@@")}`;
+  }
+  if(enccoding === "base64") {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+  if (SIMPLE_OVERLAY_PATH_REGEX.test(str)) {
+    return `i-${str.replace(/\//g, "@@")}`;
+  } else {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+}
+
+function processText(str: string, enccoding: TextOverlay["encoding"]): string {
+  if (enccoding === "plain") {
+    return `i-${encodeURIComponent(str)}`;
+  }
+  if (enccoding === "base64") {
+    return `ie-${encodeURIComponent(safeBtoa(str))}`;
+  }
+  if (SIMPLE_OVERLAY_TEXT_REGEX.test(str)) {
+    return `i-${encodeURIComponent(str)}`;
+  }
+  return `ie-${encodeURIComponent(safeBtoa(str))}`;
+}
+
+function processOverlay(overlay: Transformation["overlay"]): string | undefined {
+  const entries = [];
+  if (!overlay) {
+    return;
+  }
+  const { type, position = {}, timing = {}, transformation = [] } = overlay;
+
+  if (!type) {
+    throw new Error("Overlay type is required");
+  }
+
+  switch (type) {
+    case "text": {
+      const textOverlay = overlay as TextOverlay;
+      if (!textOverlay.text) {
+        return;
+      }
+      const enccoding = textOverlay.encoding || "auto";
+
+      entries.push("l-text");
+      entries.push(processText(textOverlay.text, enccoding));
+    }
+      break;
+    case "image":
+      entries.push("l-image");
+      {
+        const imageOverlay = overlay as ImageOverlay;
+        const enccoding = imageOverlay.encoding || "auto";
+        if (imageOverlay.input) {
+          entries.push(processInputPath(imageOverlay.input, enccoding));
+        } else {
+          return;
+        }
+      }
+      break;
+    case "video":
+      entries.push("l-video");
+      {
+        const videoOverlay = overlay as VideoOverlay;
+        const enccoding = videoOverlay.encoding || "auto";
+        if (videoOverlay.input) {
+          entries.push(processInputPath(videoOverlay.input, enccoding));
+        } else {
+          return;
+        }
+      }
+      break;
+    case "subtitle":
+      entries.push("l-subtitle");
+      {
+        const subtitleOverlay = overlay as SubtitleOverlay;
+        const enccoding = subtitleOverlay.encoding || "auto";
+        if (subtitleOverlay.input) {
+          entries.push(processInputPath(subtitleOverlay.input, enccoding));
+        } else {
+          return;
+        }
+      }
+      break;
+    case "solidColor":
+      entries.push("l-image");
+      entries.push(`i-ik_canvas`);
+      {
+        const solidColorOverlay = overlay as SolidColorOverlay;
+        if (solidColorOverlay.color) {
+          entries.push(`bg-${solidColorOverlay.color}`);
+        } else {
+          return;
+        }
+      }
+      break;
+  }
+
+  const { x, y, focus } = position;
+  if (x) {
+    entries.push(`lxo-${x}`);
+  }
+  if (y) {
+    entries.push(`lyo-${y}`);
+  }
+  if (focus) {
+    entries.push(`lfo-${focus}`);
+  }
+
+  const { start, end, duration } = timing;
+
+  if (start) {
+    entries.push(`lso-${start}`);
+  }
+  if (end) {
+    entries.push(`leo-${end}`);
+  }
+  if (duration) {
+    entries.push(`ldu-${duration}`);
+  }
+
+  const transformationString = constructTransformationString(transformation);
+
+  if (transformationString && transformationString.trim() !== "") entries.push(transformationString);
+
+  entries.push("l-end");
+
+  return entries.join(transformationUtils.getTransformDelimiter());
+}
 
 function constructTransformationString(transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }
 
-  var parsedTransforms = [];
+  var parsedTransforms: string[] = [];
   for (var i = 0, l = transformation.length; i < l; i++) {
-    var parsedTransformStep = [];
+    var parsedTransformStep: string[] = [];
     for (var key in transformation[i]) {
       let value = transformation[i][key as keyof Transformation];
       if (value === undefined || value === null) {
         continue;
+      }
+
+      if (key === "overlay" && typeof value === "object") {
+        var rawString = processOverlay(value as Transformation["overlay"]);
+        if (rawString && rawString.trim() !== "") {
+          parsedTransformStep.push(rawString);
+        }
+        continue; // Always continue as overlay is processed.
       }
 
       var transformKey = transformationUtils.getTransformKey(key);
@@ -111,7 +260,7 @@ function constructTransformationString(transformation: Transformation[] | undefi
       ) {
         parsedTransformStep.push(transformKey);
       } else if (key === "raw") {
-        parsedTransformStep.push(transformation[i][key]);
+        parsedTransformStep.push(transformation[i][key] as string);
       } else {
         if (transformKey === "di") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));

@@ -37,13 +37,12 @@ const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
 
 class ImageKit {
   options: ImageKitOptions = {
-    sdkVersion: `javascript-${version}`,
     publicKey: "",
     urlEndpoint: "",
     transformationPosition: transformationUtils.getDefault(),
   };
 
-  constructor(opts: Omit<ImageKitOptions, "sdkVersion">) {
+  constructor(opts: ImageKitOptions) {
     this.options = { ...this.options, ...(opts || {}) };
     if (!mandatoryParametersAvailable(this.options)) {
       throw errorMessages.MANDATORY_INITIALIZATION_MISSING;

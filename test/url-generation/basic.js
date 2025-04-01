@@ -1,9 +1,9 @@
 const chai = require("chai");
-const pkg = require("../package.json");
+const pkg = require("../../package.json");
 global.FormData = require('formdata-node');
 const expect = chai.expect;
-const initializationParams = require("./data").initializationParams
-import ImageKit from "../src/index";
+const initializationParams = require("../data").initializationParams
+import ImageKit from "../../src/index";
 
 describe("URL generation", function () {
 
@@ -48,8 +48,25 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
+    it("By default transformationPosition should be query", function () {
+        var imagekitNew = new ImageKit({
+            publicKey: "test_public_key",
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+        });
+        const url = imagekitNew.url({
+            path: "/test_path.jpg",
+            transformation: [{
+                "height": "300",
+                "width": "400"
+            }, {
+                rotation: 90
+            }]
+        });
+        expect(url).equal("https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400:rt-90");
+    });
+
     it('should generate the URL without sdk version', function () {
-        const ik = new ImageKit({ ...initializationParams, sdkVersion: "" })
+        const ik = new ImageKit(initializationParams)
 
         const url = ik.url({
             path: "/test_path.jpg",
@@ -111,7 +128,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with a valid src parameter and transformation', function () {
@@ -123,7 +140,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
@@ -136,7 +153,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should merge query parameters correctly in the generated URL', function () {
@@ -149,7 +166,7 @@ describe("URL generation", function () {
             }]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300%2Cw-400`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300,w-400`);
     });
 
 
@@ -261,7 +278,7 @@ describe("URL generation", function () {
         const url = imagekit.url({
             path: "/test_path.jpg",
             transformation: [{
-                effectContrast: "-"
+                contrastStretch: "-"
             }]
         })
 
@@ -274,7 +291,7 @@ describe("URL generation", function () {
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 quality: undefined,
-                effectContrast: null
+                contrastStretch: null
             }]
         })
 
@@ -286,7 +303,7 @@ describe("URL generation", function () {
             path: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
-                effectContrast: false
+                contrastStretch: false
             }]
         })
 
@@ -893,12 +910,12 @@ describe("URL generation", function () {
                 colorProfile: true,
                 defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
                 dpr: 3,
-                effectSharpen: 10,
-                effectUSM: "2-2-0.8-0.024",
-                effectContrast: true,
-                effectGray: true,
-                effectShadow: 'bl-15_st-40_x-10_y-N5',
-                effectGradient: 'from-red_to-white',
+                sharpen: 10,
+                unsharpMask: "2-2-0.8-0.024",
+                contrastStretch: true,
+                grayscale: true,
+                shadow: 'bl-15_st-40_x-10_y-N5',
+                gradient: 'from-red_to-white',
                 original: true,
                 raw: "h-200,w-300,l-image,i-logo.png,l-end"
             }]

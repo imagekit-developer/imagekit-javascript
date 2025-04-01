@@ -32,15 +32,6 @@ export const supportedTransforms: { [key: string]: string } = {
   duration: "du",
   streamingResolutions: "sr",
 
-  // Old deprecated mappings
-  effectSharpen: "e-sharpen",
-  effectUSM: "e-usm",
-  effectContrast: "e-contrast",
-  effectGray: "e-grayscale",
-  effectShadow: "e-shadow",
-  effectGradient: "e-gradient",
-  rotate: "rt",
-
   // AI & advanced effects
   grayscale: "e-grayscale",
   aiUpscale: "e-upscale",
@@ -65,6 +56,20 @@ export const supportedTransforms: { [key: string]: string } = {
   trim: "t",
   zoom: "z",
   page: "pg",
+
+  // Text overlay transformations which are not defined yet
+  fontSize: "fs",
+  fontFamily: "ff",
+  fontColor: "co",
+  innerAlignment: "ia",
+  padding: "pa",
+  alpha: "al",
+  typography: "tg",
+  lineHeight: "lh",
+
+  // Subtitles transformations which are not defined
+  fontOutline: "fol",
+  fontShadow: "fsh",
 
   // Raw pass-through
   raw: "raw",

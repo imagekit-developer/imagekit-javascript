@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 4.0.0
+
+### Breaking Changes
+
+1. The default value for `transformationPosition` is now `query` instead of `path`. This change enables wildcard cache purging to remove CDN cache for all generated transformations.
+
+   **Action Required:**  
+   If you're using the `transformationPosition` parameter in the `url` method and want to apply transformations in the path, you must now explicitly set the value to `path`. The default is `query`.
+
+2. Removed the following deprecated parameters:  
+   `effectSharpen`, `effectUSM`, `effectContrast`, `effectGray`, `effectShadow`, `effectGradient`, and `rotate`.
+
+### Other Changes
+
+1. Native support for overlays has been added. See the README for usage examples.
+2. New AI-powered transformations are now supported:  
+   `aiRemoveBackground`, `aiUpscale`, `aiVariation`, `aiDropShadow`, `aiChangeBackground`, and more.  
+   *(Introduced in version 3.1.0)*
+
+---
+
 ## SDK Version 3.0.0
 
 ### Breaking Changes
