@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 4.0.1
+
+### Bug Fixes
+
+1. Fixed overlay position x,y issue.
+
+---
+
 ## Version 4.0.0
 
 ### Breaking Changes

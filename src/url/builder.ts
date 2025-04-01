@@ -184,10 +184,10 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
 
   const { x, y, focus } = position;
   if (x) {
-    entries.push(`lxo-${x}`);
+    entries.push(`lx-${x}`);
   }
   if (y) {
-    entries.push(`lyo-${y}`);
+    entries.push(`ly-${y}`);
   }
   if (focus) {
     entries.push(`lfo-${focus}`);

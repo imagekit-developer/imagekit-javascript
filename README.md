@@ -533,8 +533,8 @@ imagekit.upload({
 ## Test Examples
 
 For a quick demonstration of the SDK features, check the test suite:
-- URL generation examples can be found in [basic](./test/url-generation/basic.js) and [overlay](./test/url-generation/overlay.js)
-- File upload examples can be found in [test/upload.js](./test/upload.js)
+- URL generation examples can be found in [basic.js](./test/url-generation/basic.js) and [overlay.js](./test/url-generation/overlay.js) files.
+- File upload examples can be found in [test/upload.js](./test/upload.js).
 
 ## Changelog
 
