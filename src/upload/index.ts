@@ -93,6 +93,7 @@ export const upload = (
       } else if (key === 'checks' && uploadOptions.checks) {
         formData.append("checks", uploadOptions.checks);
       } else if (uploadOptions[key] !== undefined) {
+        if (["onProgress", "signal"].includes(key)) continue;
         formData.append(key, String(uploadOptions[key]));
       }
     }
@@ -106,15 +107,28 @@ export const upload = (
     };
   }
 
-  if (uploadOptions.signal && uploadOptions.signal) {
+  function onAbortHandler() {
+    xhr.abort();
+    // Provide the reason or fallback error
+    // @ts-ignore for TypeScript versions lacking `signal.reason`
+    respond(true, uploadOptions.signal?.reason ?? errorMessages.UPLOAD_ABORTED, callback);
+  }
+
+  if (uploadOptions.signal) {
     if (uploadOptions.signal.aborted) { // If the signal is already aborted, return immediately with the reason
+      // @ts-ignore for TypeScript versions lacking `signal.reason`
       respond(true, uploadOptions.signal.reason ?? errorMessages.UPLOAD_ABORTED, callback);
       return;
     }
+
     // If the signal is not already aborted, add an event listener to abort the request when the signal is aborted
-    uploadOptions.signal.addEventListener("abort", function () {
-      xhr.abort();
-      respond(true, this.reason, callback);
+    uploadOptions.signal.addEventListener("abort", onAbortHandler);
+
+    // On XHR completion (success, fail, or abort), remove just this abort handler
+    xhr.addEventListener("loadend", () => {
+      if (uploadOptions.signal) {
+        uploadOptions.signal.removeEventListener("abort", onAbortHandler);
+      }
     });
   }
 
