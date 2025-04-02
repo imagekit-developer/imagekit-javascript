@@ -145,5 +145,15 @@ export interface UploadOptions {
   /**
    * Optional `checks` parameters can be used to run server-side checks before files are uploaded to the Media Library.
    */
-  checks?: string
+  checks?: string;
+
+  /**
+   * Optional callback function that will be called with the progress event when the file is being uploaded.
+   */
+  onProgress?: (event: ProgressEvent) => void;
+
+  /**
+   * Optional AbortSignal object that can be used to abort the upload request
+   */
+  signal?: AbortSignal;
 }
