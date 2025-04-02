@@ -22,6 +22,7 @@
         "@rollup/plugin-node-resolve": "^8.4.0",
         "@rollup/plugin-typescript": "^8.2.1",
         "@types/node": "^15.6.1",
+        "abortcontroller-polyfill": "^1.7.8",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "chai": "^4.2.0",
         "codecov": "^3.8.0",
@@ -43,7 +44,7 @@
         "dev": "rollup -c -w",
         "export-types": "tsc",
         "build": "rm -rf dist*;rollup -c && yarn export-types",
-        "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha \"test/**/*.js\"",
+        "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha --require ./test/setup.js \"test/**/*.js\"",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
         "report-coverage": "codecov"
     },
