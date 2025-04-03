@@ -26,16 +26,19 @@ function pathJoin(parts: string[], sep?: string) {
 }
 
 export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlEndpoint">> & Pick<ImageKitOptions, "transformationPosition">) => {
+  opts.urlEndpoint = opts.urlEndpoint || "";
+  opts.src = opts.src || "";
+  
   if (!opts.src) {
     return "";
   }
 
-  const isRelativePath = opts.src && opts.src.startsWith("/");
+  const isAbsoluteURL = opts.src.startsWith("http://") || opts.src.startsWith("https://");
 
   var urlObj, isSrcParameterUsedForURL, urlEndpointPattern;
 
   try {
-    if (isRelativePath) {
+    if (!isAbsoluteURL) {
       urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
       urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.src]));
     } else {

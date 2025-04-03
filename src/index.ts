@@ -45,18 +45,7 @@ class ImageKit {
    * A static method to generate URL for the given transformation parameters. This method is useful when you want to generate URL without creating an instance of the SDK.
    */
   static url(urlOptions: UrlOptions & Required<Pick<ImageKitOptions, "urlEndpoint">> & Pick<ImageKitOptions, "transformationPosition">): string {
-    const options = urlOptions;
-    if (!options.urlEndpoint || options.urlEndpoint.length === 0) {
-      throw {
-        message: "urlEndpoint is required",
-      }
-    }
-    if (!options.src || options.src.length === 0) {
-      throw {
-        message: "src is required",
-      }
-    }
-    return buildURL(options);
+    return buildURL(urlOptions);
   }
 
   /**

@@ -1,10 +1,10 @@
 const chai = require("chai");
 const sinon = require("sinon");
 const expect = chai.expect;
-const initializationParams = require("./data").initializationParams
+const initializationParams = require("./data").initializationParams;
+import 'regenerator-runtime/runtime';
 import ImageKit from "../src/index";
 var requests, server;
-import 'regenerator-runtime/runtime'
 
 const uploadSuccessResponseObj = {
     "fileId": "598821f949c0a938d57563bd",
@@ -27,7 +27,7 @@ const securityParameters = {
     signature: "test_signature",
     expire: 123,
     token: "test_token"
-}
+};
 
 function successUploadResponse() {
     server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -56,10 +56,8 @@ function errorUploadResponse(statusCode, obj) {
 }
 
 async function sleep(ms = 0) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        }, ms);
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
     });
 }
 
@@ -75,49 +73,52 @@ describe("File upload", function () {
     });
 
     afterEach(() => {
-        // Like before we must clean up when tampering with globals.
         global.XMLHttpRequest.restore();
         server.restore();
     });
 
-    it('Invalid options', function () {
-        var callback = sinon.spy();
-
-        imagekit.upload(undefined, callback);
-        expect(server.requests.length).to.be.equal(0);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { help: "", message: "Invalid uploadOptions parameter" }, null);
+    it('Invalid options', async function () {
+        try {
+            await imagekit.upload(undefined);
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ help: "", message: "Missing file parameter for upload" });
+        }
     });
 
-    it('Missing fileName', function () {
+    it('Missing fileName', async function () {
         const fileOptions = {
             ...securityParameters,
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { help: "", message: "Missing fileName parameter for upload" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ help: "", message: "Missing fileName parameter for upload" });
+        }
     });
 
-    it('Missing file', function () {
+    it('Missing file', async function () {
         const fileOptions = {
             ...securityParameters,
             fileName: "test_file_name",
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { help: "", message: "Missing file parameter for upload" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ help: "", message: "Missing file parameter for upload" });
+        }
     });
 
-    it('Missing token', function () {
+    it('Missing token', async function () {
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file",
@@ -125,15 +126,17 @@ describe("File upload", function () {
             expire: 123
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing token for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ message: "Missing token for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+        }
     });
 
-    it('Missing signature', function () {
+    it('Missing signature', async function () {
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file",
@@ -141,15 +144,17 @@ describe("File upload", function () {
             expire: 123
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing signature for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ message: "Missing signature for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+        }
     });
 
-    it('Missing expire', function () {
+    it('Missing expire', async function () {
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file",
@@ -157,28 +162,33 @@ describe("File upload", function () {
             signature: 'test_signature'
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, { message: "Missing expire for upload. The SDK expects token, signature and expire for authentication.", help: "" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ message: "Missing expire for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+        }
     });
 
-    it('Missing public key', function () {
+    it('Missing public key', async function () {
         const fileOptions = {
             fileName: "test_file_name",
             file: "test_file"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback, {
-            publicKey: ""
+        const imagekitWithoutPublicKey = new ImageKit({
+            urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
         });
 
-        expect(server.requests.length).to.be.equal(1);
-        sinon.assert.calledWith(callback, { message: "Missing public key for upload", help: "" }, null);
+        try {
+            const uploadPromise = imagekitWithoutPublicKey.upload(fileOptions);
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ message: "Missing public key for upload", help: "" });
+        }
     });
 
     it('Upload endpoint network error handling', async function () {
@@ -188,17 +198,18 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
-
         // Simulate network error on upload API
         server.requests[0].error();
         await sleep();
-        sinon.assert.calledWith(callback, { message: "Request to ImageKit upload endpoint failed due to network error", help: "" }, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal({ message: "Request to ImageKit upload endpoint failed due to network error", help: "" });
+        }
     });
 
     it('Boolean handling', async function () {
@@ -213,10 +224,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -235,8 +243,8 @@ describe("File upload", function () {
         expect(arg.get('isPrivateFile')).to.be.equal('true');
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Tag array handling', async function () {
@@ -249,10 +257,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -269,8 +274,8 @@ describe("File upload", function () {
         expect(arg.get('isPrivateFile')).to.be.equal('true');
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Missing useUniqueFileName', async function () {
@@ -282,10 +287,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -304,8 +306,8 @@ describe("File upload", function () {
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
         expect(arg.get('responseFields')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Missing isPrivateFile', async function () {
@@ -316,10 +318,7 @@ describe("File upload", function () {
             tags: ["test_tag1", "test_tag2"]
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -338,8 +337,8 @@ describe("File upload", function () {
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
         expect(arg.get('responseFields')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('With extensions parameter', async function () {
@@ -361,10 +360,7 @@ describe("File upload", function () {
             ],
             webhookUrl: "https://your-domain/?appId=some-id"
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -384,10 +380,10 @@ describe("File upload", function () {
         expect(arg.get('isPrivateFile')).to.be.equal('true');
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
         expect(arg.get('extensions')).to.be.equal(JSON.stringify(fileOptions.extensions));
-        expect(arg.get('webhookUrl')).to.be.equal('https://your-domain/?appId=some-id')
+        expect(arg.get('webhookUrl')).to.be.equal('https://your-domain/?appId=some-id');
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Bare minimum request', async function () {
@@ -398,10 +394,7 @@ describe("File upload", function () {
             tags: undefined
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -420,22 +413,19 @@ describe("File upload", function () {
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
         expect(arg.get('responseFields')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Bare minimum request: Blob', async function () {
-        const buffer = Buffer.from("test_buffer")
+        const buffer = Buffer.from("test_buffer");
         const fileOptions = {
             ...securityParameters,
             fileName: "test_file_name",
             file: buffer
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -455,8 +445,8 @@ describe("File upload", function () {
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
         expect(arg.get('responseFields')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Error during upload', async function () {
@@ -466,20 +456,21 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
             help: "For support kindly contact us at support@imagekit.io .",
             message: "Your account cannot be authenticated."
-        }
+        };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it('Error during upload non 2xx with bad body', async function () {
@@ -489,10 +480,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -504,9 +492,12 @@ describe("File upload", function () {
         );
         server.respond();
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        var error = callback.args[0][0];
-        expect(error instanceof SyntaxError).to.be.true;
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex instanceof SyntaxError).to.be.true;
+        }
     });
 
     it('Error during upload 2xx with bad body', async function () {
@@ -516,10 +507,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -531,9 +519,12 @@ describe("File upload", function () {
         );
         server.respond();
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        var error = callback.args[0][0];
-        expect(error instanceof SyntaxError).to.be.true;
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex instanceof SyntaxError).to.be.true;
+        }
     });
 
     it('Upload via URL', async function () {
@@ -543,10 +534,7 @@ describe("File upload", function () {
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -565,8 +553,8 @@ describe("File upload", function () {
         expect(arg.get('customCoordinates')).to.be.equal(undefined);
         expect(arg.get('responseFields')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Overriding public key', async function () {
@@ -578,9 +566,8 @@ describe("File upload", function () {
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback, {
+        const uploadPromise = imagekit.upload({
+            ...fileOptions,
             publicKey: newPublicKey
         });
 
@@ -604,8 +591,8 @@ describe("File upload", function () {
         expect(arg.get('extensions')).to.be.equal(undefined);
         expect(arg.get('customMetadata')).to.be.equal(undefined);
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('With overwrite parameters', async function () {
@@ -619,21 +606,14 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ],
             overwriteFile: false,
             overwriteAITags: false,
             overwriteTags: false,
             overwriteCustomMetadata: false
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -658,8 +638,8 @@ describe("File upload", function () {
         expect(arg.get('overwriteTags')).to.be.equal('false');
         expect(arg.get('overwriteCustomMetadata')).to.be.equal('false');
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('With customMetadata', async function () {
@@ -673,11 +653,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ],
             overwriteFile: false,
             overwriteAITags: false,
@@ -688,10 +664,7 @@ describe("File upload", function () {
                 color: "red"
             },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -717,8 +690,8 @@ describe("File upload", function () {
         expect(arg.get('overwriteCustomMetadata')).to.be.equal('false');
         expect(arg.get('customMetadata')).to.be.equal(JSON.stringify(fileOptions.customMetadata));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Array type fields', async function () {
@@ -732,11 +705,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ],
             overwriteFile: false,
             overwriteAITags: false,
@@ -747,10 +716,7 @@ describe("File upload", function () {
                 color: "red"
             },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -776,8 +742,8 @@ describe("File upload", function () {
         expect(arg.get('overwriteCustomMetadata')).to.be.equal('false');
         expect(arg.get('customMetadata')).to.be.equal(JSON.stringify(fileOptions.customMetadata));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('check custom XHR object is used', async function () {
@@ -794,16 +760,11 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ],
             xhr
         };
-        var callback = sinon.spy();
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         expect(server.requests[0]).to.be.equal(xhr);
         expect(server.requests[0].onprogress.toString()).to.be.equal(fun.toString());
@@ -826,8 +787,8 @@ describe("File upload", function () {
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
         expect(arg.get('extensions')).to.be.equal(JSON.stringify(fileOptions.extensions));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Upload using promise - success', async function () {
@@ -841,15 +802,11 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ]
         };
 
-        var uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
 
         await sleep();
@@ -870,7 +827,7 @@ describe("File upload", function () {
         expect(arg.get('isPrivateFile')).to.be.equal('true');
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
         expect(arg.get('extensions')).to.be.equal(JSON.stringify(fileOptions.extensions));
-        var response = await uploadPromise;
+        const response = await uploadPromise;
         expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
@@ -878,7 +835,7 @@ describe("File upload", function () {
         var errRes = {
             help: "For support kindly contact us at support@imagekit.io .",
             message: "Your account cannot be authenticated."
-        }
+        };
         const fileOptions = {
             ...securityParameters,
             fileName: "test_file_name",
@@ -889,20 +846,17 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ]
         };
 
         try {
-            var uploadPromise = imagekit.upload(fileOptions);
+            const uploadPromise = imagekit.upload(fileOptions);
             await sleep();
             errorUploadResponse(500, errRes);
             await sleep();
-            var response = await uploadPromise;
+            await uploadPromise;
+            throw new Error('Should have thrown error');
         } catch (ex) {
             expect(ex).to.be.deep.equal(errRes);
         }
@@ -922,18 +876,13 @@ describe("File upload", function () {
             useUniqueFileName: false,
             isPrivateFile: true,
             extensions: [
-                {
-                    name: "aws-auto-tagging",
-                    minConfidence: 80,
-                    maxTags: 10
-                }
+                { name: "aws-auto-tagging", minConfidence: 80, maxTags: 10 }
             ],
             xhr
         };
-        var uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = imagekit.upload(fileOptions);
 
         expect(server.requests.length).to.be.equal(1);
-
 
         await sleep();
         successUploadResponse();
@@ -957,7 +906,7 @@ describe("File upload", function () {
         expect(arg.get('publicKey')).to.be.equal('test_public_key');
         expect(arg.get('extensions')).to.be.equal(JSON.stringify(fileOptions.extensions));
 
-        var response = await uploadPromise;
+        const response = await uploadPromise;
         expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
@@ -999,46 +948,9 @@ describe("File upload", function () {
         server.respond();
         await sleep();
 
-        var response = await uploadPromise;
+        const response = await uploadPromise;
         expect(response.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
         expect(response.$ResponseMetadata.statusCode).to.be.deep.equal(200);
-    });
-
-    it('$ResponseMetadata assertions using callback', async function () {
-        var dummyResonseHeaders = {
-            "Content-Type": "application/json",
-            "x-request-id": "sdfsdfsdfdsf"
-        };
-        const fileOptions = {
-            ...securityParameters,
-            fileName: "test_file_name",
-            file: "test_file"
-        };
-        var callback = sinon.spy();
-        imagekit.upload(fileOptions, callback);
-
-        expect(server.requests.length).to.be.equal(1);
-
-        await sleep();
-        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
-            [
-                200,
-                dummyResonseHeaders,
-                JSON.stringify(uploadSuccessResponseObj)
-            ]
-        );
-        server.respond();
-        await sleep();
-
-        expect(callback.calledOnce).to.be.true;
-
-        var callBackArguments = callback.args[0];
-        expect(callBackArguments.length).to.be.eq(2);
-        var callbackResult = callBackArguments[1];
-
-        expect(callbackResult).to.be.deep.equal(uploadSuccessResponseObj);
-        expect(callbackResult.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
-        expect(callbackResult.$ResponseMetadata.statusCode).to.be.deep.equal(200);
     });
 
     it('Undefined fields should not be sent', async function () {
@@ -1060,10 +972,7 @@ describe("File upload", function () {
             customMetadata: undefined
         };
 
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1085,8 +994,9 @@ describe("File upload", function () {
         expect(arg.get('overwriteTags')).to.be.equal(undefined);
         expect(arg.get('overwriteCustomMetadata')).to.be.equal(undefined);
         expect(arg.get('customMetadata')).to.be.equal(undefined);
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it("With pre and post transformation", async function () {
@@ -1098,10 +1008,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "w-100", post: [{ type: "transformation", value: "w-100" }] },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1116,8 +1023,8 @@ describe("File upload", function () {
         expect(arg.get("publicKey")).to.be.equal("test_public_key");
         expect(arg.get("transformation")).to.be.equal(JSON.stringify(fileOptions.transformation));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it("With pre transformation", async function () {
@@ -1129,10 +1036,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "w-100" },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1147,8 +1051,8 @@ describe("File upload", function () {
         expect(arg.get("publicKey")).to.be.equal("test_public_key");
         expect(arg.get("transformation")).to.be.equal(JSON.stringify(fileOptions.transformation));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it("With post transformation", async function () {
@@ -1160,10 +1064,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "transformation", value: "w-100" }] },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1178,8 +1079,8 @@ describe("File upload", function () {
         expect(arg.get("publicKey")).to.be.equal("test_public_key");
         expect(arg.get("transformation")).to.be.equal(JSON.stringify(fileOptions.transformation));
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it("Should return error for an invalid transformation", async function () {
@@ -1191,10 +1092,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: {},
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1203,8 +1101,12 @@ describe("File upload", function () {
         };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it("Should return error for an invalid pre transformation", async function () {
@@ -1216,10 +1118,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "" },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1228,8 +1127,12 @@ describe("File upload", function () {
         };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it("Should return error for an invalid post transformation of type abs", async function () {
@@ -1241,10 +1144,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "abs", value: "" }] },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1253,8 +1153,12 @@ describe("File upload", function () {
         };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it("Should return error for an invalid post transformation of type transformation", async function () {
@@ -1266,10 +1170,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "transformation", value: "" }] },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1278,8 +1179,12 @@ describe("File upload", function () {
         };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it("Should return error for an invalid post transformation if it's not an array", async function () {
@@ -1291,10 +1196,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: {} },
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1303,8 +1205,12 @@ describe("File upload", function () {
         };
         errorUploadResponse(500, errRes);
         await sleep();
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, errRes, null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal(errRes);
+        }
     });
 
     it("With checks option", async function () {
@@ -1316,10 +1222,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             checks: "'request.folder' : '/'",
         };
-        var callback = sinon.spy();
-
-        imagekit.upload(fileOptions, callback);
-
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1333,8 +1236,8 @@ describe("File upload", function () {
         expect(arg.get("publicKey")).to.be.equal("test_public_key");
         expect(arg.get('checks')).to.be.equal("'request.folder' : '/'");
 
-        expect(callback.calledOnce).to.be.true;
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('onProgress callback is triggered during upload', async function () {
@@ -1345,8 +1248,7 @@ describe("File upload", function () {
             file: "test_file",
             onProgress: progressSpy
         };
-        var callback = sinon.spy();
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         server.requests[0].uploadProgress({ lengthComputable: true, loaded: 50, total: 100 });
 
@@ -1355,7 +1257,8 @@ describe("File upload", function () {
         successUploadResponse();
         await sleep();
         expect(progressSpy.calledTwice).to.be.true; // for 100% progress
-        sinon.assert.calledWith(callback, null, uploadSuccessResponseObj);
+        const response = await uploadPromise;
+        expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
     it('Abort signal aborts the upload', async function () {
@@ -1366,16 +1269,16 @@ describe("File upload", function () {
             file: "test_file",
             signal: abortController.signal
         };
-        var callback = sinon.spy();
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         abortController.abort();
         await sleep();
-        // get arguments of the first call
-        expect(callback.calledOnce).to.be.true;
-        const args = callback.getCall(0).args;
-        expect(args[0].name).to.be.equal("AbortError");
-        expect(args[1]).to.be.equal(null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex.name).to.be.equal("AbortError");
+        }
     });
 
     it('Abort signal aborts the upload with reason', async function () {
@@ -1386,11 +1289,15 @@ describe("File upload", function () {
             file: "test_file",
             signal: abortController.signal
         };
-        var callback = sinon.spy();
-        imagekit.upload(fileOptions, callback);
+        const uploadPromise = imagekit.upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         abortController.abort("abort reason");
         await sleep();
-        sinon.assert.calledWith(callback, "abort reason", null);
+        try {
+            await uploadPromise;
+            throw new Error('Should have thrown error');
+        } catch (ex) {
+            expect(ex).to.be.deep.equal("abort reason");
+        }
     });
 });

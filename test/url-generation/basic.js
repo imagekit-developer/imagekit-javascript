@@ -18,12 +18,12 @@ describe("URL generation", function () {
     it('should return an empty string for an invalid src URL', function () {
         const url = imagekit.url({ src: "/" });
 
-        expect(url).equal("");
+        expect(url).equal("https://ik.imagekit.io/test_url_endpoint/");
     });
 
     it('should generate a valid URL when a path is provided without transformation', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg"
+            src: "/test_path.jpg"
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
@@ -39,10 +39,9 @@ describe("URL generation", function () {
 
     it('should generate a valid URL when undefined transformation parameters are provided with path', function () {
         const url = imagekit.url({
-            path: "/test_path_alt.jpg",
+            src: "/test_path_alt.jpg",
             transformation: undefined,
             transformationPosition: undefined,
-            src: undefined,
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
@@ -54,7 +53,7 @@ describe("URL generation", function () {
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
         });
         const url = imagekitNew.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -69,7 +68,7 @@ describe("URL generation", function () {
         const ik = new ImageKit(initializationParams)
 
         const url = ik.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -81,7 +80,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL with a valid path and transformation', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -93,7 +92,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when the provided path contains multiple leading slashes', function () {
         const url = imagekit.url({
-            path: "///test_path.jpg",
+            src: "///test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -107,7 +106,7 @@ describe("URL generation", function () {
     it('should generate the correct URL when the urlEndpoint is overridden', function () {
         const url = imagekit.url({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint_alt",
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -120,7 +119,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL with transformationPosition as query parameter when path is provided', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformationPosition: "query",
             transformation: [{
                 "height": "300",
@@ -172,7 +171,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL with chained transformations', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -187,7 +186,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL with chained transformations including a new undocumented transformation parameter', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400"
@@ -201,7 +200,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when overlay image transformation is provided', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400",
@@ -214,7 +213,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when overlay image transformation contains a slash in the overlay path', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400",
@@ -227,7 +226,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when border transformation is applied', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "height": "300",
                 "width": "400",
@@ -240,7 +239,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when transformation has empty key and value', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "": ""
             }]
@@ -254,7 +253,7 @@ describe("URL generation", function () {
      */
     it('should generate the correct URL when an undefined transform is provided', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 "undefined-transform": "true"
             }]
@@ -265,7 +264,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when transformation key has an empty value', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 defaultImage: ""
             }]
@@ -276,7 +275,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when transformation key has \'-\' as its value', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 contrastStretch: "-"
             }]
@@ -287,7 +286,7 @@ describe("URL generation", function () {
 
     it('should skip transformation parameters that are undefined or null', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 quality: undefined,
@@ -300,7 +299,7 @@ describe("URL generation", function () {
 
     it('should skip transformation parameters that are false', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 contrastStretch: false
@@ -312,7 +311,7 @@ describe("URL generation", function () {
 
     it('should include only the key when transformation value is an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 shadow: ""
@@ -324,7 +323,7 @@ describe("URL generation", function () {
 
     it('should include both key and value when transformation parameter value is provided', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 shadow: "bl-15_st-40_x-10_y-N5"
@@ -336,7 +335,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when trim transformation is set to true as a boolean', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 trim: true
@@ -348,7 +347,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when trim transformation is set to true as a string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 defaultImage: "/test_path.jpg",
                 trim: "true"
@@ -360,7 +359,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for AI background removal when set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackground: true
             }]
@@ -371,7 +370,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for AI background removal when \'true\' is provided as a string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackground: "true"
             }]
@@ -382,7 +381,7 @@ describe("URL generation", function () {
 
     it('should not apply AI background removal when value is not true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackground: "false"
             }]
@@ -393,7 +392,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for external AI background removal when set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackgroundExternal: true
             }]
@@ -404,7 +403,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for external AI background removal when \'true\' is provided as a string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackgroundExternal: "true"
             }]
@@ -415,7 +414,7 @@ describe("URL generation", function () {
 
     it('should not apply external AI background removal when value is not true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiRemoveBackgroundExternal: "false"
             }]
@@ -426,7 +425,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when gradient transformation is provided as a string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 gradient: "ld-top_from-green_to-00FF0010_sp-1"
             }]
@@ -437,7 +436,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when gradient transformation is provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 gradient: ""
             }]
@@ -448,7 +447,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when gradient transformation is set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 gradient: true
             }]
@@ -459,7 +458,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when AI drop shadow transformation is set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiDropShadow: true
             }]
@@ -470,7 +469,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when AI drop shadow transformation is provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiDropShadow: ""
             }]
@@ -481,7 +480,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when AI drop shadow transformation is provided with a specific string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aiDropShadow: "az-45"
             }]
@@ -492,7 +491,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when shadow transformation is set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 shadow: true
             }]
@@ -503,7 +502,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when shadow transformation is provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 shadow: ""
             }]
@@ -514,7 +513,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when shadow transformation is provided with a specific string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 shadow: "bl-15_st-40_x-10_y-N5"
             }]
@@ -525,7 +524,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when sharpen transformation is set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 sharpen: true
             }]
@@ -536,7 +535,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when sharpen transformation is provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 sharpen: ""
             }]
@@ -547,7 +546,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when sharpen transformation is provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 sharpen: 10
             }]
@@ -558,7 +557,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when unsharpMask transformation is set to true', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 unsharpMask: true
             }]
@@ -569,7 +568,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when unsharpMask transformation is provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 unsharpMask: ""
             }]
@@ -580,7 +579,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL when unsharpMask transformation is provided with a string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 unsharpMask: "2-2-0.8-0.024"
             }]
@@ -591,7 +590,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for trim transformation when set to true (boolean)', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 trim: true
             }]
@@ -602,7 +601,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for trim transformation when provided as an empty string', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 trim: ""
             }]
@@ -613,7 +612,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for trim transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 trim: 5
             }]
@@ -625,7 +624,7 @@ describe("URL generation", function () {
     // Width parameter tests
     it('should generate the correct URL for width transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 width: 400
             }]
@@ -636,7 +635,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for width transformation when provided with a string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 width: "400"
             }]
@@ -647,7 +646,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for width transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 width: "iw_div_2"
             }]
@@ -659,7 +658,7 @@ describe("URL generation", function () {
     // Height parameter tests
     it('should generate the correct URL for height transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 height: 300
             }]
@@ -670,7 +669,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for height transformation when provided with a string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 height: "300"
             }]
@@ -681,7 +680,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for height transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 height: "ih_mul_0.5"
             }]
@@ -693,7 +692,7 @@ describe("URL generation", function () {
     // AspectRatio parameter tests
     it('should generate the correct URL for aspectRatio transformation when provided with a string value in colon format', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aspectRatio: "4:3"
             }]
@@ -704,7 +703,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for aspectRatio transformation when provided with an alternate underscore format', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aspectRatio: "4_3"
             }]
@@ -715,7 +714,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for aspectRatio transformation when provided with an arithmetic expression', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 aspectRatio: "iar_div_2"
             }]
@@ -727,7 +726,7 @@ describe("URL generation", function () {
     // Background parameter tests
     it('should generate the correct URL for background transformation when provided with a solid color', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 background: "FF0000"
             }]
@@ -738,7 +737,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for background transformation when provided with the blurred option', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 background: "blurred"
             }]
@@ -749,7 +748,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for background transformation when provided with the genfill option', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 background: "genfill"
             }]
@@ -761,7 +760,7 @@ describe("URL generation", function () {
     // Crop parameter tests
     it('should generate the correct URL for crop transformation when provided with force value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 crop: "force"
             }]
@@ -772,7 +771,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for crop transformation when provided with at_max value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 crop: "at_max"
             }]
@@ -784,7 +783,7 @@ describe("URL generation", function () {
     // CropMode parameter tests
     it('should generate the correct URL for cropMode transformation when provided with pad_resize', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 cropMode: "pad_resize"
             }]
@@ -795,7 +794,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for cropMode transformation when provided with extract value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 cropMode: "extract"
             }]
@@ -807,7 +806,7 @@ describe("URL generation", function () {
     // Focus parameter tests
     it('should generate the correct URL for focus transformation when provided with a string value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 focus: "center"
             }]
@@ -818,7 +817,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for focus transformation when face detection is specified', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 focus: "face"
             }]
@@ -830,7 +829,7 @@ describe("URL generation", function () {
     // Quality parameter test
     it('should generate the correct URL for quality transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 quality: 80
             }]
@@ -842,7 +841,7 @@ describe("URL generation", function () {
     // Coordinate parameters tests
     it('should generate the correct URL for x coordinate transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 x: 10
             }]
@@ -853,7 +852,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for y coordinate transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 y: 20
             }]
@@ -864,7 +863,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for xCenter transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 xCenter: 30
             }]
@@ -875,7 +874,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL for yCenter transformation when provided with a number value', function () {
         const url = imagekit.url({
-            path: "/test_path1.jpg",
+            src: "/test_path1.jpg",
             transformation: [{
                 yCenter: 40
             }]
@@ -887,7 +886,7 @@ describe("URL generation", function () {
     // This is done just to test how SDK constructs URL, the actual transformation is not valid.
     it('Including deprecated properties', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 height: 300,
                 width: 400,
@@ -927,7 +926,7 @@ describe("URL generation", function () {
     // This is done just to test how SDK constructs URL, the actual transformation is not valid
     it('should generate the correct URL when comprehensive transformations, including video and AI transformations, are applied', function () {
         const url = imagekit.url({
-            path: "/test_path.jpg",
+            src: "/test_path.jpg",
             transformation: [{
                 height: 300,
                 width: 400,

@@ -8,7 +8,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Ignore invalid values if text is missing', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "text"
@@ -20,7 +20,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Ignore invalid values if input', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "image"
@@ -32,7 +32,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Ignore invalid values if input', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "video"
@@ -44,7 +44,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Ignore invalid values if input', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "subtitle"
@@ -56,7 +56,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Ignore invalid values if color is missing', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "solidColor"
@@ -68,7 +68,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Text overlay generates correct URL with encoded overlay text', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -81,7 +81,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Image overlay generates correct URL with input logo.png', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "image",
@@ -94,7 +94,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Video overlay generates correct URL with input play-pause-loop.mp4', function () {
         const url = imagekit.url({
-            path: "/base-video.mp4",
+            src: "/base-video.mp4",
             transformation: [{
                 overlay: {
                     type: "video",
@@ -107,7 +107,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it("Subtitle overlay generates correct URL with input subtitle.srt", function () {
         const url = imagekit.url({
-            path: "/base-video.mp4",
+            src: "/base-video.mp4",
             transformation: [{
                 overlay: {
                     type: "subtitle",
@@ -120,7 +120,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it("Solid color overlay generates correct URL with background color FF0000", function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [{
                 overlay: {
                     type: "solidColor",
@@ -133,7 +133,7 @@ describe("Overlay Transformation Test Cases", function () {
 
     it('Combined overlay transformations generate correct URL including nested overlays', function () {
         const url = imagekit.url({
-            path: "/base-image.jpg",
+            src: "/base-image.jpg",
             transformation: [
                 {
                     // Text overlay
@@ -281,7 +281,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Nested simple path, should use i instead of ie, handle slash properly', function () {
         const url = imagekit.url({
-            path: "/medium_cafe_B1iTdD0C.jpg",
+            src: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "image",
@@ -294,7 +294,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Nested non-simple path, should use ie instead of i', function () {
         const url = imagekit.url({
-            path: "/medium_cafe_B1iTdD0C.jpg",
+            src: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "image",
@@ -307,7 +307,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Simple text overlay, should use i instead of ie', function () {
         const url = imagekit.url({
-            path: "/medium_cafe_B1iTdD0C.jpg",
+            src: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -320,7 +320,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Simple text overlay with spaces and other safe characters, should use i instead of ie', function () {
         const url = imagekit.url({
-            path: "/medium_cafe_B1iTdD0C.jpg",
+            src: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -333,7 +333,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Non simple text overlay, should use ie instead of i', function () {
         const url = imagekit.url({
-            path: "/medium_cafe_B1iTdD0C.jpg",
+            src: "/medium_cafe_B1iTdD0C.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -346,7 +346,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Text overlay with explicit plain encoding', function () {
         const url = imagekit.url({
-            path: "/sample.jpg",
+            src: "/sample.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -360,7 +360,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Text overlay with explicit base64 encoding', function () {
         const url = imagekit.url({
-            path: "/sample.jpg",
+            src: "/sample.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
@@ -374,7 +374,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Image overlay with explicit plain encoding', function () {
         const url = imagekit.url({
-            path: "/sample.jpg",
+            src: "/sample.jpg",
             transformation: [{
                 overlay: {
                     type: "image",
@@ -388,7 +388,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Image overlay with explicit base64 encoding', function () {
         const url = imagekit.url({
-            path: "/sample.jpg",
+            src: "/sample.jpg",
             transformation: [{
                 overlay: {
                     type: "image",
@@ -402,7 +402,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Video overlay with explicit base64 encoding', function () {
         const url = imagekit.url({
-            path: "/sample.mp4",
+            src: "/sample.mp4",
             transformation: [{
                 overlay: {
                     type: "video",
@@ -416,7 +416,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Subtitle overlay with explicit plain encoding', function () {
         const url = imagekit.url({
-            path: "/sample.mp4",
+            src: "/sample.mp4",
             transformation: [{
                 overlay: {
                     type: "subtitle",
@@ -430,7 +430,7 @@ describe("Overlay encoding test cases", function () {
 
     it('Subtitle overlay with explicit base64 encoding', function () {
         const url = imagekit.url({
-            path: "/sample.mp4",
+            src: "/sample.mp4",
             transformation: [{
                 overlay: {
                     type: "subtitle",
@@ -444,7 +444,7 @@ describe("Overlay encoding test cases", function () {
 
     it("Avoid double encoding when transformation string is in query params", function () {
         const url = imagekit.url({
-            path: "/sample.jpg",
+            src: "/sample.jpg",
             transformation: [{
                 overlay: {
                     type: "text",
