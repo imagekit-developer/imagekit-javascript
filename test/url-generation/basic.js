@@ -9,7 +9,7 @@ describe("URL generation", function () {
 
     var imagekit = new ImageKit(initializationParams);
 
-    it('should return an empty string when neither path nor src is provided', function () {
+    it('should return an empty string when src is not provided', function () {
         const url = imagekit.url({});
 
         expect(url).equal("");
@@ -21,7 +21,7 @@ describe("URL generation", function () {
         expect(url).equal("https://ik.imagekit.io/test_url_endpoint/");
     });
 
-    it('should generate a valid URL when a path is provided without transformation', function () {
+    it('should generate a valid URL when src is provided without transformation', function () {
         const url = imagekit.url({
             src: "/test_path.jpg"
         });
@@ -78,7 +78,7 @@ describe("URL generation", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
     });
 
-    it('should generate the correct URL with a valid path and transformation', function () {
+    it('should generate the correct URL with a valid src and transformation', function () {
         const url = imagekit.url({
             src: "/test_path.jpg",
             transformation: [{
@@ -117,7 +117,7 @@ describe("URL generation", function () {
 
     });
 
-    it('should generate the correct URL with transformationPosition as query parameter when path is provided', function () {
+    it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
         const url = imagekit.url({
             src: "/test_path.jpg",
             transformationPosition: "query",
