@@ -25,17 +25,19 @@ function pathJoin(parts: string[], sep?: string) {
   return parts.join(separator).replace(replace, separator);
 }
 
-export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
-  if (!opts.path && !opts.src) {
+export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlEndpoint">> & Pick<ImageKitOptions, "transformationPosition">) => {
+  if (!opts.src) {
     return "";
   }
+
+  const isRelativePath = opts.src && opts.src.startsWith("/");
 
   var urlObj, isSrcParameterUsedForURL, urlEndpointPattern;
 
   try {
-    if (opts.path) {
+    if (isRelativePath) {
       urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
-      urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.path]));
+      urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.src]));
     } else {
       urlObj = new URL(opts.src!);
       isSrcParameterUsedForURL = true;
@@ -49,7 +51,7 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
   }
 
-  var transformationString = constructTransformationString(opts.transformation);
+  var transformationString = generateTransformationString(opts.transformation);
 
   if (transformationString && transformationString.length) {
     if (!transformationUtils.addAsQueryParameter(opts) && !isSrcParameterUsedForURL) {
@@ -205,7 +207,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
     entries.push(`ldu-${duration}`);
   }
 
-  const transformationString = constructTransformationString(transformation);
+  const transformationString = generateTransformationString(transformation);
 
   if (transformationString && transformationString.trim() !== "") entries.push(transformationString);
 
@@ -214,7 +216,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   return entries.join(transformationUtils.getTransformDelimiter());
 }
 
-function constructTransformationString(transformation: Transformation[] | undefined) {
+export const generateTransformationString = function(transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }

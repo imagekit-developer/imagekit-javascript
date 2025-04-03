@@ -12,8 +12,7 @@ export default [
     output: {
       name: "ImageKit",
       file: pkg.browser,
-      format: "umd",
-      sourceMap: true,
+      format: "umd"
     },
     plugins: [
       nodeResolve({ extensions: [".ts"] }),

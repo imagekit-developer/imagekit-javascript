@@ -1,48 +1,24 @@
-import { version } from "../package.json";
 import errorMessages from "./constants/errorMessages";
 import { ImageKitOptions, UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
 import IKResponse from "./interfaces/IKResponse";
-import { upload } from "./upload/index";
-import respond from "./utils/respond";
-import { url } from "./url/index";
+import { upload } from "./upload";
+import { buildURL } from "./url/builder";
 import transformationUtils from "./utils/transformation";
+type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+
 
 function mandatoryParametersAvailable(options: ImageKitOptions) {
   return options.urlEndpoint;
 }
 
-const promisify = function <T = void>(thisContext: ImageKit, fn: Function) {
-  return function (...args: any[]): Promise<T> | void {
-    if (args.length === fn.length && typeof args[args.length - 1] !== "undefined") {
-      if (typeof args[args.length - 1] !== "function") {
-        throw new Error("Callback must be a function.");
-      }
-      fn.call(thisContext, ...args);
-    } else {
-      return new Promise<T>((resolve, reject) => {
-        const callback = function (err: Error, ...results: any[]) {
-          if (err) {
-            return reject(err);
-          } else {
-            resolve(results.length > 1 ? results : results[0]);
-          }
-        };
-        args.pop()
-        args.push(callback);
-        fn.call(thisContext, ...args);
-      });
-    }
-  };
-};
-
 class ImageKit {
-  options: ImageKitOptions = {
+  options: MakeRequired<ImageKitOptions, "urlEndpoint"> = {
     publicKey: "",
     urlEndpoint: "",
     transformationPosition: transformationUtils.getDefault(),
   };
 
-  constructor(opts: ImageKitOptions) {
+  constructor(opts: MakeRequired<ImageKitOptions, "urlEndpoint">) {
     this.options = { ...this.options, ...(opts || {}) };
     if (!mandatoryParametersAvailable(this.options)) {
       throw errorMessages.MANDATORY_INITIALIZATION_MISSING;
@@ -54,37 +30,69 @@ class ImageKit {
   }
 
   /**
-   * A utility function to generate asset URL. It applies the specified transformations and other parameters to the URL.
+   * An instance method to generate URL for the given transformation parameters. This method is useful when you want to generate URL using the instance of the SDK without passing common parameters like `urlEndpoint` and `transformationPosition` every time.
    */
-  url(urlOptions: UrlOptions): string {
-    return url(urlOptions, this.options);
+  url(urlOptions: UrlOptions & Partial<Pick<ImageKitOptions, "urlEndpoint" | "transformationPosition">>): string {
+    // Merge the options with the instance options
+    const options = {
+      ...this.options,
+      ...urlOptions,
+    };
+    return ImageKit.url(options);
   }
 
   /**
-   * For uploading files directly from the browser to ImageKit.io.
-   *
-   * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#how-to-implement-client-side-file-upload}
+   * A static method to generate URL for the given transformation parameters. This method is useful when you want to generate URL without creating an instance of the SDK.
    */
-  upload(uploadOptions: UploadOptions, options?: Partial<ImageKitOptions>): Promise<IKResponse<UploadResponse>>
-  upload(uploadOptions: UploadOptions, callback: (err: Error | null, response: IKResponse<UploadResponse> | null) => void, options?: Partial<ImageKitOptions>): void;
-  upload(uploadOptions: UploadOptions, callbackOrOptions?: ((err: Error | null, response: IKResponse<UploadResponse> | null) => void) | Partial<ImageKitOptions>, options?: Partial<ImageKitOptions>): void | Promise<IKResponse<UploadResponse>> {
-    let callback;
-    if (typeof callbackOrOptions === 'function') {
-      callback = callbackOrOptions;
-    } else {
-      options = callbackOrOptions || {};
+  static url(urlOptions: UrlOptions & Required<Pick<ImageKitOptions, "urlEndpoint">> & Pick<ImageKitOptions, "transformationPosition">): string {
+    const options = urlOptions;
+    if (!options.urlEndpoint || options.urlEndpoint.length === 0) {
+      throw {
+        message: "urlEndpoint is required",
+      }
     }
-    if (!uploadOptions || typeof uploadOptions !== "object") {
-      return respond(true, errorMessages.INVALID_UPLOAD_OPTIONS, callback);
+    if (!options.src || options.src.length === 0) {
+      throw {
+        message: "src is required",
+      }
     }
-    var mergedOptions = {
+    return buildURL(options);
+  }
+
+  /**
+   * An instance method to upload file to ImageKit.io. This method is useful when you want to upload file using the instance of the SDK without passing common parameters like `urlEndpoint` and `publicKey` every time.
+   */
+  upload(uploadOptions: UploadOptions & Partial<Pick<ImageKitOptions, "publicKey">>): Promise<IKResponse<UploadResponse>> {
+    // Merge the options with the instance options
+    const options = {
       ...this.options,
-      ...options,
+      ...uploadOptions,
     };
+
+    return ImageKit.upload(options as UploadOptions & Required<Pick<ImageKitOptions, "publicKey">>);
+  }
+
+  /**
+   * A static method to upload file to ImageKit.io. This method is useful when you want to upload file without creating an instance of the SDK.
+   */
+  static upload(uploadOptions: UploadOptions & Required<Pick<ImageKitOptions, "publicKey">>): Promise<IKResponse<UploadResponse>> {
+    if (!uploadOptions.publicKey || uploadOptions.publicKey.length === 0) {
+      throw errorMessages.MISSING_PUBLIC_KEY;
+    }
+
     const { xhr: userProvidedXHR } = uploadOptions || {};
     delete uploadOptions.xhr;
     const xhr = userProvidedXHR || new XMLHttpRequest();
-    return promisify<IKResponse<UploadResponse>>(this, upload)(xhr, uploadOptions, mergedOptions, callback);
+
+    // Extract publicKey from uploadOptions
+    const { publicKey, ...rest } = uploadOptions;
+    return upload(
+      xhr,
+      rest,
+      {
+        publicKey,
+      }
+    )
   }
 }
 
