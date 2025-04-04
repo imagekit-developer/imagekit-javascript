@@ -1,6 +1,7 @@
-import { ImageKitOptions, UrlOptions } from "../interfaces";
-import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "../interfaces/Transformation";
-import transformationUtils, { safeBtoa } from "../utils/transformation";
+import { UrlOptions } from "./interfaces";
+import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
+import transformationUtils from "./utils/transformation";
+import { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
 const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
@@ -25,10 +26,11 @@ function pathJoin(parts: string[], sep?: string) {
   return parts.join(separator).replace(replace, separator);
 }
 
-export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlEndpoint">> & Pick<ImageKitOptions, "transformationPosition">) => {
+export const buildURL = (opts: UrlOptions) => {
   opts.urlEndpoint = opts.urlEndpoint || "";
   opts.src = opts.src || "";
-  
+  opts.transformationPosition = opts.transformationPosition || "query";
+
   if (!opts.src) {
     return "";
   }
@@ -62,7 +64,7 @@ export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlE
         TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
         urlObj.pathname,
       ]);
-    } 
+    }
   }
 
   if (urlEndpointPattern) {
@@ -72,8 +74,8 @@ export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlE
   }
 
   if (transformationString && transformationString.length) {
-    if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-      if(urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
+    if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
+      if (urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
         return `${urlObj.href}&${TRANSFORMATION_PARAMETER}=${transformationString}`;
       }
       else {
@@ -88,10 +90,10 @@ export const buildURL = (opts: UrlOptions & Required<Pick<ImageKitOptions, "urlE
 function processInputPath(str: string, enccoding: string): string {
   // Remove leading and trailing slashes
   str = removeTrailingSlash(removeLeadingSlash(str));
-  if(enccoding === "plain") {
+  if (enccoding === "plain") {
     return `i-${str.replace(/\//g, "@@")}`;
   }
-  if(enccoding === "base64") {
+  if (enccoding === "base64") {
     return `ie-${encodeURIComponent(safeBtoa(str))}`;
   }
   if (SIMPLE_OVERLAY_PATH_REGEX.test(str)) {
@@ -219,7 +221,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   return entries.join(transformationUtils.getTransformDelimiter());
 }
 
-export const generateTransformationString = function(transformation: Transformation[] | undefined) {
+export const generateTransformationString = function (transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }

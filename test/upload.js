@@ -1,9 +1,9 @@
 const chai = require("chai");
 const sinon = require("sinon");
 const expect = chai.expect;
-const initializationParams = require("./data").initializationParams;
 import 'regenerator-runtime/runtime';
-import ImageKit from "../src/index";
+import { upload } from "../src/index";
+import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError } from '../src/upload';
 var requests, server;
 
 const uploadSuccessResponseObj = {
@@ -26,7 +26,8 @@ const uploadSuccessResponseObj = {
 const securityParameters = {
     signature: "test_signature",
     expire: 123,
-    token: "test_token"
+    token: "test_token",
+    publicKey: "test_public_key",
 };
 
 function successUploadResponse() {
@@ -61,10 +62,7 @@ async function sleep(ms = 0) {
     });
 }
 
-describe("File upload", function () {
-
-    var imagekit = new ImageKit(initializationParams);
-
+describe("File upload", async function () {
     beforeEach(() => {
         global.XMLHttpRequest = sinon.useFakeXMLHttpRequest();
         requests = [];
@@ -79,10 +77,11 @@ describe("File upload", function () {
 
     it('Invalid options', async function () {
         try {
-            await imagekit.upload(undefined);
+            await upload();
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ help: "", message: "Missing file parameter for upload" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid options provided for upload");
         }
     });
 
@@ -92,13 +91,14 @@ describe("File upload", function () {
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ help: "", message: "Missing fileName parameter for upload" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing fileName parameter for upload");
         }
     });
 
@@ -108,13 +108,14 @@ describe("File upload", function () {
             fileName: "test_file_name",
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ help: "", message: "Missing file parameter for upload" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing file parameter for upload");
         }
     });
 
@@ -123,16 +124,18 @@ describe("File upload", function () {
             fileName: "test_file_name",
             file: "test_file",
             signature: 'test_signature',
-            expire: 123
+            expire: 123,
+            publicKey: 'test_public_key'
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ message: "Missing token for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing token for upload. The SDK expects token, signature and expire for authentication.");
         }
     });
 
@@ -144,7 +147,7 @@ describe("File upload", function () {
             expire: 123
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         try {
             await uploadPromise;
@@ -162,7 +165,7 @@ describe("File upload", function () {
             signature: 'test_signature'
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         try {
             await uploadPromise;
@@ -198,7 +201,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         // Simulate network error on upload API
@@ -224,7 +227,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -257,7 +260,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -287,7 +290,7 @@ describe("File upload", function () {
             isPrivateFile: true
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -318,7 +321,7 @@ describe("File upload", function () {
             tags: ["test_tag1", "test_tag2"]
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -360,7 +363,7 @@ describe("File upload", function () {
             ],
             webhookUrl: "https://your-domain/?appId=some-id"
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -394,7 +397,7 @@ describe("File upload", function () {
             tags: undefined
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -425,7 +428,7 @@ describe("File upload", function () {
             file: buffer
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -456,7 +459,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -480,7 +483,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -507,7 +510,7 @@ describe("File upload", function () {
             file: "test_file"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
@@ -534,7 +537,7 @@ describe("File upload", function () {
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -566,7 +569,7 @@ describe("File upload", function () {
             file: "https://ik.imagekit.io/remote-url.jpg"
         };
 
-        const uploadPromise = imagekit.upload({
+        const uploadPromise = upload({
             ...fileOptions,
             publicKey: newPublicKey
         });
@@ -613,7 +616,7 @@ describe("File upload", function () {
             overwriteTags: false,
             overwriteCustomMetadata: false
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -664,7 +667,7 @@ describe("File upload", function () {
                 color: "red"
             },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -716,7 +719,7 @@ describe("File upload", function () {
                 color: "red"
             },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -764,7 +767,7 @@ describe("File upload", function () {
             ],
             xhr
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         expect(server.requests[0]).to.be.equal(xhr);
         expect(server.requests[0].onprogress.toString()).to.be.equal(fun.toString());
@@ -806,7 +809,7 @@ describe("File upload", function () {
             ]
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
 
         await sleep();
@@ -851,7 +854,7 @@ describe("File upload", function () {
         };
 
         try {
-            const uploadPromise = imagekit.upload(fileOptions);
+            const uploadPromise = upload(fileOptions);
             await sleep();
             errorUploadResponse(500, errRes);
             await sleep();
@@ -880,7 +883,7 @@ describe("File upload", function () {
             ],
             xhr
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
 
         expect(server.requests.length).to.be.equal(1);
 
@@ -933,7 +936,7 @@ describe("File upload", function () {
             ]
         };
 
-        var uploadPromise = imagekit.upload(fileOptions)
+        var uploadPromise = upload(fileOptions)
         expect(server.requests.length).to.be.equal(1);
 
         await sleep();
@@ -972,7 +975,7 @@ describe("File upload", function () {
             customMetadata: undefined
         };
 
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1008,7 +1011,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "w-100", post: [{ type: "transformation", value: "w-100" }] },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1036,7 +1039,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "w-100" },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1064,7 +1067,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "transformation", value: "w-100" }] },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1092,7 +1095,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: {},
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1118,7 +1121,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { pre: "" },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1144,7 +1147,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "abs", value: "" }] },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1170,7 +1173,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: [{ type: "transformation", value: "" }] },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1196,7 +1199,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             transformation: { post: {} },
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
@@ -1222,7 +1225,7 @@ describe("File upload", function () {
             useUniqueFileName: false,
             checks: "'request.folder' : '/'",
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         successUploadResponse();
@@ -1248,7 +1251,7 @@ describe("File upload", function () {
             file: "test_file",
             onProgress: progressSpy
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         server.requests[0].uploadProgress({ lengthComputable: true, loaded: 50, total: 100 });
 
@@ -1269,7 +1272,7 @@ describe("File upload", function () {
             file: "test_file",
             signal: abortController.signal
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         abortController.abort();
         await sleep();
@@ -1289,7 +1292,7 @@ describe("File upload", function () {
             file: "test_file",
             signal: abortController.signal
         };
-        const uploadPromise = imagekit.upload(fileOptions);
+        const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         abortController.abort("abort reason");
         await sleep();

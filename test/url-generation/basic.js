@@ -1,28 +1,31 @@
 const chai = require("chai");
-const pkg = require("../../package.json");
-global.FormData = require('formdata-node');
 const expect = chai.expect;
-const initializationParams = require("../data").initializationParams
-import ImageKit from "../../src/index";
+import { buildURL } from "../../src/index";
 
 describe("URL generation", function () {
-
-    var imagekit = new ImageKit(initializationParams);
-
     it('should return an empty string when src is not provided', function () {
-        const url = imagekit.url({});
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query"
+        });
 
         expect(url).equal("");
     });
 
     it('should return an empty string for an invalid src URL', function () {
-        const url = imagekit.url({ src: "/" });
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
+            src: "/"
+        });
 
         expect(url).equal("https://ik.imagekit.io/test_url_endpoint/");
     });
 
     it('should generate a valid URL when src is provided without transformation', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg"
         });
 
@@ -30,7 +33,9 @@ describe("URL generation", function () {
     });
 
     it('should generate a valid URL when a src is provided without transformation', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg"
         });
 
@@ -38,950 +43,1235 @@ describe("URL generation", function () {
     });
 
     it('should generate a valid URL when undefined transformation parameters are provided with path', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path_alt.jpg",
             transformation: undefined,
-            transformationPosition: undefined,
+            transformationPosition: "query"
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg`);
     });
 
     it("By default transformationPosition should be query", function () {
-        var imagekitNew = new ImageKit({
-            publicKey: "test_public_key",
+        const url = buildURL({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
-        });
-        const url = imagekitNew.url({
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }, {
-                rotation: 90
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                },
+                {
+                    rotation: 90
+                }
+            ]
         });
         expect(url).equal("https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400:rt-90");
     });
 
     it('should generate the URL without sdk version', function () {
-        const ik = new ImageKit(initializationParams)
-
-        const url = ik.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ],
+            transformationPosition: "path"
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
     });
 
     it('should generate the correct URL with a valid src and transformation', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
         });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
+        // Now transformed URL goes into query since transformationPosition is "query".
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL when the provided path contains multiple leading slashes', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "///test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400/test_path.jpg`);
-
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL when the urlEndpoint is overridden', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            // We do not override urlEndpoint here
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint_alt",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint_alt/tr:h-300,w-400/test_path.jpg`);
-
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint_alt/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path.jpg",
             transformationPosition: "query",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with a valid src parameter and transformation', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
             transformationPosition: "query",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?tr=h-300,w-400`);
     });
 
     it('should merge query parameters correctly in the generated URL', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1",
             queryParameters: { t2: "v2", t3: "v3" },
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }]
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                }
+            ]
         });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1&t2=v2&t3=v3&tr=h-300,w-400`);
     });
 
-
     it('should generate the correct URL with chained transformations', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }, {
-                "rt": "90"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                },
+                {
+                    rt: "90"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rt-90/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400:rt-90`);
     });
 
-
     it('should generate the correct URL with chained transformations including a new undocumented transformation parameter', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400"
-            }, {
-                "rndm_trnsf": "abcd"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400"
+                },
+                {
+                    rndm_trnsf: "abcd"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400:rndm_trnsf-abcd/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400:rndm_trnsf-abcd`);
     });
 
     it('should generate the correct URL when overlay image transformation is provided', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400",
-                "raw": "l-image,i-overlay.jpg,w-100,b-10_CDDC39,l-end"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400",
+                    raw: "l-image,i-overlay.jpg,w-100,b-10_CDDC39,l-end"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,l-image,i-overlay.jpg,w-100,b-10_CDDC39,l-end/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400,l-image,i-overlay.jpg,w-100,b-10_CDDC39,l-end`);
     });
 
     it('should generate the correct URL when overlay image transformation contains a slash in the overlay path', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400",
-                "raw": "l-image,i-/path/to/overlay.jpg,w-100,b-10_CDDC39,l-end"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400",
+                    raw: "l-image,i-/path/to/overlay.jpg,w-100,b-10_CDDC39,l-end"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,l-image,i-/path/to/overlay.jpg,w-100,b-10_CDDC39,l-end/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400,l-image,i-/path/to/overlay.jpg,w-100,b-10_CDDC39,l-end`);
     });
 
     it('should generate the correct URL when border transformation is applied', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "height": "300",
-                "width": "400",
-                border: "20_FF0000"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300",
+                    width: "400",
+                    border: "20_FF0000"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,b-20_FF0000/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400,b-20_FF0000`);
     });
 
     it('should generate the correct URL when transformation has empty key and value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "": ""
-            }]
-        })
+            transformation: [
+                {
+                    "": ""
+                }
+            ]
+        });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
     });
 
-    /**
-     * Provided to provide support to a new transform without sdk update
-     */
     it('should generate the correct URL when an undefined transform is provided', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                "undefined-transform": "true"
-            }]
-        })
+            transformation: [
+                {
+                    "undefined-transform": "true"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:undefined-transform-true/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=undefined-transform-true`);
     });
 
     it('should generate the correct URL when transformation key has an empty value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                defaultImage: ""
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=di-`);
     });
 
     it('should generate the correct URL when transformation key has \'-\' as its value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                contrastStretch: "-"
-            }]
-        })
+            transformation: [
+                {
+                    contrastStretch: "-"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-contrast/test_path.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=e-contrast`);
     });
 
     it('should skip transformation parameters that are undefined or null', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                quality: undefined,
-                contrastStretch: null
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    quality: undefined,
+                    contrastStretch: null
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg`);
     });
 
     it('should skip transformation parameters that are false', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                contrastStretch: false
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    contrastStretch: false
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg`);
     });
 
     it('should include only the key when transformation value is an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                shadow: ""
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    shadow: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg,e-shadow`);
     });
 
     it('should include both key and value when transformation parameter value is provided', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                shadow: "bl-15_st-40_x-10_y-N5"
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    shadow: "bl-15_st-40_x-10_y-N5"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg,e-shadow-bl-15_st-40_x-10_y-N5`);
     });
 
     it('should generate the correct URL when trim transformation is set to true as a boolean', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                trim: true
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    trim: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg,t-true`);
     });
 
     it('should generate the correct URL when trim transformation is set to true as a string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                defaultImage: "/test_path.jpg",
-                trim: "true"
-            }]
-        })
+            transformation: [
+                {
+                    defaultImage: "/test_path.jpg",
+                    trim: "true"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:di-test_path.jpg,t-true/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=di-test_path.jpg,t-true`);
     });
 
     it('should generate the correct URL for AI background removal when set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackground: true
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackground: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-bgremove`);
     });
 
     it('should generate the correct URL for AI background removal when \'true\' is provided as a string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackground: "true"
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackground: "true"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-bgremove/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-bgremove`);
     });
 
     it('should not apply AI background removal when value is not true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackground: "false"
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackground: "false"
+                }
+            ]
+        });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
     it('should generate the correct URL for external AI background removal when set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackgroundExternal: true
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackgroundExternal: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-removedotbg`);
     });
 
     it('should generate the correct URL for external AI background removal when \'true\' is provided as a string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackgroundExternal: "true"
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackgroundExternal: "true"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-removedotbg/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-removedotbg`);
     });
 
     it('should not apply external AI background removal when value is not true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiRemoveBackgroundExternal: "false"
-            }]
-        })
+            transformation: [
+                {
+                    aiRemoveBackgroundExternal: "false"
+                }
+            ]
+        });
 
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg`);
     });
 
     it('should generate the correct URL when gradient transformation is provided as a string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                gradient: "ld-top_from-green_to-00FF0010_sp-1"
-            }]
-        })
+            transformation: [
+                {
+                    gradient: "ld-top_from-green_to-00FF0010_sp-1"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient-ld-top_from-green_to-00FF0010_sp-1/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-gradient-ld-top_from-green_to-00FF0010_sp-1`);
     });
 
     it('should generate the correct URL when gradient transformation is provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                gradient: ""
-            }]
-        })
+            transformation: [
+                {
+                    gradient: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-gradient`);
     });
 
     it('should generate the correct URL when gradient transformation is set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                gradient: true
-            }]
-        })
+            transformation: [
+                {
+                    gradient: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-gradient/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-gradient`);
     });
 
     it('should generate the correct URL when AI drop shadow transformation is set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiDropShadow: true
-            }]
-        })
+            transformation: [
+                {
+                    aiDropShadow: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-dropshadow`);
     });
 
     it('should generate the correct URL when AI drop shadow transformation is provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiDropShadow: ""
-            }]
-        })
+            transformation: [
+                {
+                    aiDropShadow: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-dropshadow`);
     });
 
     it('should generate the correct URL when AI drop shadow transformation is provided with a specific string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aiDropShadow: "az-45"
-            }]
-        })
+            transformation: [
+                {
+                    aiDropShadow: "az-45"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-dropshadow-az-45/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-dropshadow-az-45`);
     });
 
     it('should generate the correct URL when shadow transformation is set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                shadow: true
-            }]
-        })
+            transformation: [
+                {
+                    shadow: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-shadow`);
     });
 
     it('should generate the correct URL when shadow transformation is provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                shadow: ""
-            }]
-        })
+            transformation: [
+                {
+                    shadow: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-shadow`);
     });
 
     it('should generate the correct URL when shadow transformation is provided with a specific string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                shadow: "bl-15_st-40_x-10_y-N5"
-            }]
-        })
+            transformation: [
+                {
+                    shadow: "bl-15_st-40_x-10_y-N5"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-shadow-bl-15_st-40_x-10_y-N5/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-shadow-bl-15_st-40_x-10_y-N5`);
     });
 
     it('should generate the correct URL when sharpen transformation is set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                sharpen: true
-            }]
-        })
+            transformation: [
+                {
+                    sharpen: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-sharpen`);
     });
 
     it('should generate the correct URL when sharpen transformation is provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                sharpen: ""
-            }]
-        })
+            transformation: [
+                {
+                    sharpen: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-sharpen`);
     });
 
     it('should generate the correct URL when sharpen transformation is provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                sharpen: 10
-            }]
-        })
+            transformation: [
+                {
+                    sharpen: 10
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-sharpen-10/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-sharpen-10`);
     });
 
     it('should generate the correct URL when unsharpMask transformation is set to true', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                unsharpMask: true
-            }]
-        })
+            transformation: [
+                {
+                    unsharpMask: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-usm`);
     });
 
     it('should generate the correct URL when unsharpMask transformation is provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                unsharpMask: ""
-            }]
-        })
+            transformation: [
+                {
+                    unsharpMask: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-usm`);
     });
 
     it('should generate the correct URL when unsharpMask transformation is provided with a string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                unsharpMask: "2-2-0.8-0.024"
-            }]
-        })
+            transformation: [
+                {
+                    unsharpMask: "2-2-0.8-0.024"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:e-usm-2-2-0.8-0.024/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=e-usm-2-2-0.8-0.024`);
     });
 
     it('should generate the correct URL for trim transformation when set to true (boolean)', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                trim: true
-            }]
-        })
+            transformation: [
+                {
+                    trim: true
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=t-true`);
     });
 
     it('should generate the correct URL for trim transformation when provided as an empty string', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                trim: ""
-            }]
-        })
+            transformation: [
+                {
+                    trim: ""
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-true/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=t-true`);
     });
 
     it('should generate the correct URL for trim transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                trim: 5
-            }]
-        })
+            transformation: [
+                {
+                    trim: 5
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:t-5/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=t-5`);
     });
 
     // Width parameter tests
     it('should generate the correct URL for width transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                width: 400
-            }]
-        })
+            transformation: [
+                {
+                    width: 400
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=w-400`);
     });
 
     it('should generate the correct URL for width transformation when provided with a string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                width: "400"
-            }]
-        })
+            transformation: [
+                {
+                    width: "400"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-400/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=w-400`);
     });
 
     it('should generate the correct URL for width transformation when provided with an arithmetic expression', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                width: "iw_div_2"
-            }]
-        })
+            transformation: [
+                {
+                    width: "iw_div_2"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:w-iw_div_2/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=w-iw_div_2`);
     });
 
     // Height parameter tests
     it('should generate the correct URL for height transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                height: 300
-            }]
-        })
+            transformation: [
+                {
+                    height: 300
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=h-300`);
     });
 
     it('should generate the correct URL for height transformation when provided with a string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                height: "300"
-            }]
-        })
+            transformation: [
+                {
+                    height: "300"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=h-300`);
     });
 
     it('should generate the correct URL for height transformation when provided with an arithmetic expression', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                height: "ih_mul_0.5"
-            }]
-        })
+            transformation: [
+                {
+                    height: "ih_mul_0.5"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-ih_mul_0.5/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=h-ih_mul_0.5`);
     });
 
     // AspectRatio parameter tests
     it('should generate the correct URL for aspectRatio transformation when provided with a string value in colon format', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aspectRatio: "4:3"
-            }]
-        })
+            transformation: [
+                {
+                    aspectRatio: "4:3"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4:3/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=ar-4:3`);
     });
 
     it('should generate the correct URL for aspectRatio transformation when provided with an alternate underscore format', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aspectRatio: "4_3"
-            }]
-        })
+            transformation: [
+                {
+                    aspectRatio: "4_3"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-4_3/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=ar-4_3`);
     });
 
     it('should generate the correct URL for aspectRatio transformation when provided with an arithmetic expression', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                aspectRatio: "iar_div_2"
-            }]
-        })
+            transformation: [
+                {
+                    aspectRatio: "iar_div_2"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:ar-iar_div_2/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=ar-iar_div_2`);
     });
 
     // Background parameter tests
     it('should generate the correct URL for background transformation when provided with a solid color', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                background: "FF0000"
-            }]
-        })
+            transformation: [
+                {
+                    background: "FF0000"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-FF0000/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=bg-FF0000`);
     });
 
     it('should generate the correct URL for background transformation when provided with the blurred option', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                background: "blurred"
-            }]
-        })
+            transformation: [
+                {
+                    background: "blurred"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-blurred/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=bg-blurred`);
     });
 
     it('should generate the correct URL for background transformation when provided with the genfill option', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                background: "genfill"
-            }]
-        })
+            transformation: [
+                {
+                    background: "genfill"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:bg-genfill/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=bg-genfill`);
     });
 
     // Crop parameter tests
     it('should generate the correct URL for crop transformation when provided with force value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                crop: "force"
-            }]
-        })
+            transformation: [
+                {
+                    crop: "force"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:c-force/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=c-force`);
     });
 
     it('should generate the correct URL for crop transformation when provided with at_max value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                crop: "at_max"
-            }]
-        })
+            transformation: [
+                {
+                    crop: "at_max"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:c-at_max/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=c-at_max`);
     });
 
     // CropMode parameter tests
     it('should generate the correct URL for cropMode transformation when provided with pad_resize', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                cropMode: "pad_resize"
-            }]
-        })
+            transformation: [
+                {
+                    cropMode: "pad_resize"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:cm-pad_resize/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=cm-pad_resize`);
     });
 
     it('should generate the correct URL for cropMode transformation when provided with extract value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                cropMode: "extract"
-            }]
-        })
+            transformation: [
+                {
+                    cropMode: "extract"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:cm-extract/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=cm-extract`);
     });
 
     // Focus parameter tests
     it('should generate the correct URL for focus transformation when provided with a string value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                focus: "center"
-            }]
-        })
+            transformation: [
+                {
+                    focus: "center"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:fo-center/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=fo-center`);
     });
 
     it('should generate the correct URL for focus transformation when face detection is specified', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                focus: "face"
-            }]
-        })
+            transformation: [
+                {
+                    focus: "face"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:fo-face/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=fo-face`);
     });
 
     // Quality parameter test
     it('should generate the correct URL for quality transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                quality: 80
-            }]
-        })
+            transformation: [
+                {
+                    quality: 80
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:q-80/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=q-80`);
     });
 
     // Coordinate parameters tests
     it('should generate the correct URL for x coordinate transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                x: 10
-            }]
-        })
+            transformation: [
+                {
+                    x: 10
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:x-10/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=x-10`);
     });
 
     it('should generate the correct URL for y coordinate transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                y: 20
-            }]
-        })
+            transformation: [
+                {
+                    y: 20
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:y-20/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=y-20`);
     });
 
     it('should generate the correct URL for xCenter transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                xCenter: 30
-            }]
-        })
+            transformation: [
+                {
+                    xCenter: 30
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:xc-30/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=xc-30`);
     });
 
     it('should generate the correct URL for yCenter transformation when provided with a number value', function () {
-        const url = imagekit.url({
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path1.jpg",
-            transformation: [{
-                yCenter: 40
-            }]
-        })
+            transformation: [
+                {
+                    yCenter: 40
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:yc-40/test_path1.jpg`);
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/test_path1.jpg?tr=yc-40`);
     });
 
-    // This is done just to test how SDK constructs URL, the actual transformation is not valid.
     it('Including deprecated properties', function () {
-        const url = imagekit.url({
+        // This is just testing how the SDK constructs the URL, not actual valid transformations.
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                height: 300,
-                width: 400,
-                aspectRatio: '4-3',
-                quality: 40,
-                crop: 'force',
-                cropMode: 'extract',
-                focus: 'left',
-                format: 'jpeg',
-                radius: 50,
-                bg: "A94D34",
-                border: "5-A94D34",
-                rotation: 90,
-                blur: 10,
-                named: "some_name",
-                progressive: true,
-                lossless: true,
-                trim: 5,
-                metadata: true,
-                colorProfile: true,
-                defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
-                dpr: 3,
-                sharpen: 10,
-                unsharpMask: "2-2-0.8-0.024",
-                contrastStretch: true,
-                grayscale: true,
-                shadow: 'bl-15_st-40_x-10_y-N5',
-                gradient: 'from-red_to-white',
-                original: true,
-                raw: "h-200,w-300,l-image,i-logo.png,l-end"
-            }]
-        })
+            transformation: [
+                {
+                    height: 300,
+                    width: 400,
+                    aspectRatio: '4-3',
+                    quality: 40,
+                    crop: 'force',
+                    cropMode: 'extract',
+                    focus: 'left',
+                    format: 'jpeg',
+                    radius: 50,
+                    bg: "A94D34",
+                    border: "5-A94D34",
+                    rotation: 90,
+                    blur: 10,
+                    named: "some_name",
+                    progressive: true,
+                    lossless: true,
+                    trim: 5,
+                    metadata: true,
+                    colorProfile: true,
+                    defaultImage: "/folder/file.jpg/",
+                    dpr: 3,
+                    sharpen: 10,
+                    unsharpMask: "2-2-0.8-0.024",
+                    contrastStretch: true,
+                    grayscale: true,
+                    shadow: "bl-15_st-40_x-10_y-N5",
+                    gradient: "from-red_to-white",
+                    original: true,
+                    raw: "h-200,w-300,l-image,i-logo.png,l-end"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast,e-grayscale,e-shadow-bl-15_st-40_x-10_y-N5,e-gradient-from-red_to-white,orig-true,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
+        expect(url).equal(
+            `https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,e-sharpen-10,e-usm-2-2-0.8-0.024,e-contrast,e-grayscale,e-shadow-bl-15_st-40_x-10_y-N5,e-gradient-from-red_to-white,orig-true,h-200,w-300,l-image,i-logo.png,l-end`
+        );
     });
 
-    // This is done just to test how SDK constructs URL, the actual transformation is not valid
-    it('should generate the correct URL when comprehensive transformations, including video and AI transformations, are applied', function () {
-        const url = imagekit.url({
+    it('should generate the correct URL with many transformations, including video and AI transforms', function () {
+        // Example test with comprehensive transformations
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
             src: "/test_path.jpg",
-            transformation: [{
-                height: 300,
-                width: 400,
-                aspectRatio: '4-3',
-                quality: 40,
-                crop: 'force',
-                cropMode: 'extract',
-                focus: 'left',
-                format: 'jpeg',
-                radius: 50,
-                bg: "A94D34",
-                border: "5-A94D34",
-                rotation: 90,
-                blur: 10,
-                named: "some_name",
-                progressive: true,
-                lossless: true,
-                trim: 5,
-                metadata: true,
-                colorProfile: true,
-                defaultImage: "/folder/file.jpg/", //trailing and leading slash case 
-                dpr: 3,
-                x: 10,
-                y: 20,
-                xCenter: 30,
-                yCenter: 40,
-                flip: "h",
-                opacity: 0.8,
-                zoom: 2,
-                // Video transformations
-                videoCodec: "h264",
-                audioCodec: "aac",
-                startOffset: 5,
-                endOffset: 15,
-                duration: 10,
-                streamingResolutions: ["1440", "1080"],
-                // AI transformations
-                grayscale: true,
-                aiUpscale: true,
-                aiRetouch: true,
-                aiVariation: true,
-                aiDropShadow: true,
-                aiChangeBackground: "prompt-car",
-                aiRemoveBackground: true,
-                contrastStretch: true,
-                shadow: 'bl-15_st-40_x-10_y-N5',
-                sharpen: 10,
-                unsharpMask: "2-2-0.8-0.024",
-                gradient: 'from-red_to-white',
-                original: true,
-                page: "2_4",
-                raw: "h-200,w-300,l-image,i-logo.png,l-end"
-            }]
-        })
+            transformation: [
+                {
+                    height: 300,
+                    width: 400,
+                    aspectRatio: '4-3',
+                    quality: 40,
+                    crop: 'force',
+                    cropMode: 'extract',
+                    focus: 'left',
+                    format: 'jpeg',
+                    radius: 50,
+                    bg: "A94D34",
+                    border: "5-A94D34",
+                    rotation: 90,
+                    blur: 10,
+                    named: "some_name",
+                    progressive: true,
+                    lossless: true,
+                    trim: 5,
+                    metadata: true,
+                    colorProfile: true,
+                    defaultImage: "/folder/file.jpg/",
+                    dpr: 3,
+                    x: 10,
+                    y: 20,
+                    xCenter: 30,
+                    yCenter: 40,
+                    flip: "h",
+                    opacity: 0.8,
+                    zoom: 2,
+                    // Video transformations
+                    videoCodec: "h264",
+                    audioCodec: "aac",
+                    startOffset: 5,
+                    endOffset: 15,
+                    duration: 10,
+                    streamingResolutions: ["1440", "1080"],
+                    // AI transformations
+                    grayscale: true,
+                    aiUpscale: true,
+                    aiRetouch: true,
+                    aiVariation: true,
+                    aiDropShadow: true,
+                    aiChangeBackground: "prompt-car",
+                    aiRemoveBackground: true,
+                    contrastStretch: true,
+                    shadow: "bl-15_st-40_x-10_y-N5",
+                    sharpen: 10,
+                    unsharpMask: "2-2-0.8-0.024",
+                    gradient: "from-red_to-white",
+                    original: true,
+                    page: "2_4",
+                    raw: "h-200,w-300,l-image,i-logo.png,l-end"
+                }
+            ]
+        });
 
-        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,x-10,y-20,xc-30,yc-40,fl-h,o-0.8,z-2,vc-h264,ac-aac,so-5,eo-15,du-10,sr-1440_1080,e-grayscale,e-upscale,e-retouch,e-genvar,e-dropshadow,e-changebg-prompt-car,e-bgremove,e-contrast,e-shadow-bl-15_st-40_x-10_y-N5,e-sharpen-10,e-usm-2-2-0.8-0.024,e-gradient-from-red_to-white,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end/test_path.jpg`);
+        expect(url).equal(
+            `https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=h-300,w-400,ar-4-3,q-40,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,rt-90,bl-10,n-some_name,pr-true,lo-true,t-5,md-true,cp-true,di-folder@@file.jpg,dpr-3,x-10,y-20,xc-30,yc-40,fl-h,o-0.8,z-2,vc-h264,ac-aac,so-5,eo-15,du-10,sr-1440_1080,e-grayscale,e-upscale,e-retouch,e-genvar,e-dropshadow,e-changebg-prompt-car,e-bgremove,e-contrast,e-shadow-bl-15_st-40_x-10_y-N5,e-sharpen-10,e-usm-2-2-0.8-0.024,e-gradient-from-red_to-white,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end`
+        );
     });
 });

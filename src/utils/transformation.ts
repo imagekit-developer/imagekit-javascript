@@ -1,5 +1,5 @@
 import supportedTransforms from "../constants/supportedTransforms";
-import { ImageKitOptions, TransformationPosition } from "../interfaces";
+import { TransformationPosition, UrlOptions } from "../interfaces";
 
 const QUERY_TRANSFORMATION_POSITION: TransformationPosition = "query";
 const PATH_TRANSFORMATION_POSITION: TransformationPosition = "path";
@@ -13,10 +13,10 @@ export default {
     getDefault: (): TransformationPosition => {
         return DEFAULT_TRANSFORMATION_POSITION;
     },
-    addAsQueryParameter: (options: ImageKitOptions) => {
+    addAsQueryParameter: (options: UrlOptions) => {
         return options.transformationPosition === QUERY_TRANSFORMATION_POSITION;
     },
-    validParameters: (options: ImageKitOptions) => {
+    validParameters: (options: UrlOptions) => {
         if (typeof options.transformationPosition == "undefined") return false;
         return VALID_TRANSFORMATION_POSITIONS.indexOf(options.transformationPosition) != -1;
     },

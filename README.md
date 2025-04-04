@@ -75,8 +75,6 @@ var imagekit = new ImageKit({
 });
 ```
 
-> Note: Never include your private API key in client-side code. The SDK will throw an error if you do.
-
 ### Initialization Options
 
 | Option                 | Description                                                                                                                                                                                                                                         | Example                                         |
