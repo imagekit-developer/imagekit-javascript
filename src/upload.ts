@@ -188,7 +188,7 @@ export const upload = (
 
     xhr.open('POST', 'https://upload.imagekit.io/api/v1/files/upload');
     xhr.onerror = function (e) {
-      return reject(new ImageKitInvalidRequestError(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR.message));
+      return reject(new ImageKitUploadNetworkError(errorMessages.UPLOAD_ENDPOINT_NETWORK_ERROR.message));
     }
     xhr.onload = function () {
       if (xhr.status >= 200 && xhr.status < 300) {
@@ -204,7 +204,7 @@ export const upload = (
         try {
           var body = JSON.parse(xhr.responseText);
           return reject(new ImageKitInvalidRequestError(
-            body.message,
+            body.message ?? "Invalid request. Please check the parameters.",
             getResponseMetadata(xhr)
           ));
         } catch (ex: any) {
@@ -215,11 +215,14 @@ export const upload = (
         try {
           var body = JSON.parse(xhr.responseText);
           return reject(new ImageKitServerError(
-            "Server error occurred while uploading the file. This is rare and usually temporary.",
+            body.message ?? "Server error occurred while uploading the file. This is rare and usually temporary.",
             getResponseMetadata(xhr)
           ));
         } catch (ex: any) {
-          return reject(ex);
+          return reject(new ImageKitServerError(
+            "Server error occurred while uploading the file. This is rare and usually temporary.",
+            getResponseMetadata(xhr)
+          ));
         }
       }
     };

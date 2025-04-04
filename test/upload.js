@@ -3,7 +3,13 @@ const sinon = require("sinon");
 const expect = chai.expect;
 import 'regenerator-runtime/runtime';
 import { upload } from "../src/index";
-import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError } from '../src/upload';
+import {
+    ImageKitAbortError,
+    ImageKitInvalidRequestError,
+    ImageKitServerError,
+    ImageKitUploadNetworkError
+} from '../src/upload';
+
 var requests, server;
 
 const uploadSuccessResponseObj = {
@@ -125,6 +131,7 @@ describe("File upload", async function () {
             file: "test_file",
             signature: 'test_signature',
             expire: 123,
+            // Omit token
             publicKey: 'test_public_key'
         };
 
@@ -144,7 +151,9 @@ describe("File upload", async function () {
             fileName: "test_file_name",
             file: "test_file",
             token: 'test_token',
-            expire: 123
+            expire: 123,
+            publicKey: 'test_public_key'
+            // Omit signature
         };
 
         const uploadPromise = upload(fileOptions);
@@ -153,7 +162,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ message: "Missing signature for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing signature for upload. The SDK expects token, signature and expire for authentication.");
         }
     });
 
@@ -162,7 +172,9 @@ describe("File upload", async function () {
             fileName: "test_file_name",
             file: "test_file",
             token: 'test_token',
-            signature: 'test_signature'
+            signature: 'test_signature',
+            publicKey: 'test_public_key'
+            // Omit expire
         };
 
         const uploadPromise = upload(fileOptions);
@@ -171,34 +183,40 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ message: "Missing expire for upload. The SDK expects token, signature and expire for authentication.", help: "" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing expire for upload. The SDK expects token, signature and expire for authentication.");
         }
     });
 
     it('Missing public key', async function () {
         const fileOptions = {
             fileName: "test_file_name",
-            file: "test_file"
+            file: "test_file",
+            token: 'test_token',
+            signature: 'test_signature',
+            expire: 123
+            // Omit publicKey
         };
 
-        const imagekitWithoutPublicKey = new ImageKit({
-            urlEndpoint: "https://ik.imagekit.io/your_imagekit_id",
-        });
-
+        const uploadPromise = upload(fileOptions);
+        expect(server.requests.length).to.be.equal(1);
         try {
-            const uploadPromise = imagekitWithoutPublicKey.upload(fileOptions);
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ message: "Missing public key for upload", help: "" });
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Missing public key for upload");
         }
     });
 
     it('Upload endpoint network error handling', async function () {
         const fileOptions = {
-            ...securityParameters,
             fileName: "test_file_name",
-            file: "test_file"
+            file: "test_file",
+            token: 'test_token',
+            signature: 'test_signature',
+            expire: 123,
+            publicKey: 'test_public_key'
         };
 
         const uploadPromise = upload(fileOptions);
@@ -211,7 +229,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal({ message: "Request to ImageKit upload endpoint failed due to network error", help: "" });
+            expect(ex instanceof ImageKitUploadNetworkError).to.be.true;
+            expect(ex.message).to.be.equal("Request to ImageKit upload endpoint failed due to network error");
         }
     });
 
@@ -435,7 +454,7 @@ describe("File upload", async function () {
         await sleep();
 
         var arg = server.requests[0].requestBody;
-
+        // It's a blob now, check size
         expect(arg.get('file').size).to.be.eq(buffer.length);
         expect(arg.get('fileName')).to.be.equal("test_file_name");
         expect(arg.get('token')).to.be.equal("test_token");
@@ -466,13 +485,14 @@ describe("File upload", async function () {
             help: "For support kindly contact us at support@imagekit.io .",
             message: "Your account cannot be authenticated."
         };
-        errorUploadResponse(500, errRes);
+        errorUploadResponse(401, errRes);
         await sleep();
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Your account cannot be authenticated.");
         }
     });
 
@@ -499,7 +519,9 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex instanceof SyntaxError).to.be.true;
+            // The response body is invalid JSON => SyntaxError
+            expect(ex instanceof ImageKitServerError).to.be.true;
+            expect(ex.message).to.be.equal("Server error occurred while uploading the file. This is rare and usually temporary.");
         }
     });
 
@@ -834,10 +856,10 @@ describe("File upload", async function () {
         expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
-    it('Upload using promise - error', async function () {
+    it('Server 5xx error with proper json and message', async function () {
         var errRes = {
             help: "For support kindly contact us at support@imagekit.io .",
-            message: "Your account cannot be authenticated."
+            message: "Something went wrong"
         };
         const fileOptions = {
             ...securityParameters,
@@ -861,7 +883,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitServerError).to.be.true;
+            expect(ex.message).to.be.equal("Something went wrong");
         }
     });
 
@@ -914,8 +937,8 @@ describe("File upload", async function () {
     });
 
     it('$ResponseMetadata assertions using promise', async function () {
-        var dummyResonseHeaders = {
-            "Content-Type": "application/json",
+        var dummyResponseHeaders = {
+            "content-type": "application/json",
             "x-request-id": "sdfsdfsdfdsf"
         };
         const fileOptions = {
@@ -936,7 +959,7 @@ describe("File upload", async function () {
             ]
         };
 
-        var uploadPromise = upload(fileOptions)
+        var uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
 
         await sleep();
@@ -944,7 +967,7 @@ describe("File upload", async function () {
         server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
             [
                 200,
-                dummyResonseHeaders,
+                dummyResponseHeaders,
                 JSON.stringify(uploadSuccessResponseObj)
             ]
         );
@@ -952,8 +975,9 @@ describe("File upload", async function () {
         await sleep();
 
         const response = await uploadPromise;
-        expect(response.$ResponseMetadata.headers).to.be.deep.equal(dummyResonseHeaders);
-        expect(response.$ResponseMetadata.statusCode).to.be.deep.equal(200);
+        // Make sure your upload.ts preserves the case of "Content-Type"
+        expect(response.$ResponseMetadata.headers).to.deep.equal(dummyResponseHeaders);
+        expect(response.$ResponseMetadata.statusCode).to.equal(200);
     });
 
     it('Undefined fields should not be sent', async function () {
@@ -1086,21 +1110,19 @@ describe("File upload", async function () {
         expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
 
-    it("Should return error for an invalid transformation", async function () {
+    it("Server 5xx without message", async function () {
         const fileOptions = {
             ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
             responseFields: "tags, customCoordinates, isPrivateFile, metadata",
-            useUniqueFileName: false,
-            transformation: {},
+            useUniqueFileName: false
         };
         const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
         await sleep();
         var errRes = {
-            help: "",
-            message: "Invalid transformation parameter. Please include at least pre, post, or both.",
+            help: ""
         };
         errorUploadResponse(500, errRes);
         await sleep();
@@ -1108,7 +1130,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitServerError).to.be.true;
+            expect(ex.message).to.be.equal("Server error occurred while uploading the file. This is rare and usually temporary.");
         }
     });
 
@@ -1134,7 +1157,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid pre transformation parameter.");
         }
     });
 
@@ -1160,7 +1184,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid post transformation parameter.");
         }
     });
 
@@ -1186,7 +1211,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid post transformation parameter.");
         }
     });
 
@@ -1212,7 +1238,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal(errRes);
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid post transformation parameter.");
         }
     });
 
@@ -1259,7 +1286,7 @@ describe("File upload", async function () {
         expect(progressSpy.calledOnce).to.be.true;
         successUploadResponse();
         await sleep();
-        expect(progressSpy.calledTwice).to.be.true; // for 100% progress
+        expect(progressSpy.calledTwice).to.be.true; // final progress
         const response = await uploadPromise;
         expect(response).to.be.deep.equal(uploadSuccessResponseObj);
     });
@@ -1280,7 +1307,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex.name).to.be.equal("AbortError");
+            expect(ex instanceof ImageKitAbortError).to.be.true;
+            expect(ex.reason.name).to.be.equal("AbortError");
         }
     });
 
@@ -1300,7 +1328,8 @@ describe("File upload", async function () {
             await uploadPromise;
             throw new Error('Should have thrown error');
         } catch (ex) {
-            expect(ex).to.be.deep.equal("abort reason");
+            expect(ex instanceof ImageKitAbortError).to.be.true;
+            expect(ex.reason).to.be.equal("abort reason");
         }
     });
 });
