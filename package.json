@@ -14,6 +14,9 @@
     "devDependencies": {
         "@babel/cli": "^7.10.5",
         "@babel/core": "^7.10.5",
+        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+        "@babel/plugin-transform-optional-chaining": "^7.25.9",
         "@babel/preset-env": "^7.10.4",
         "@babel/preset-typescript": "^7.13.0",
         "@babel/register": "^7.14.5",
@@ -22,11 +25,9 @@
         "@rollup/plugin-node-resolve": "^8.4.0",
         "@rollup/plugin-typescript": "^8.2.1",
         "@types/node": "^15.6.1",
-        "abortcontroller-polyfill": "^1.7.8",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "chai": "^4.2.0",
         "codecov": "^3.8.0",
-        "esm": "^3.2.25",
         "formdata-node": "2.1.0",
         "mocha": "^7.0.1",
         "nyc": "^15.1.0",
@@ -70,6 +71,5 @@
     "bugs": {
         "url": "https://github.com/imagekit-developer/imagekit-javascript/issues"
     },
-    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme",
-    "dependencies": {}
+    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme"
 }

@@ -63,6 +63,7 @@ function errorUploadResponse(statusCode, obj) {
 }
 
 async function sleep(ms = 0) {
+    return true;
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
@@ -220,11 +221,11 @@ describe("File upload", async function () {
         };
 
         const uploadPromise = upload(fileOptions);
-        expect(server.requests.length).to.be.equal(1);
-        await sleep();
-        // Simulate network error on upload API
-        server.requests[0].error();
-        await sleep();
+            expect(server.requests.length).to.be.equal(1);
+            await sleep();
+            // Simulate network error on upload API
+            server.requests[0].error();
+            await sleep();
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');

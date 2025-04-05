@@ -159,7 +159,6 @@ export const upload = (
       xhr.abort();
       return reject(new ImageKitAbortError(
         "Upload aborted",
-        // @ts-ignore for TypeScript versions lacking `signal.reason`
         uploadOptions.signal?.reason
       ));
     }
@@ -170,7 +169,6 @@ export const upload = (
 
         return reject(new ImageKitAbortError(
           "Upload aborted",
-          // @ts-ignore for TypeScript versions lacking `signal.reason`
           uploadOptions.signal?.reason
         ));
       }
