@@ -20,7 +20,7 @@ export default [
       babel({
         extensions: [".ts"],
       }),
-      // terser(),
+      terser(),
       cleanup(),
     ],
   },
