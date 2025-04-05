@@ -1,6 +1,6 @@
 {
   "coverage": true,
-  "require": ["esm", "./babel-register.js"],
+  "require": ["./babel-register.js"],
   "exit": true,
   "timeout": "40000"
 }

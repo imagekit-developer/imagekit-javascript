@@ -1,6 +1,6 @@
-import { ImageKitOptions, UrlOptions } from "../interfaces";
-import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "../interfaces/Transformation";
-import transformationUtils, { safeBtoa } from "../utils/transformation";
+import { UrlOptions } from "./interfaces";
+import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
+import transformationUtils, { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
 const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
@@ -25,17 +25,23 @@ function pathJoin(parts: string[], sep?: string) {
   return parts.join(separator).replace(replace, separator);
 }
 
-export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
-  if (!opts.path && !opts.src) {
+export const buildURL = (opts: UrlOptions) => {
+  opts.urlEndpoint = opts.urlEndpoint || "";
+  opts.src = opts.src || "";
+  opts.transformationPosition = opts.transformationPosition || "query";
+
+  if (!opts.src) {
     return "";
   }
+
+  const isAbsoluteURL = opts.src.startsWith("http://") || opts.src.startsWith("https://");
 
   var urlObj, isSrcParameterUsedForURL, urlEndpointPattern;
 
   try {
-    if (opts.path) {
+    if (!isAbsoluteURL) {
       urlEndpointPattern = new URL(opts.urlEndpoint).pathname;
-      urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.path]));
+      urlObj = new URL(pathJoin([opts.urlEndpoint.replace(urlEndpointPattern, ""), opts.src]));
     } else {
       urlObj = new URL(opts.src!);
       isSrcParameterUsedForURL = true;
@@ -49,7 +55,7 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
   }
 
-  var transformationString = constructTransformationString(opts.transformation);
+  var transformationString = generateTransformationString(opts.transformation);
 
   if (transformationString && transformationString.length) {
     if (!transformationUtils.addAsQueryParameter(opts) && !isSrcParameterUsedForURL) {
@@ -57,7 +63,7 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
         TRANSFORMATION_PARAMETER + transformationUtils.getChainTransformDelimiter() + transformationString,
         urlObj.pathname,
       ]);
-    } 
+    }
   }
 
   if (urlEndpointPattern) {
@@ -67,8 +73,8 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
   }
 
   if (transformationString && transformationString.length) {
-    if(transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
-      if(urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
+    if (transformationUtils.addAsQueryParameter(opts) || isSrcParameterUsedForURL) {
+      if (urlObj.searchParams.toString() !== "") { // In 12 node.js .size was not there. So, we need to check if it is an object or not.
         return `${urlObj.href}&${TRANSFORMATION_PARAMETER}=${transformationString}`;
       }
       else {
@@ -83,10 +89,10 @@ export const buildURL = (opts: UrlOptions & ImageKitOptions) => {
 function processInputPath(str: string, enccoding: string): string {
   // Remove leading and trailing slashes
   str = removeTrailingSlash(removeLeadingSlash(str));
-  if(enccoding === "plain") {
+  if (enccoding === "plain") {
     return `i-${str.replace(/\//g, "@@")}`;
   }
-  if(enccoding === "base64") {
+  if (enccoding === "base64") {
     return `ie-${encodeURIComponent(safeBtoa(str))}`;
   }
   if (SIMPLE_OVERLAY_PATH_REGEX.test(str)) {
@@ -111,13 +117,11 @@ function processText(str: string, enccoding: TextOverlay["encoding"]): string {
 
 function processOverlay(overlay: Transformation["overlay"]): string | undefined {
   const entries = [];
-  if (!overlay) {
-    return;
-  }
-  const { type, position = {}, timing = {}, transformation = [] } = overlay;
+
+  const { type, position = {}, timing = {}, transformation = [] } = overlay || {};
 
   if (!type) {
-    throw new Error("Overlay type is required");
+    return;
   }
 
   switch (type) {
@@ -205,7 +209,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
     entries.push(`ldu-${duration}`);
   }
 
-  const transformationString = constructTransformationString(transformation);
+  const transformationString = generateTransformationString(transformation);
 
   if (transformationString && transformationString.trim() !== "") entries.push(transformationString);
 
@@ -214,7 +218,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   return entries.join(transformationUtils.getTransformDelimiter());
 }
 
-function constructTransformationString(transformation: Transformation[] | undefined) {
+export const generateTransformationString = function (transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }

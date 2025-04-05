@@ -1,5 +1,5 @@
 import supportedTransforms from "../constants/supportedTransforms";
-import { ImageKitOptions, TransformationPosition } from "../interfaces";
+import { TransformationPosition, UrlOptions } from "../interfaces";
 
 const QUERY_TRANSFORMATION_POSITION: TransformationPosition = "query";
 const PATH_TRANSFORMATION_POSITION: TransformationPosition = "path";
@@ -10,15 +10,8 @@ const TRANSFORM_DELIMITER: string = ",";
 const TRANSFORM_KEY_VALUE_DELIMITER: string = "-";
 
 export default {
-    getDefault: (): TransformationPosition => {
-        return DEFAULT_TRANSFORMATION_POSITION;
-    },
-    addAsQueryParameter: (options: ImageKitOptions) => {
+    addAsQueryParameter: (options: UrlOptions) => {
         return options.transformationPosition === QUERY_TRANSFORMATION_POSITION;
-    },
-    validParameters: (options: ImageKitOptions) => {
-        if (typeof options.transformationPosition == "undefined") return false;
-        return VALID_TRANSFORMATION_POSITIONS.indexOf(options.transformationPosition) != -1;
     },
     getTransformKey: function (transform: string) {
         if (!transform) { return ""; }
@@ -38,6 +31,7 @@ export default {
 
 export const safeBtoa = function (str: string): string {
     if (typeof window !== "undefined") {
+        /* istanbul ignore next */
         return btoa(str);
     } else {
         // Node fallback
