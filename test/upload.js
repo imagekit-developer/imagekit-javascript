@@ -221,11 +221,11 @@ describe("File upload", async function () {
         };
 
         const uploadPromise = upload(fileOptions);
-            expect(server.requests.length).to.be.equal(1);
-            await sleep();
-            // Simulate network error on upload API
-            server.requests[0].error();
-            await sleep();
+        expect(server.requests.length).to.be.equal(1);
+        await sleep();
+        // Simulate network error on upload API
+        server.requests[0].error();
+        await sleep();
         try {
             await uploadPromise;
             throw new Error('Should have thrown error');
@@ -1331,6 +1331,65 @@ describe("File upload", async function () {
         } catch (ex) {
             expect(ex instanceof ImageKitAbortError).to.be.true;
             expect(ex.reason).to.be.equal("abort reason");
+        }
+    });
+
+    it("Already aborted signal should abort upload immediately", async function () {
+        const abortController = new AbortController();
+        // Abort the signal before calling upload
+        abortController.abort();
+        const fileOptions = {
+            ...securityParameters,
+            fileName: "test_file_name",
+            file: "test_file",
+            signal: abortController.signal
+        };
+        try {
+            await upload(fileOptions);
+            throw new Error("Should have thrown error");
+        } catch (ex) {
+            expect(ex instanceof ImageKitAbortError).to.be.true;
+            expect(ex.reason && ex.reason.name).to.be.equal("AbortError");
+        }
+    });
+
+    it("Error during upload 4xx with invalid JSON response", async function () {
+        const fileOptions = {
+            ...securityParameters,
+            fileName: "test_file_name",
+            file: "test_file"
+        };
+        const uploadPromise = upload(fileOptions);
+        // errorUploadResponse(400, `{sd`);
+        server.respondWith("POST", "https://upload.imagekit.io/api/v1/files/upload",
+            [
+                400,
+                { "Content-Type": "application/json" },
+                "sdf"
+            ]
+        );
+        server.respond();
+        try {
+            await uploadPromise;
+            throw new Error("Should have thrown error");
+        } catch (ex) {
+            expect(ex).to.be.instanceOf(SyntaxError);
+        }
+    });
+
+    it("Should return error for an invalid transformation object in upload", async function () {
+        const fileOptions = {
+            ...securityParameters,
+            fileName: "test_file_name",
+            file: "test_file",
+            transformation: 123
+        };
+        try {
+            await upload(fileOptions);
+            throw new Error("Should have thrown error");
+        } catch (ex) {
+            expect(ex instanceof ImageKitInvalidRequestError).to.be.true;
+            expect(ex.message).to.be.equal("Invalid transformation parameter. Please include at least pre, post, or both.");
         }
     });
 });
