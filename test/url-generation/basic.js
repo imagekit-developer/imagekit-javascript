@@ -12,7 +12,7 @@ describe("URL generation", function () {
         expect(url).equal("");
     });
 
-    it('should return an empty string for an invalid src URL', function () {
+    it('should return an empty string when src is /', function () {
         const url = buildURL({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
@@ -20,6 +20,16 @@ describe("URL generation", function () {
         });
 
         expect(url).equal("https://ik.imagekit.io/test_url_endpoint/");
+    });
+
+    it('should return an empty string when src is invalid', function () {
+        const url = buildURL({
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            transformationPosition: "query",
+            src: "https://"
+        });
+
+        expect(url).equal("");
     });
 
     it('should generate a valid URL when src is provided without transformation', function () {

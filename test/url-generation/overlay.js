@@ -19,6 +19,19 @@ describe("Overlay Transformation Test Cases", function () {
         expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
     });
 
+    it('Ignore if type is missing', function () {
+        const url = buildURL({
+            transformationPosition: "path",
+            urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+            src: "/base-image.jpg",
+            transformation: [{
+                overlay: {
+                }
+            }]
+        });
+        expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/base-image.jpg`);
+    });
+
     it('Ignore invalid values if input (image)', function () {
         const url = buildURL({
             transformationPosition: "path",

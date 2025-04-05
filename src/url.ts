@@ -1,7 +1,6 @@
 import { UrlOptions } from "./interfaces";
 import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
-import transformationUtils from "./utils/transformation";
-import { safeBtoa } from "./utils/transformation";
+import transformationUtils, { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
 const SIMPLE_OVERLAY_TEXT_REGEX = new RegExp('^[a-zA-Z0-9-._ ]*$') // These characters are selected by testing actual URLs on both path and query parameters. If and when backend starts supporting wide range of characters, this regex should be updated to improve URL readability.
@@ -118,13 +117,11 @@ function processText(str: string, enccoding: TextOverlay["encoding"]): string {
 
 function processOverlay(overlay: Transformation["overlay"]): string | undefined {
   const entries = [];
-  if (!overlay) {
-    return;
-  }
-  const { type, position = {}, timing = {}, transformation = [] } = overlay;
+
+  const { type, position = {}, timing = {}, transformation = [] } = overlay || {};
 
   if (!type) {
-    throw new Error("Overlay type is required");
+    return;
   }
 
   switch (type) {
