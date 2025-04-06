@@ -1,7 +1,7 @@
 import { Transformation } from "./Transformation";
 import { TransformationPosition } from ".";
 
-export interface UrlOptions {
+export interface SrcOptions {
   /**
    * Accepts relative or absolute path of the resource. If relative path is provided, it is appended to the `urlEndpoint`. If absolute path is provided, `urlEndpoint` is ignored.
    */

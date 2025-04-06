@@ -1,4 +1,4 @@
-import { UrlOptions } from "./interfaces";
+import { SrcOptions } from "./interfaces";
 import { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
 import transformationUtils, { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
@@ -25,7 +25,7 @@ function pathJoin(parts: string[], sep?: string) {
   return parts.join(separator).replace(replace, separator);
 }
 
-export const buildURL = (opts: UrlOptions) => {
+export const buildSrc = (opts: SrcOptions) => {
   opts.urlEndpoint = opts.urlEndpoint || "";
   opts.src = opts.src || "";
   opts.transformationPosition = opts.transformationPosition || "query";
@@ -55,7 +55,7 @@ export const buildURL = (opts: UrlOptions) => {
     urlObj.searchParams.append(i, String(opts.queryParameters[i]));
   }
 
-  var transformationString = generateTransformationString(opts.transformation);
+  var transformationString = buildTransformationString(opts.transformation);
 
   if (transformationString && transformationString.length) {
     if (!transformationUtils.addAsQueryParameter(opts) && !isSrcParameterUsedForURL) {
@@ -209,7 +209,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
     entries.push(`ldu-${duration}`);
   }
 
-  const transformationString = generateTransformationString(transformation);
+  const transformationString = buildTransformationString(transformation);
 
   if (transformationString && transformationString.trim() !== "") entries.push(transformationString);
 
@@ -218,7 +218,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   return entries.join(transformationUtils.getTransformDelimiter());
 }
 
-export const generateTransformationString = function (transformation: Transformation[] | undefined) {
+export const buildTransformationString = function (transformation: Transformation[] | undefined) {
   if (!Array.isArray(transformation)) {
     return "";
   }

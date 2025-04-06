@@ -1,11 +1,13 @@
-import { UploadOptions, UploadResponse, UrlOptions } from "./interfaces";
-import { upload } from "./upload";
-import { buildURL, generateTransformationString } from "./url";
+import { SrcOptions, Transformation, UploadOptions, UploadResponse } from "./interfaces";
+import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload } from "./upload";
+import { buildSrc, buildTransformationString } from "./url";
 
-export { buildURL, generateTransformationString, upload };
-
+export { buildSrc, buildTransformationString, upload, ImageKitInvalidRequestError, ImageKitAbortError, ImageKitServerError, ImageKitUploadNetworkError };
 export type {
-  UrlOptions,
+  Transformation,
+  SrcOptions,
   UploadOptions,
   UploadResponse
 };
+
+

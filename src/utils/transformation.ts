@@ -1,5 +1,5 @@
 import supportedTransforms from "../constants/supportedTransforms";
-import { TransformationPosition, UrlOptions } from "../interfaces";
+import { TransformationPosition, SrcOptions } from "../interfaces";
 
 const QUERY_TRANSFORMATION_POSITION: TransformationPosition = "query";
 const PATH_TRANSFORMATION_POSITION: TransformationPosition = "path";
@@ -10,7 +10,7 @@ const TRANSFORM_DELIMITER: string = ",";
 const TRANSFORM_KEY_VALUE_DELIMITER: string = "-";
 
 export default {
-    addAsQueryParameter: (options: UrlOptions) => {
+    addAsQueryParameter: (options: SrcOptions) => {
         return options.transformationPosition === QUERY_TRANSFORMATION_POSITION;
     },
     getTransformKey: function (transform: string) {

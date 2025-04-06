@@ -1,7 +1,5 @@
 import errorMessages from "./constants/errorMessages";
-import { UploadOptions } from "./interfaces/UploadOptions";
-import { ResponseMetadata, UploadResponse } from "./interfaces/UploadResponse";
-
+import { ResponseMetadata, UploadOptions, UploadResponse } from "./interfaces";
 
 export class ImageKitInvalidRequestError extends Error {
   /**
@@ -47,12 +45,12 @@ export class ImageKitServerError extends Error {
 }
 
 /**
- * Uploads a file with the given upload options.
+ * Uploads a file to ImageKit with the given upload options.
  * 
- * @throws {ImageKitInvalidRequestError} If the request is invalid.
- * @throws {ImageKitAbortError} If the request is aborted.
- * @throws {ImageKitUploadNetworkError} If there is a network error.
- * @throws {ImageKitServerError} If there is a server error.
+ * @throws {@link ImageKitInvalidRequestError} If the request is invalid.
+ * @throws {@link ImageKitAbortError} If the request is aborted.
+ * @throws {@link ImageKitUploadNetworkError} If there is a network error.
+ * @throws {@link ImageKitServerError} If there is a server error.
  * 
  * @param {UploadOptions} uploadOptions - The options for uploading the file.
  * @returns A Promise resolving to a successful {@link UploadResponse}

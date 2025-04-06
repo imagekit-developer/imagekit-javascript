@@ -2,13 +2,12 @@ const chai = require("chai");
 const sinon = require("sinon");
 const expect = chai.expect;
 import 'regenerator-runtime/runtime';
-import { upload } from "../src/index";
 import {
     ImageKitAbortError,
     ImageKitInvalidRequestError,
     ImageKitServerError,
-    ImageKitUploadNetworkError
-} from '../src/upload';
+    ImageKitUploadNetworkError, upload
+} from "../src/index";
 
 var requests, server;
 

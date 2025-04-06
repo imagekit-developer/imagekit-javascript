@@ -6,7 +6,7 @@
  *
  * {@link https://imagekit.io/docs/api-reference/digital-asset-management-dam/list-and-search-assets}
  */
-export type FileType = "all" | "image" | "non-image";
+type FileType = "all" | "image" | "non-image";
 
 /**
  * Metadata object structure
@@ -23,7 +23,7 @@ export type FileType = "all" | "image" | "non-image";
  * 
  * Perceptual hashing allows you to construct a hash value that uniquely identifies an input image based on the image's contents. It is different from cryptographic hash functions like MD5 and SHA1. pHash provides similar hash value after minor distortions, like small rotations, blurring, and compression in the image.
  */
-export interface Metadata {
+interface Metadata {
   height: number;
   width: number;
   size: number;

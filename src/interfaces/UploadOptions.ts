@@ -21,9 +21,7 @@ interface Transformation {
   post?: PostTransformation[]
 }
 /**
- * Options used when uploading a file
- *
- * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#Request}
+ * Options used when uploading a file. Checkout [upload docs](https://imagekit.io/docs/api-reference/upload-file/upload-file#Request) for more details.
  */
 export interface UploadOptions {
   /**

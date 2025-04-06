@@ -1,10 +1,10 @@
 const chai = require("chai");
 const expect = chai.expect;
-import { buildURL } from "../../src/index";
+import { buildSrc } from "../../src/index";
 
 describe("URL generation", function () {
     it('should return an empty string when src is not provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query"
         });
@@ -13,7 +13,7 @@ describe("URL generation", function () {
     });
 
     it('should return an empty string when src is /', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/"
@@ -23,7 +23,7 @@ describe("URL generation", function () {
     });
 
     it('should return an empty string when src is invalid', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "https://"
@@ -33,7 +33,7 @@ describe("URL generation", function () {
     });
 
     it('should generate a valid URL when src is provided without transformation', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg"
@@ -43,7 +43,7 @@ describe("URL generation", function () {
     });
 
     it('should generate a valid URL when a src is provided without transformation', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg"
@@ -53,7 +53,7 @@ describe("URL generation", function () {
     });
 
     it('should generate a valid URL when undefined transformation parameters are provided with path', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path_alt.jpg",
             transformation: undefined,
@@ -64,7 +64,7 @@ describe("URL generation", function () {
     });
 
     it("By default transformationPosition should be query", function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path.jpg",
             transformation: [
@@ -81,7 +81,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the URL without sdk version', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path.jpg",
             transformation: [
@@ -97,7 +97,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with a valid src and transformation', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -114,7 +114,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when the provided path contains multiple leading slashes', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "///test_path.jpg",
@@ -130,7 +130,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when the urlEndpoint is overridden', function () {
-        const url = buildURL({
+        const url = buildSrc({
             // We do not override urlEndpoint here
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint_alt",
             transformationPosition: "query",
@@ -147,7 +147,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "/test_path.jpg",
             transformationPosition: "query",
@@ -163,7 +163,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with a valid src parameter and transformation', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
@@ -179,7 +179,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with transformationPosition as query parameter when src is provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg",
             transformationPosition: "query",
@@ -195,7 +195,7 @@ describe("URL generation", function () {
     });
 
     it('should merge query parameters correctly in the generated URL', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "https://ik.imagekit.io/test_url_endpoint/test_path_alt.jpg?t1=v1",
@@ -212,7 +212,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with chained transformations', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -231,7 +231,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL with chained transformations including a new undocumented transformation parameter', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -250,7 +250,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when overlay image transformation is provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -267,7 +267,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when overlay image transformation contains a slash in the overlay path', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -284,7 +284,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when border transformation is applied', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -301,7 +301,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when transformation has empty key and value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -316,7 +316,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when an undefined transform is provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -331,7 +331,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when transformation key has an empty value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -346,7 +346,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when transformation key has \'-\' as its value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -361,7 +361,7 @@ describe("URL generation", function () {
     });
 
     it('should skip transformation parameters that are undefined or null', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -378,7 +378,7 @@ describe("URL generation", function () {
     });
 
     it('should skip transformation parameters that are false', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -394,7 +394,7 @@ describe("URL generation", function () {
     });
 
     it('should include only the key when transformation value is an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -410,7 +410,7 @@ describe("URL generation", function () {
     });
 
     it('should include both key and value when transformation parameter value is provided', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -426,7 +426,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when trim transformation is set to true as a boolean', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -442,7 +442,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when trim transformation is set to true as a string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -458,7 +458,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for AI background removal when set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -473,7 +473,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for AI background removal when \'true\' is provided as a string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -488,7 +488,7 @@ describe("URL generation", function () {
     });
 
     it('should not apply AI background removal when value is not true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -503,7 +503,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for external AI background removal when set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -518,7 +518,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for external AI background removal when \'true\' is provided as a string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -533,7 +533,7 @@ describe("URL generation", function () {
     });
 
     it('should not apply external AI background removal when value is not true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -548,7 +548,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when gradient transformation is provided as a string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -563,7 +563,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when gradient transformation is provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -578,7 +578,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when gradient transformation is set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -593,7 +593,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when AI drop shadow transformation is set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -608,7 +608,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when AI drop shadow transformation is provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -623,7 +623,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when AI drop shadow transformation is provided with a specific string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -638,7 +638,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when shadow transformation is set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -653,7 +653,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when shadow transformation is provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -668,7 +668,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when shadow transformation is provided with a specific string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -683,7 +683,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when sharpen transformation is set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -698,7 +698,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when sharpen transformation is provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -713,7 +713,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when sharpen transformation is provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -728,7 +728,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when unsharpMask transformation is set to true', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -743,7 +743,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when unsharpMask transformation is provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -758,7 +758,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL when unsharpMask transformation is provided with a string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -773,7 +773,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for trim transformation when set to true (boolean)', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -788,7 +788,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for trim transformation when provided as an empty string', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -803,7 +803,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for trim transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -819,7 +819,7 @@ describe("URL generation", function () {
 
     // Width parameter tests
     it('should generate the correct URL for width transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -834,7 +834,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for width transformation when provided with a string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -849,7 +849,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for width transformation when provided with an arithmetic expression', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -865,7 +865,7 @@ describe("URL generation", function () {
 
     // Height parameter tests
     it('should generate the correct URL for height transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -880,7 +880,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for height transformation when provided with a string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -895,7 +895,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for height transformation when provided with an arithmetic expression', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -911,7 +911,7 @@ describe("URL generation", function () {
 
     // AspectRatio parameter tests
     it('should generate the correct URL for aspectRatio transformation when provided with a string value in colon format', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -926,7 +926,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for aspectRatio transformation when provided with an alternate underscore format', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -941,7 +941,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for aspectRatio transformation when provided with an arithmetic expression', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -957,7 +957,7 @@ describe("URL generation", function () {
 
     // Background parameter tests
     it('should generate the correct URL for background transformation when provided with a solid color', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -972,7 +972,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for background transformation when provided with the blurred option', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -987,7 +987,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for background transformation when provided with the genfill option', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1003,7 +1003,7 @@ describe("URL generation", function () {
 
     // Crop parameter tests
     it('should generate the correct URL for crop transformation when provided with force value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1018,7 +1018,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for crop transformation when provided with at_max value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1034,7 +1034,7 @@ describe("URL generation", function () {
 
     // CropMode parameter tests
     it('should generate the correct URL for cropMode transformation when provided with pad_resize', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1049,7 +1049,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for cropMode transformation when provided with extract value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1065,7 +1065,7 @@ describe("URL generation", function () {
 
     // Focus parameter tests
     it('should generate the correct URL for focus transformation when provided with a string value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1080,7 +1080,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for focus transformation when face detection is specified', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1096,7 +1096,7 @@ describe("URL generation", function () {
 
     // Quality parameter test
     it('should generate the correct URL for quality transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1112,7 +1112,7 @@ describe("URL generation", function () {
 
     // Coordinate parameters tests
     it('should generate the correct URL for x coordinate transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1127,7 +1127,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for y coordinate transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1142,7 +1142,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for xCenter transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1157,7 +1157,7 @@ describe("URL generation", function () {
     });
 
     it('should generate the correct URL for yCenter transformation when provided with a number value', function () {
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path1.jpg",
@@ -1173,7 +1173,7 @@ describe("URL generation", function () {
 
     it('Including deprecated properties', function () {
         // This is just testing how the SDK constructs the URL, not actual valid transformations.
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",
@@ -1219,7 +1219,7 @@ describe("URL generation", function () {
 
     it('should generate the correct URL with many transformations, including video and AI transforms', function () {
         // Example test with comprehensive transformations
-        const url = buildURL({
+        const url = buildSrc({
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
             transformationPosition: "query",
             src: "/test_path.jpg",

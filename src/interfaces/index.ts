@@ -1,7 +1,7 @@
-import { TransformationPosition } from "./Transformation";
+import { Transformation, TransformationPosition } from "./Transformation";
 import { UploadOptions } from "./UploadOptions";
-import { FileType, UploadResponse } from "./UploadResponse";
-import { UrlOptions } from "./UrlOptions";
+import { ResponseMetadata, UploadResponse } from "./UploadResponse";
+import { SrcOptions } from "./SrcOptions";
 
-export type { FileType, TransformationPosition, UploadOptions, UploadResponse, UrlOptions };
+export type { ResponseMetadata, Transformation, TransformationPosition, UploadOptions, UploadResponse, SrcOptions };
 
