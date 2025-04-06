@@ -31,7 +31,7 @@ To enable type checking in JavaScript projects, add `//@ts-check` at the top of 
 
 ## Documentation
 
-Refer to the ImageKit [official documentation](http://localhost/docs/integration/javascript) for more details on how to use the SDK.
+Refer to the ImageKit [official documentation](https://imagekit.io/docs/integration/javascript) for more details on how to use the SDK.
 
 ## Changelog
 
