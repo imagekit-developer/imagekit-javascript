@@ -48,6 +48,9 @@
         "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha --require ./test/setup.js \"test/**/*.js\"",
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js"
     },
+    "publishConfig": {
+        "tag": "beta"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/imagekit-developer/imagekit-javascript.git"
