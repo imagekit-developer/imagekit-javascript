@@ -7,14 +7,14 @@ export type StreamingResolution = "240" | "360" | "480" | "720" | "1080" | "1440
  * SDKs are updated regularly to support new transformations. If you want to use a transformation that is not supported by the SDK, 
  * You can use the `raw` parameter to pass the transformation string directly.
  * 
- * {@link https://imagekit.io/docs/transformations|Transformations Documentation}
+ * [Transformations Documentation](https://imagekit.io/docs/transformations)
  */
 export interface Transformation {
     /**
      * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated as a percentage (e.g., `0.4` represents 40% of the original width). 
      * You can also supply arithmetic expressions (e.g., `iw_div_2`).
      * 
-     * Width transformation - {@link https://imagekit.io/docs/image-resize-and-crop#width---w|Images} | {@link https://imagekit.io/docs/video-resize-and-crop#width---w|Videos}
+     * Width transformation - [Images](https://imagekit.io/docs/image-resize-and-crop#width---w) | [Videos](https://imagekit.io/docs/video-resize-and-crop#width---w)
      */
     width?: number | string;
 
@@ -22,7 +22,7 @@ export interface Transformation {
      * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated as a percentage (e.g., `0.5` represents 50% of the original height). 
      * You can also supply arithmetic expressions (e.g., `ih_mul_0.5`).
      * 
-     * Height transformation - {@link https://imagekit.io/docs/image-resize-and-crop#height---h|Images} | {@link https://imagekit.io/docs/video-resize-and-crop#height---h|Videos}
+     * Height transformation - [Images](https://imagekit.io/docs/image-resize-and-crop#height---h) | [Videos](https://imagekit.io/docs/video-resize-and-crop#height---h)
      */
     height?: number | string;
 
@@ -30,7 +30,7 @@ export interface Transformation {
      * Specifies the aspect ratio for the output, e.g., "ar-4-3". Typically used with either width or height (but not both). 
      * For example: aspectRatio = `4:3`, `4_3`, or an expression like `iar_div_2`.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar|Image Resize and Crop - Aspect Ratio}
+     * [Image Resize and Crop - Aspect Ratio](https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar)
      */
     aspectRatio?: number | string;
 
@@ -38,16 +38,16 @@ export interface Transformation {
      * Specifies the background to be used in conjunction with certain cropping strategies when resizing an image. 
      * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`.
      * 
-     *   {@link https://imagekit.io/docs/effects-and-enhancements#solid-color-background|Effects and Enhancements - Solid Color Background}
+     *   [Effects and Enhancements - Solid Color Background](https://imagekit.io/docs/effects-and-enhancements#solid-color-background)
      * 
      * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc.
      * 
-     *   {@link https://imagekit.io/docs/effects-and-enhancements#blurred-background|Effects and Enhancements - Blurred Background}
+     *   [Effects and Enhancements - Blurred Background](https://imagekit.io/docs/effects-and-enhancements#blurred-background)
      * 
      * - Expand the image boundaries using generative fill: `genfill`. Not supported inside overlay. Optionally, control the background scene by passing a text prompt:
      *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
      *   
-     *   {@link https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill|AI Transformations - Generative Fill Background}
+     *   [AI Transformations - Generative Fill Background](https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill)
      */
     background?: string;
 
@@ -55,31 +55,31 @@ export interface Transformation {
      * Adds a border to the output media. Accepts a string in the format `<border-width>_<hex-code>` 
      * (e.g., `5_FFF000` for a 5px yellow border), or an expression like `ih_div_20_FF00FF`.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#border---b|Effects and Enhancements - Border}
+     * [Effects and Enhancements - Border](https://imagekit.io/docs/effects-and-enhancements#border---b)
      */
     border?: string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus|Image Resize and Crop - Crop Modes}
+     * [Image Resize and Crop - Crop Modes](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus)
      */
     crop?: "force" | "at_max" | "at_max_enlarge" | "at_least" | "maintain_ratio";
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus|Image Resize and Crop - Crop Modes}
+     * [Image Resize and Crop - Crop Modes](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus)
      */
     cropMode?: "pad_resize" | "extract" | "pad_extract";
 
     /**
      * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR) calculation.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#dpr---dpr|Image Resize and Crop - DPR}
+     * [Image Resize and Crop - DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr)
      */
     dpr?: number
 
     /**
      * This parameter can be used with pad resize, maintain ratio, or extract crop to modify the padding or cropping behavior. 
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#focus---fo|Image Resize and Crop - Focus}
+     * [Image Resize and Crop - Focus](https://imagekit.io/docs/image-resize-and-crop#focus---fo)
      */
     focus?: string;
 
@@ -87,27 +87,27 @@ export interface Transformation {
      * Specifies the quality of the output image for lossy formats such as JPEG, WebP, and AVIF. 
      * A higher quality value results in a larger file size with better quality, while a lower value produces a smaller file size with reduced quality.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#quality---q|Image Optimization - Quality}
+     * [Image Optimization - Quality](https://imagekit.io/docs/image-optimization#quality---q)
      */
     quality?: number;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
+     * [Image Resize and Crop - Focus Using Cropped Image Coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates)
      */
     x?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
+     * [Image Resize and Crop - Focus Using Cropped Image Coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates)
      */
     xCenter?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
+     * [Image Resize and Crop - Focus Using Cropped Image Coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates)
      */
     y?: number | string;
 
     /**
-     * {@link https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates|Image Resize and Crop - Focus Using Cropped Image Coordinates}
+     * [Image Resize and Crop - Focus Using Cropped Image Coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates)
      */
     yCenter?: number | string;
 
@@ -116,28 +116,28 @@ export interface Transformation {
      * You can also pass `orig` for images to return the original format.
      * ImageKit automatically delivers images and videos in the optimal format based on device support unless overridden by the dashboard settings or the format parameter.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#format---f|Image Optimization - Format} & {@link https://imagekit.io/docs/video-optimization#format---f|Video Optimization - Format}
+     * [Image Optimization - Format](https://imagekit.io/docs/image-optimization#format---f) & [Video Optimization - Format](https://imagekit.io/docs/video-optimization#format---f)
      */
     format?: "auto" | "webp" | "jpg" | "jpeg" | "png" | "gif" | "svg" | "mp4" | "webm" | "avif" | "orig";
 
     /**
      * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. 
      * 
-     * {@link https://imagekit.io/docs/video-optimization#video-codec---vc|Video Optimization - Video Codec}
+     * [Video Optimization - Video Codec](https://imagekit.io/docs/video-optimization#video-codec---vc)
      */
     videoCodec?: "h264" | "vp9" | "av1" | "none";
 
     /**
      * Specifies the audio codec, e.g., `aac`, `opus`, or `none`. 
      * 
-     * {@link https://imagekit.io/docs/video-optimization#audio-codec---ac|Video Optimization - Audio Codec}
+     * [Video Optimization - Audio Codec](https://imagekit.io/docs/video-optimization#audio-codec---ac)
      */
     audioCodec?: "aac" | "opus" | "none";
 
     /**
      * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular/oval shapes. 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#radius---r|Effects and Enhancements - Radius}
+     * [Effects and Enhancements - Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r)
      */
     radius?: number | "max";
 
@@ -146,26 +146,26 @@ export interface Transformation {
      * or `auto` to use the orientation specified in the image's EXIF data.
      * For videos, only the following values are supported: 0, 90, 180, 270, or 360.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#rotate---rt|Effects and Enhancements - Rotate}
+     * [Effects and Enhancements - Rotate](https://imagekit.io/docs/effects-and-enhancements#rotate---rt)
      */
     rotation?: number | string;
 
     /**
      * Specifies the Gaussian blur level. Accepts an integer value between 1 and 100, or an expression like `bl-10`. 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#blur---bl|Effects and Enhancements - Blur}
+     * [Effects and Enhancements - Blur](https://imagekit.io/docs/effects-and-enhancements#blur---bl)
      */
     blur?: number;
 
     /**
-     * {@link https://imagekit.io/docs/transformations#named-transformations|Transformations - Named Transformations}
+     * [Transformations - Named Transformations](https://imagekit.io/docs/transformations#named-transformations)
      */
     named?: string;
 
     /**
      * Specifies a fallback image if the resource is not found, e.g., a URL or file path. 
      * 
-     * {@link https://imagekit.io/docs/image-transformation#default-image---di|Image Transformation - Default Image}
+     * [Image Transformation - Default Image](https://imagekit.io/docs/image-transformation#default-image---di)
      */
     defaultImage?: string;
 
@@ -173,14 +173,14 @@ export interface Transformation {
      * Flips or mirrors an image either horizontally, vertically, or both. 
      * Acceptable values: `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#flip---fl|Effects and Enhancements - Flip}
+     * [Effects and Enhancements - Flip](https://imagekit.io/docs/effects-and-enhancements#flip---fl)
      */
     flip?: "h" | "v" | "h_v" | "v_h";
 
     /**
      * If set to true, serves the original file without applying any transformations. 
      * 
-     * {@link https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true|Core Delivery Features - Deliver Original File As Is}
+     * [Core Delivery Features - Deliver Original File As Is](https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true)
      */
     original?: boolean;
 
@@ -188,7 +188,7 @@ export interface Transformation {
      * Specifies the start offset (in seconds) for trimming videos, e.g., `5` or `10.5`. 
      * Arithmetic expressions are also supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#start-offset---so|Trim Videos - Start Offset}
+     * [Trim Videos - Start Offset](https://imagekit.io/docs/trim-videos#start-offset---so)
      */
     startOffset?: number | string;
 
@@ -196,7 +196,7 @@ export interface Transformation {
      * Specifies the end offset (in seconds) for trimming videos, e.g., `5` or `10.5`. 
      * Typically used with startOffset to define a time window. Arithmetic expressions are supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#end-offset---eo|Trim Videos - End Offset}
+     * [Trim Videos - End Offset](https://imagekit.io/docs/trim-videos#end-offset---eo)
      */
     endOffset?: number | string;
 
@@ -204,35 +204,35 @@ export interface Transformation {
      * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. 
      * Typically used with startOffset to indicate the length from the start offset. Arithmetic expressions are supported.
      * 
-     * {@link https://imagekit.io/docs/trim-videos#duration---du|Trim Videos - Duration}
+     * [Trim Videos - Duration](https://imagekit.io/docs/trim-videos#duration---du)
      */
     duration?: number | string;
 
     /**
      * An array of resolutions for adaptive bitrate streaming, e.g., [`240`, `360`, `480`, `720`, `1080`]. 
      * 
-     * {@link https://imagekit.io/docs/adaptive-bitrate-streaming|Adaptive Bitrate Streaming}
+     * [Adaptive Bitrate Streaming](https://imagekit.io/docs/adaptive-bitrate-streaming)
      */
     streamingResolutions?: StreamingResolution[];
 
     /**
      * Enables a grayscale effect for images. 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale|Effects and Enhancements - Grayscale}
+     * [Effects and Enhancements - Grayscale](https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale)
      */
     grayscale?: true;
 
     /**
      * Upscales images beyond their original dimensions using AI. Not supported inside overlay. 
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#upscale-e-upscale|AI Transformations - Upscale}
+     * [AI Transformations - Upscale](https://imagekit.io/docs/ai-transformations#upscale-e-upscale)
      */
     aiUpscale?: true
 
     /**
      * Performs AI-based retouching to improve faces or product shots. Not supported inside overlay. 
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#retouch-e-retouch|AI Transformations - Retouch}
+     * [AI Transformations - Retouch](https://imagekit.io/docs/ai-transformations#retouch-e-retouch)
      */
     aiRetouch?: true
 
@@ -240,7 +240,7 @@ export interface Transformation {
      * Generates a variation of an image using AI. This produces a new image with slight variations from the original, 
      * such as changes in color, texture, and other visual elements, while preserving the structure and essence of the original image. Not supported inside overlay.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar|AI Transformations - Generate Variations}
+     * [AI Transformations - Generate Variations](https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar)
      */
     aiVariation?: true
 
@@ -250,7 +250,7 @@ export interface Transformation {
      * Pass `true` for the default drop shadow, or provide a string for a custom drop shadow.
      * Supported inside overlay.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow|AI Transformations - Drop Shadow}
+     * [AI Transformations - Drop Shadow](https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow)
      */
     aiDropShadow?: true | string
 
@@ -259,7 +259,7 @@ export interface Transformation {
      * e.g., `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`.
      * Not supported inside overlay.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#change-background-e-changebg|AI Transformations - Change Background}
+     * [AI Transformations - Change Background](https://imagekit.io/docs/ai-transformations#change-background-e-changebg)
      */
     aiChangeBackground?: string;
 
@@ -267,7 +267,7 @@ export interface Transformation {
      * Applies ImageKit’s in-house background removal. 
      * Supported inside overlay.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove|AI Transformations - Background Removal}
+     * [AI Transformations - Background Removal](https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove)
      */
     aiRemoveBackground?: true
 
@@ -276,14 +276,14 @@ export interface Transformation {
      * Note: It is recommended to use aiRemoveBackground, ImageKit’s in-house solution, which is more cost-effective.
      * Supported inside overlay.
      * 
-     * {@link https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg|AI Transformations - External Background Removal}
+     * [AI Transformations - External Background Removal](https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg)
      */
     aiRemoveBackgroundExternal?: true
 
     /**
      * Automatically enhances the contrast of an image (contrast stretch). 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast|Effects and Enhancements - Contrast Stretch}
+     * [Effects and Enhancements - Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast)
      */
     contrastStretch?: true
 
@@ -292,7 +292,7 @@ export interface Transformation {
      * For AI-based drop shadows, refer to aiDropShadow.
      * Pass `true` for a default shadow, or provide a string for a custom shadow.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow|Effects and Enhancements - Shadow}
+     * [Effects and Enhancements - Shadow](https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow)
      */
     shadow?: true | string
 
@@ -300,7 +300,7 @@ export interface Transformation {
      * Sharpens the input image, highlighting edges and finer details. 
      * Pass `true` for default sharpening, or provide a numeric value for custom sharpening.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen|Effects and Enhancements - Sharpen}
+     * [Effects and Enhancements - Sharpen](https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen)
      */
     sharpen?: true | number
 
@@ -308,14 +308,14 @@ export interface Transformation {
      * Applies Unsharp Masking (USM), an image sharpening technique. 
      * Pass `true` for a default unsharp mask, or provide a string for a custom unsharp mask.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm|Effects and Enhancements - Unsharp Mask}
+     * [Effects and Enhancements - Unsharp Mask](https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm)
      */
     unsharpMask?: true | string;
 
     /**
      * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a string for a custom gradient. 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient|Effects and Enhancements - Gradient}
+     * [Effects and Enhancements - Gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient)
      */
     gradient?: true | string;
 
@@ -323,21 +323,21 @@ export interface Transformation {
      * Specifies whether the output JPEG image should be rendered progressively. Progressive loading begins with a low-quality, 
      * pixelated version of the full image, which gradually improves to provide a faster perceived load time.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#progressive-image---pr|Image Optimization - Progressive Image}
+     * [Image Optimization - Progressive Image](https://imagekit.io/docs/image-optimization#progressive-image---pr)
      */
     progressive?: boolean;
 
     /**
      * Specifies whether the output image (in JPEG or PNG) should be compressed losslessly. 
      * 
-     * {@link https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo|Image Optimization - Lossless Compression}
+     * [Image Optimization - Lossless Compression](https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo)
      */
     lossless?: boolean
 
     /**
      * Indicates whether the output image should retain the original color profile. 
      * 
-     * {@link https://imagekit.io/docs/image-optimization#color-profile---cp|Image Optimization - Color Profile}
+     * [Image Optimization - Color Profile](https://imagekit.io/docs/image-optimization#color-profile---cp)
      */
     colorProfile?: boolean;
 
@@ -345,14 +345,14 @@ export interface Transformation {
      * By default, ImageKit removes all metadata during automatic image compression. 
      * Set this to true to preserve metadata.
      * 
-     * {@link https://imagekit.io/docs/image-optimization#image-metadata---md|Image Optimization - Image Metadata}
+     * [Image Optimization - Image Metadata](https://imagekit.io/docs/image-optimization#image-metadata---md)
      */
     metadata?: boolean;
 
     /**
      * Specifies the opacity level of the output image. 
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#opacity---o|Effects and Enhancements - Opacity}
+     * [Effects and Enhancements - Opacity](https://imagekit.io/docs/effects-and-enhancements#opacity---o)
      */
     opacity?: number;
 
@@ -360,7 +360,7 @@ export interface Transformation {
      * Useful for images with a solid or nearly solid background and a central object. This parameter trims the background, 
      * leaving only the central object in the output image.
      * 
-     * {@link https://imagekit.io/docs/effects-and-enhancements#trim-edges---t|Effects and Enhancements - Trim Edges}
+     * [Effects and Enhancements - Trim Edges](https://imagekit.io/docs/effects-and-enhancements#trim-edges---t)
      */
     trim?: true | number;
 
@@ -368,7 +368,7 @@ export interface Transformation {
      * Accepts a numeric value that determines how much to zoom in or out of the cropped area. 
      * It should be used in conjunction with fo-face or fo-<object_name>.
      * 
-     * {@link https://imagekit.io/docs/image-resize-and-crop#zoom---z|Image Resize and Crop - Zoom}
+     * [Image Resize and Crop - Zoom](https://imagekit.io/docs/image-resize-and-crop#zoom---z)
      */
     zoom?: number;
 
@@ -377,7 +377,7 @@ export interface Transformation {
      * For example, specify by number (e.g., `2`), a range (e.g., `3-4` for the 2nd and 3rd layers),
      * or by name (e.g., `name-layer-4` for a PSD layer).
      * 
-     * {@link https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files|Vector and Animated Images - Thumbnail Extraction}
+     * [Vector and Animated Images - Thumbnail Extraction](https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files)
      */
     page?: number | string;
 
@@ -392,7 +392,7 @@ export interface Transformation {
      * Specifies an overlay to be applied on the parent image or video. 
      * ImageKit supports overlays including images, text, videos, subtitles, and solid colors.
      * 
-     * {@link https://imagekit.io/docs/transformations#overlay-using-layers|Transformations - Overlay Using Layers}
+     * [Transformations - Overlay Using Layers](https://imagekit.io/docs/transformations#overlay-using-layers)
      */
     overlay?: Overlay;
 }
@@ -409,7 +409,7 @@ export interface BaseOverlay {
      * Specifies the overlay's position relative to the parent asset.
      * Accepts a JSON object with `x` and `y` (or `focus`) properties.
      * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
+     * [Transformations - Position of Layer](https://imagekit.io/docs/transformations#position-of-layer)
      */
     position?: OverlayPosition;
 
@@ -417,7 +417,7 @@ export interface BaseOverlay {
      * Specifies timing information for the overlay (only applicable if the base asset is a video).
      * Accepts a JSON object with `start` (`lso`), `end` (`leo`), and `duration` (`ldu`) properties.
      * 
-     * {@link https://imagekit.io/docs/transformations#position-of-layer|Transformations - Position of Layer}
+     * [Transformations - Position of Layer](https://imagekit.io/docs/transformations#position-of-layer)
      */
     timing?: OverlayTiming;
 }
@@ -527,7 +527,7 @@ export interface ImageOverlay extends BaseOverlay {
     /**
      * Array of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
      * 
-     * {@link https://imagekit.io/docs/add-overlays-on-images#list-of-supported-image-transformations-in-image-layers|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#list-of-transformations-supported-on-image-overlay|Video}
+     * [Image](https://imagekit.io/docs/add-overlays-on-images#list-of-supported-image-transformations-in-image-layers) | [Video](https://imagekit.io/docs/add-overlays-on-videos#list-of-transformations-supported-on-image-overlay)
      */
     transformation?: Transformation[];
 }
@@ -554,7 +554,7 @@ export interface VideoOverlay extends BaseOverlay {
     /**
      * Array of transformation to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
      * 
-     * {@link https://imagekit.io/docs/video-transformation|Video Transformations}
+     * [Video Transformations](https://imagekit.io/docs/video-transformation)
      */
     transformation?: Transformation[];
 }
@@ -581,7 +581,7 @@ export interface SubtitleOverlay extends BaseOverlay {
     /**
      * Control styling of the subtitle.
      * 
-     * {@link https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer|Styling subtitles}
+     * [Styling subtitles](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      */
     transformation?: SubtitleOverlayTransformation[];
 }
@@ -597,7 +597,7 @@ export interface SolidColorOverlay extends BaseOverlay {
     /**
      * Control width and height of the solid color overlay. Supported transformations depend on the base/parent asset.
      * 
-     * {@link https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay|Image} | {@link https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay|Video}
+     * [Image](https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay) | [Video](https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay)
      */
     transformation?: SolidColorOverlayTransformation[];
 }
