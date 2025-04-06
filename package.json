@@ -1,6 +1,6 @@
 {
     "name": "@imagekit/javascript",
-    "version": "5.0.0-beta.1",
+    "version": "5.0.0-beta.2",
     "description": "ImageKit Javascript SDK",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
@@ -49,7 +49,8 @@
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js"
     },
     "publishConfig": {
-        "tag": "beta"
+        "tag": "beta",
+        "access": "public"
     },
     "repository": {
         "type": "git",
