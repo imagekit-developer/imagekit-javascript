@@ -1,7 +1,7 @@
-import { Transformation, TransformationPosition } from "./Transformation";
-import { UploadOptions } from "./UploadOptions";
-import { ResponseMetadata, UploadResponse } from "./UploadResponse";
-import { SrcOptions } from "./SrcOptions";
+// src/interfaces/index.ts
+// Re-export all interfaces so that TypeDoc includes referenced types in the documentation
 
-export type { ResponseMetadata, Transformation, TransformationPosition, UploadOptions, UploadResponse, SrcOptions };
-
+export * from './UploadResponse';
+export * from './UploadOptions';
+export * from './Transformation';
+export * from './SrcOptions';
