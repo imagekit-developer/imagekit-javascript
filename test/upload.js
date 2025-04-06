@@ -1297,7 +1297,7 @@ describe("File upload", async function () {
             ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
-            signal: abortController.signal
+            abortSignal: abortController.signal
         };
         const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
@@ -1318,7 +1318,7 @@ describe("File upload", async function () {
             ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
-            signal: abortController.signal
+            abortSignal: abortController.signal
         };
         const uploadPromise = upload(fileOptions);
         expect(server.requests.length).to.be.equal(1);
@@ -1341,7 +1341,7 @@ describe("File upload", async function () {
             ...securityParameters,
             fileName: "test_file_name",
             file: "test_file",
-            signal: abortController.signal
+            abortSignal: abortController.signal
         };
         try {
             await upload(fileOptions);

@@ -1,6 +1,9 @@
 import errorMessages from "./constants/errorMessages";
 import { ResponseMetadata, UploadOptions, UploadResponse } from "./interfaces";
 
+/**
+ * Represents an error when a request to ImageKit is invalid.
+ */
 export class ImageKitInvalidRequestError extends Error {
   /**
    * Optional metadata about the response. It is only available if server returns a response.
@@ -13,6 +16,9 @@ export class ImageKitInvalidRequestError extends Error {
   }
 }
 
+/**
+ * Represents an error when an upload operation is aborted.
+ */
 export class ImageKitAbortError extends Error {
   /**
    * The reason why the operation was aborted, which can be any JavaScript value. If not specified, the reason is set to "AbortError" DOMException.
@@ -25,6 +31,9 @@ export class ImageKitAbortError extends Error {
   }
 }
 
+/**
+ * Represents a network error during an upload operation to ImageKit.
+ */
 export class ImageKitUploadNetworkError extends Error {
   constructor(message: string) {
     super(message);
@@ -32,6 +41,9 @@ export class ImageKitUploadNetworkError extends Error {
   }
 }
 
+/**
+ * Represents a server error from ImageKit during an upload operation.
+ */
 export class ImageKitServerError extends Error {
   /**
    * Optional metadata about the response. It is only available if server returns a response.
@@ -45,19 +57,17 @@ export class ImageKitServerError extends Error {
 }
 
 /**
- * Uploads a file to ImageKit with the given upload options.
- * 
- * @throws {@link ImageKitInvalidRequestError} If the request is invalid.
- * @throws {@link ImageKitAbortError} If the request is aborted.
- * @throws {@link ImageKitUploadNetworkError} If there is a network error.
- * @throws {@link ImageKitServerError} If there is a server error.
- * 
+ * Uploads a file to ImageKit with the given upload options. This function uses V1 API, check the [API docs](https://imagekit.io/docs/api-reference/upload-file/upload-file) for more details.
+ *
+ * @throws {ImageKitInvalidRequestError} If the request is invalid.
+ * @throws {ImageKitAbortError} If the request is aborted.
+ * @throws {ImageKitUploadNetworkError} If there is a network error.
+ * @throws {ImageKitServerError} If there is a server error.
+ *
  * @param {UploadOptions} uploadOptions - The options for uploading the file.
- * @returns A Promise resolving to a successful {@link UploadResponse}
+ * @returns {Promise<UploadResponse>} A Promise resolving to a successful UploadResponse.
  */
-export const upload = (
-  uploadOptions: UploadOptions
-): Promise<UploadResponse> => {
+export const upload = (uploadOptions: UploadOptions): Promise<UploadResponse> => {
   if(!uploadOptions) {
     return Promise.reject(new ImageKitInvalidRequestError("Invalid options provided for upload"));
   }
@@ -139,7 +149,7 @@ export const upload = (
         } else if (key === 'checks' && uploadOptions.checks) {
           formData.append("checks", uploadOptions.checks);
         } else if (uploadOptions[key] !== undefined) {
-          if (["onProgress", "signal"].includes(key)) continue;
+          if (["onProgress", "abortSignal"].includes(key)) continue;
           formData.append(key, String(uploadOptions[key]));
         }
       }
@@ -157,27 +167,27 @@ export const upload = (
       xhr.abort();
       return reject(new ImageKitAbortError(
         "Upload aborted",
-        uploadOptions.signal?.reason
+        uploadOptions.abortSignal?.reason
       ));
     }
 
-    if (uploadOptions.signal) {
-      if (uploadOptions.signal.aborted) {
+    if (uploadOptions.abortSignal) {
+      if (uploadOptions.abortSignal.aborted) {
         // If the signal is already aborted, return immediately with the reason
 
         return reject(new ImageKitAbortError(
           "Upload aborted",
-          uploadOptions.signal?.reason
+          uploadOptions.abortSignal?.reason
         ));
       }
 
       // If the signal is not already aborted, add an event listener to abort the request when the signal is aborted
-      uploadOptions.signal.addEventListener("abort", onAbortHandler);
+      uploadOptions.abortSignal.addEventListener("abort", onAbortHandler);
 
       // On XHR completion (success, fail, or abort), remove just this abort handler
       xhr.addEventListener("loadend", () => {
-        if (uploadOptions.signal) {
-          uploadOptions.signal.removeEventListener("abort", onAbortHandler);
+        if (uploadOptions.abortSignal) {
+          uploadOptions.abortSignal.removeEventListener("abort", onAbortHandler);
         }
       });
     }

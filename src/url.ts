@@ -25,7 +25,13 @@ function pathJoin(parts: string[], sep?: string) {
   return parts.join(separator).replace(replace, separator);
 }
 
-export const buildSrc = (opts: SrcOptions) => {
+/**
+ * Builds a source URL with the given options.
+ *
+ * @param {SrcOptions} opts - The options for building the source URL.
+ * @returns {string} The constructed source URL.
+ */
+export const buildSrc = (opts: SrcOptions): string => {
   opts.urlEndpoint = opts.urlEndpoint || "";
   opts.src = opts.src || "";
   opts.transformationPosition = opts.transformationPosition || "query";
@@ -218,7 +224,13 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
   return entries.join(transformationUtils.getTransformDelimiter());
 }
 
-export const buildTransformationString = function (transformation: Transformation[] | undefined) {
+/**
+ * Builds a transformation string from the given transformations.
+ *
+ * @param {Transformation[] | undefined} transformation - The transformations to apply.
+ * @returns {string} The constructed transformation string.
+ */
+export const buildTransformationString = function (transformation: Transformation[] | undefined): string {
   if (!Array.isArray(transformation)) {
     return "";
   }
