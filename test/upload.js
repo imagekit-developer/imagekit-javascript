@@ -975,9 +975,9 @@ describe("File upload", async function () {
         await sleep();
 
         const response = await uploadPromise;
-        // Make sure your upload.ts preserves the case of "Content-Type"
         expect(response.$ResponseMetadata.headers).to.deep.equal(dummyResponseHeaders);
         expect(response.$ResponseMetadata.statusCode).to.equal(200);
+        expect(response.$ResponseMetadata.requestId).to.equal("sdfsdfsdfdsf");
     });
 
     it('Undefined fields should not be sent', async function () {
