@@ -1,6 +1,6 @@
 {
     "name": "@imagekit/javascript",
-    "version": "5.0.0-beta.3",
+    "version": "5.0.0-beta.4",
     "description": "ImageKit Javascript SDK",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
