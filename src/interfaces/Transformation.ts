@@ -496,7 +496,7 @@ export interface TextOverlay extends BaseOverlay {
      * Regardless of the encoding method, the input text is always percent-encoded to ensure it is URL-safe.
      */
 
-    encoding: "auto" | "plain" | "base64";
+    encoding?: "auto" | "plain" | "base64";
 
     /**
      * Control styling of the text overlay.
@@ -522,7 +522,7 @@ export interface ImageOverlay extends BaseOverlay {
      * - Leading and trailing slashes are removed.
      * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
-    encoding: "auto" | "plain" | "base64";
+    encoding?: "auto" | "plain" | "base64";
 
     /**
      * Array of transformations to be applied to the overlay image. Supported transformations depends on the base/parent asset.
@@ -549,7 +549,7 @@ export interface VideoOverlay extends BaseOverlay {
      * - Leading and trailing slashes are removed.
      * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
-    encoding: "auto" | "plain" | "base64";
+    encoding?: "auto" | "plain" | "base64";
 
     /**
      * Array of transformation to be applied to the overlay video. Except `streamingResolutions`, all other video transformations are supported.
@@ -576,7 +576,7 @@ export interface SubtitleOverlay extends BaseOverlay {
      * - Leading and trailing slashes are removed.
      * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
-    encoding: "auto" | "plain" | "base64";
+    encoding?: "auto" | "plain" | "base64";
 
     /**
      * Control styling of the subtitle.
