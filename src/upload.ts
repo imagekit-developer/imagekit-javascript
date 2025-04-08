@@ -127,35 +127,33 @@ export const upload = (uploadOptions: UploadOptions): Promise<UploadResponse> =>
     for (key in uploadOptions) {
       if (key) {
         if (key === "file" && typeof uploadOptions.file != "string") {
-          formData.append('file', uploadOptions.file, String(uploadOptions.fileName));
+          formData.set('file', uploadOptions.file, String(uploadOptions.fileName));
         } else if (key === "tags" && Array.isArray(uploadOptions.tags)) {
-          formData.append('tags', uploadOptions.tags.join(","));
+          formData.set('tags', uploadOptions.tags.join(","));
         } else if (key === 'signature') {
-          formData.append("signature", uploadOptions.signature);
+          formData.set("signature", uploadOptions.signature);
         } else if (key === 'expire') {
-          formData.append("expire", String(uploadOptions.expire));
+          formData.set("expire", String(uploadOptions.expire));
         } else if (key === 'token') {
-          formData.append("token", uploadOptions.token);
+          formData.set("token", uploadOptions.token);
         } else if (key === "responseFields" && Array.isArray(uploadOptions.responseFields)) {
-          formData.append('responseFields', uploadOptions.responseFields.join(","));
+          formData.set('responseFields', uploadOptions.responseFields.join(","));
         } else if (key === "extensions" && Array.isArray(uploadOptions.extensions)) {
-          formData.append('extensions', JSON.stringify(uploadOptions.extensions));
+          formData.set('extensions', JSON.stringify(uploadOptions.extensions));
         } else if (key === "customMetadata" && typeof uploadOptions.customMetadata === "object" &&
           !Array.isArray(uploadOptions.customMetadata) && uploadOptions.customMetadata !== null) {
-          formData.append('customMetadata', JSON.stringify(uploadOptions.customMetadata));
+          formData.set('customMetadata', JSON.stringify(uploadOptions.customMetadata));
         } else if (key === "transformation" && typeof uploadOptions.transformation === "object" &&
           uploadOptions.transformation !== null) {
-          formData.append(key, JSON.stringify(uploadOptions.transformation));
+          formData.set(key, JSON.stringify(uploadOptions.transformation));
         } else if (key === 'checks' && uploadOptions.checks) {
-          formData.append("checks", uploadOptions.checks);
+          formData.set("checks", uploadOptions.checks);
         } else if (uploadOptions[key] !== undefined) {
           if (["onProgress", "abortSignal"].includes(key)) continue;
-          formData.append(key, String(uploadOptions[key]));
+          formData.set(key, String(uploadOptions[key]));
         }
       }
     }
-
-    formData.append("publicKey", uploadOptions.publicKey);
 
     if (uploadOptions.onProgress) {
       xhr.upload.onprogress = function (event: ProgressEvent) {
