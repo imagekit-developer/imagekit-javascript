@@ -3,8 +3,6 @@ import { TransformationPosition, SrcOptions } from "../interfaces";
 
 const QUERY_TRANSFORMATION_POSITION: TransformationPosition = "query";
 const PATH_TRANSFORMATION_POSITION: TransformationPosition = "path";
-const DEFAULT_TRANSFORMATION_POSITION: TransformationPosition = QUERY_TRANSFORMATION_POSITION;
-const VALID_TRANSFORMATION_POSITIONS = [PATH_TRANSFORMATION_POSITION, QUERY_TRANSFORMATION_POSITION];
 const CHAIN_TRANSFORM_DELIMITER: string = ":";
 const TRANSFORM_DELIMITER: string = ",";
 const TRANSFORM_KEY_VALUE_DELIMITER: string = "-";

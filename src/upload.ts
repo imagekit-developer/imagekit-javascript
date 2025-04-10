@@ -1,5 +1,5 @@
 import errorMessages from "./constants/errorMessages";
-import { ResponseMetadata, UploadOptions, UploadResponse } from "./interfaces";
+import type { ResponseMetadata, UploadOptions, UploadResponse } from "./interfaces";
 
 /**
  * Represents an error when a request to ImageKit is invalid.
