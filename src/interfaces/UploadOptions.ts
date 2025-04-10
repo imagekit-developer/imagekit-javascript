@@ -30,6 +30,8 @@ interface Transformation {
    *  - protocol: Used only when type is "abs". Can be "hls" or "dash".
    *
    * Refer to the docs for more details on transformations and usage in post.
+   *
+   * {@link https://imagekit.io/docs/dam/pre-and-post-transformation-on-upload#post-transformation}
    */
   post?: PostTransformation[];
 }
