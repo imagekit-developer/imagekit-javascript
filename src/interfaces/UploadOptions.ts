@@ -20,6 +20,8 @@ interface Transformation {
   /**
    * Specifies pre-transformations to be applied. Must be a valid string of transformations like "w-300,h-300".
    * Refer to the docs for more details on transformations.
+   *
+   * {@link https://imagekit.io/docs/dam/pre-and-post-transformation-on-upload#pre-transformation}
    */
   pre?: string;
 
