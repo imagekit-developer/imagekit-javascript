@@ -48,7 +48,6 @@
         "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js"
     },
     "publishConfig": {
-        "tag": "beta",
         "access": "public"
     },
     "repository": {
