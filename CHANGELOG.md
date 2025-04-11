@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 5.0.0
+
+This version introduces major breaking changes, for usage examples, refer to the [official documentation](https://imagekit.io/docs/integration/javascript).
+
+1. The package has been renamed from `imagekit-javascript` to `@imagekit/javascript`.  
+   Please update your dependency references and import statements accordingly.
+
+2. The default-exported `ImageKit` class has been removed and replaced with named exports:  
+   - `buildSrc`  
+   - `buildTransformationString`  
+   - `upload`  
+   - Error classes: `ImageKitInvalidRequestError`, `ImageKitAbortError`, `ImageKitUploadNetworkError`, `ImageKitServerError`  
+   
+   Update your imports to use these named exports.
+
+3. The `upload` method supports `AbortSignal` for canceling uploads.  
+   Upload error handling has been revamped, and `onProgress` callbacks are now supported.  
+   Only the Promise-based syntax is supported. Callback style usage has been removed.
+
+4. Several internal interfaces (e.g., `ImageKitOptions`, `IKResponse`) have been updated or removed.  
+   The upload options now require a `publicKey`, and a new `SrcOptions` interface has been introduced.
+
+---
+
 ## Version 4.0.1
 
 ### Bug Fixes
