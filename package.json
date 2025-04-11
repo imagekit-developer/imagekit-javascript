@@ -8,8 +8,7 @@
     "unpkg": "dist/imagekit.min.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "src"
+        "dist"
     ],
     "devDependencies": {
         "@babel/cli": "^7.10.5",
