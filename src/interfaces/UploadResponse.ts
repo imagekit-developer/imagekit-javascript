@@ -6,7 +6,7 @@
  *
  * {@link https://imagekit.io/docs/api-reference/digital-asset-management-dam/list-and-search-assets}
  */
-export type FileType = "all" | "image" | "non-image";
+type FileType = "all" | "image" | "non-image";
 
 /**
  * Metadata object structure
@@ -23,7 +23,7 @@ export type FileType = "all" | "image" | "non-image";
  * 
  * Perceptual hashing allows you to construct a hash value that uniquely identifies an input image based on the image's contents. It is different from cryptographic hash functions like MD5 and SHA1. pHash provides similar hash value after minor distortions, like small rotations, blurring, and compression in the image.
  */
-export interface Metadata {
+interface Metadata {
   height: number;
   width: number;
   size: number;
@@ -94,8 +94,14 @@ export interface Metadata {
   };
 }
 
+export interface ResponseMetadata {
+  statusCode: number;
+  requestId: string;
+  headers: Record<string, string | number | boolean>;
+}
+
 /**
- * Response from uploading a file
+ * Response from server when file is uploaded successfully.
  *
  * {@link https://imagekit.io/docs/api-reference/upload-file/upload-file#Responses}
  */
@@ -103,39 +109,39 @@ export interface UploadResponse {
   /**
    * Unique fileId. Store this fileld in your database, as this will be used to perform update action on this file.
    */
-  fileId: string;
+  fileId?: string;
   /**
    * The name of the uploaded file.
    */
-  name: string;
+  name?: string;
   /**
    * The URL of the file.
    */
-  url: string;
+  url?: string;
   /**
    * In case of an image, a small thumbnail URL.
    */
-  thumbnailUrl: string;
+  thumbnailUrl?: string;
   /**
    * Height of the uploaded image file. Only applicable when file type is image.
    */
-  height: number;
+  height?: number;
   /**
    * Width of the uploaded image file. Only applicable when file type is image.
    */
-  width: number;
+  width?: number;
   /**
    * Size of the uploaded file in bytes.
    */
-  size: number;
+  size?: number;
   /**
    * Type of file. It can either be image or non-image.
    */
-  fileType: FileType;
+  fileType?: FileType;
   /**
    * The path of the file uploaded. It includes any folder that you specified while uploading.
    */
-  filePath: string;
+  filePath?: string;
   /**
    * Array of tags associated with the image.
    */
@@ -143,11 +149,11 @@ export interface UploadResponse {
   /**
    * Is the file marked as private. It can be either true or false.
    */
-  isPrivateFile: boolean;
+  isPrivateFile?: boolean;
   /**
    * Value of custom coordinates associated with the image in format x,y,width,height.
    */
-  customCoordinates: string | null;
+  customCoordinates?: string | null;
   /**
    * The metadata of the upload file. Use responseFields property in request to get the metadata returned in response of upload API.
    */
@@ -156,8 +162,21 @@ export interface UploadResponse {
    * AITags field is populated only because the google-auto-tagging extension was executed synchronously and it received a successresponse.
    */
   AITags?: object[];
+
   /*
    * Field object which will contain the status of each extension at the time of completion of the update/upload request.
    */ 
   extensionStatus?: { [key: string]: string }
+
+  /**
+   * Message indicating that the file upload is accepted. This field is only present when the upload is accepted but not yet processed.
+   * This can happen when the file is being processed for pre-transformation for video.
+   * The upload will be completed once the pre-transformation is done.
+   */
+  message?: string
+
+  /**
+   * Response metadata for debugging purposes.
+   */
+  readonly $ResponseMetadata: ResponseMetadata;
 }

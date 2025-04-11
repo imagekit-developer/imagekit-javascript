@@ -1,19 +1,21 @@
 {
-    "name": "imagekit-javascript",
-    "version": "4.0.1",
-    "description": "Javascript SDK for using ImageKit.io in the browser",
+    "name": "@imagekit/javascript",
+    "version": "5.0.0",
+    "description": "ImageKit Javascript SDK",
     "main": "dist/imagekit.cjs.js",
     "module": "dist/imagekit.esm.js",
     "browser": "dist/imagekit.min.js",
     "unpkg": "dist/imagekit.min.js",
-    "types": "dist/src/index.d.ts",
+    "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "src"
+        "dist"
     ],
     "devDependencies": {
         "@babel/cli": "^7.10.5",
         "@babel/core": "^7.10.5",
+        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+        "@babel/plugin-transform-optional-chaining": "^7.25.9",
         "@babel/preset-env": "^7.10.4",
         "@babel/preset-typescript": "^7.13.0",
         "@babel/register": "^7.14.5",
@@ -24,8 +26,7 @@
         "@types/node": "^15.6.1",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "chai": "^4.2.0",
-        "codecov": "^3.8.0",
-        "esm": "^3.2.25",
+        "codecov": "^3.8.3",
         "formdata-node": "2.1.0",
         "mocha": "^7.0.1",
         "nyc": "^15.1.0",
@@ -43,9 +44,12 @@
         "dev": "rollup -c -w",
         "export-types": "tsc",
         "build": "rm -rf dist*;rollup -c && yarn export-types",
-        "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha \"test/**/*.js\"",
-        "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js",
-        "report-coverage": "codecov"
+        "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/mocha --require ./test/setup.js \"test/**/*.js\"",
+        "startSampleApp": "yarn build && cd samples/sample-app/ && yarn install && node index.js"
+    },
+    "publishConfig": {
+        "tag": "beta",
+        "access": "public"
     },
     "repository": {
         "type": "git",
@@ -54,14 +58,12 @@
     "keywords": [
         "imagekit",
         "javascript",
-        "sdk",
-        "js",
         "image",
+        "video",
+        "upload",
         "optimization",
         "transformation",
         "resize",
-        "upload",
-        "video",
         "overlay"
     ],
     "author": "ImageKit Developer",
@@ -69,6 +71,5 @@
     "bugs": {
         "url": "https://github.com/imagekit-developer/imagekit-javascript/issues"
     },
-    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme",
-    "dependencies": {}
+    "homepage": "https://github.com/imagekit-developer/imagekit-javascript#readme"
 }

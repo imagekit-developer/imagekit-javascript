@@ -23,6 +23,7 @@ html
         script(type='text/javascript' src="./imagekit.min.js")
         script.
             try {
+                window.controller = new AbortController();
                 var imagekit = new ImageKit({
                     publicKey: "!{publicKey}",
                     urlEndpoint: "!{urlEndpoint}",
@@ -51,9 +52,11 @@ html
                     var statusEl = document.getElementById("status");
                     statusEl.innerHTML = "Uploading...";
 
+                    
                     // Use this if you want to track upload progress
                     var customXHR = new XMLHttpRequest();
                     customXHR.upload.addEventListener('progress', function (e) {
+                        console.log("On progress event handler from customXHR");
                         if (e.loaded <= fileSize) {
                             var percent = Math.round(e.loaded / fileSize * 100);
                             console.log(`Uploaded ${percent}%`);
@@ -94,6 +97,11 @@ html
                                 token: securityParametersObj.token,
                                 signature: securityParametersObj.signature,
                                 expire: securityParametersObj.expire,
+                                signal: window.controller.signal,
+                                onProgress: function(e) {
+                                    console.log("On progress event handler from SDK");
+                                    console.log(e.loaded);
+                                },
                                 //- extensions: [
                                 //-     {
                                 //-         name: "aws-auto-tagging",
@@ -102,6 +110,7 @@ html
                                 //-     }
                                 //- ],
                             }, function(err, result) {
+                                debugger;
                                 if (err) {
                                     statusEl.innerHTML = "Error uploading image. "+ err.message; 
                                     console.log(err) 
