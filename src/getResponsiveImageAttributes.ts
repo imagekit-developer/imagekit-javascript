@@ -3,7 +3,7 @@ import { buildSrc } from './url'
 
 /* Default break‑point pools */
 const DEFAULT_DEVICE_BREAKPOINTS = [640, 750, 828, 1080, 1200, 1920, 2048, 3840] as const
-const DEFAULT_IMAGE_BREAKPOINTS = [16, 32, 48, 64, 96, 128, 256, 320, 420] as const
+const DEFAULT_IMAGE_BREAKPOINTS = [16, 32, 48, 64, 96, 128, 256, 384] as const
 
 export interface GetImageAttributesOptions extends SrcOptions {
   width?: number               // explicit rendered width
@@ -62,11 +62,13 @@ export function getResponsiveImageAttributes(
       .map((w, i) => `${buildURL(w)} ${descriptorKind === 'w' ? w : i + 1}${descriptorKind}`)
       .join(', ') || undefined
 
+  const finalSizes = sizes ?? (descriptorKind === 'w' ? '100vw' : undefined)
+
   return {
     src: buildURL(candidates[candidates.length - 1]), // largest candidate
     srcSet,
-    sizes: sizes ?? (descriptorKind === 'w' ? '100vw' : undefined),
-    width,
+    ...(finalSizes ? { sizes: finalSizes } : {}), // include only when defined
+    ...(width !== undefined ? { width } : {}),  // include only when defined
   }
 }
 
