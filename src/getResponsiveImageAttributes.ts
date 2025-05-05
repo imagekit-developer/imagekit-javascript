@@ -65,11 +65,13 @@ export function getResponsiveImageAttributes(
     imageBreakpoints = DEFAULT_IMAGE_BREAKPOINTS as unknown as number[],
   } = opts
 
-  const allBreakpoints = [...imageBreakpoints, ...deviceBreakpoints].sort((a, b) => a - b)
+  const sortedDeviceBreakpoints = [...deviceBreakpoints].sort((a, b) => a - b);
+  const sortedImageBreakpoints = [...imageBreakpoints].sort((a, b) => a - b);
+  const allBreakpoints = [...sortedImageBreakpoints, ...sortedDeviceBreakpoints].sort((a, b) => a - b);
 
   const { candidates, descriptorKind } = computeCandidateWidths({
     allBreakpoints,
-    deviceBreakpoints,
+    deviceBreakpoints: sortedDeviceBreakpoints,
     explicitWidth: width,
     sizesAttr: sizes,
   })
