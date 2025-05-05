@@ -720,4 +720,19 @@ export type SolidColorOverlayTransformation = Pick<Transformation, "width" | "he
      * Specifies the transparency level of the overlaid solid color layer. Supports integers from `1` to `9`.
      */
     alpha?: number;
+
+    /**
+     * Specifies the background color of the solid color overlay.
+     * Accepts an RGB hex code, an RGBA code, or a color name.
+     */
+    background?: string;
+
+    /**
+     * Only works if base asset is an image.
+     * 
+     * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a string for a custom gradient. 
+     * 
+     * [Effects and Enhancements - Gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient)
+     */
+    gradient?: Transformation["gradient"]
 }
