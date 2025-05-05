@@ -6,12 +6,39 @@ const DEFAULT_DEVICE_BREAKPOINTS = [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
 const DEFAULT_IMAGE_BREAKPOINTS = [16, 32, 48, 64, 96, 128, 256, 384] as const
 
 export interface GetImageAttributesOptions extends SrcOptions {
-  width?: number               // explicit rendered width
-  sizes?: string               // the HTML sizes value
-  deviceBreakpoints?: number[] // override default device break‑points
-  imageBreakpoints?: number[]  // override tiny image break‑points
+  /**
+   * The intended display width (in pixels) of the image on screen.
+   * Used for calculating `srcSet` with a pixel-density (DPR) strategy.
+   * If omitted, a width-based strategy using breakpoints will be applied.
+   */
+  width?: number
+
+  /**
+   * The `sizes` attribute for the image element. 
+   * Typically used to indicate how the image will scale across different viewport sizes (e.g., "100vw").
+   * Presence of `sizes` triggers a width-based `srcSet` strategy.
+   */
+  sizes?: string
+
+  /**
+   * An optional custom list of device width breakpoints (in pixels).
+   * If not specified, defaults to `[640, 750, 828, 1080, 1200, 1920, 2048, 3840]`.
+   * Recommended to align with your target audience's common screen widths.
+   */
+  deviceBreakpoints?: number[]
+
+  /**
+   * An optional list of custom image breakpoints (in pixels).
+   * These are merged with the device breakpoints to compute the final list of candidate widths.
+   * Defaults to `[16, 32, 48, 64, 96, 128, 256, 384]`.
+   */
+  imageBreakpoints?: number[]
 }
 
+/**
+ * Resulting set of attributes suitable for an HTML `<img>` element.
+ * Useful for enabling responsive image loading.
+ */
 export interface ResponsiveImageAttributes {
   src: string
   srcSet?: string
@@ -19,6 +46,10 @@ export interface ResponsiveImageAttributes {
   width?: number
 }
 
+/**
+ * Generates a responsive image URL, `srcSet`, and `sizes` attributes
+ * based on the input options such as `width`, `sizes`, and breakpoints.
+ */
 export function getResponsiveImageAttributes(
   opts: GetImageAttributesOptions
 ): ResponsiveImageAttributes {
@@ -80,7 +111,7 @@ function computeCandidateWidths(params: {
 }): { candidates: number[]; descriptorKind: 'w' | 'x' } {
   const { allBreakpoints, deviceBreakpoints, explicitWidth, sizesAttr } = params
 
-  /* --- sizes attribute present ----------------------------------- */
+  // Strategy 1: Width-based srcSet (`w`) using viewport `vw` hints
   if (sizesAttr) {
     const vwTokens = sizesAttr.match(/(^|\s)(1?\d{1,2})vw/g) || []
     const vwPercents = vwTokens.map((t) => parseInt(t, 10))
@@ -93,16 +124,17 @@ function computeCandidateWidths(params: {
         descriptorKind: 'w',
       }
     }
-    /* no vw → give the full break‑point list */
+
+    // No usable `vw` found: fallback to all breakpoints
     return { candidates: allBreakpoints, descriptorKind: 'w' }
   }
 
-  /* --- no sizes attr ------------------------------------------------ */
+  // Strategy 2: Fallback using explicit image width using device breakpoints
   if (typeof explicitWidth !== 'number') {
     return { candidates: deviceBreakpoints, descriptorKind: 'w' }
   }
 
-  /* DPR strategy: 1× & 2× nearest break‑points */
+  // Strategy 3: Use 1x and 2x nearest breakpoints for `x` descriptor
   const nearest = (t: number) =>
     allBreakpoints.find((n) => n >= t) || allBreakpoints[allBreakpoints.length - 1]
 

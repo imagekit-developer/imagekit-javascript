@@ -120,4 +120,26 @@ describe.only('getResponsiveImageAttributes', () => {
       sizes: "(min-width: 800px) 33vw, 100vw"
     });
   });
+
+  it("Using queryParameters and transformationPosition", () => {
+    const out = getResponsiveImageAttributes({
+      src: 'sample.jpg',
+      urlEndpoint: 'https://ik.imagekit.io/demo',
+      width: 450,
+      transformation: [
+        { height: 300 },
+        { aiRemoveBackground: true }
+      ],
+      queryParameters: {
+        key: "value"
+      },
+      transformationPosition: "path"
+    });
+    // The function should respect the transformation position and query parameters.
+    expect(out).to.deep.equal({
+      src: "https://ik.imagekit.io/demo/tr:h-300:e-bgremove:w-1080,c-at_max/sample.jpg?key=value",
+      srcSet: "https://ik.imagekit.io/demo/tr:h-300:e-bgremove:w-640,c-at_max/sample.jpg?key=value 1x, https://ik.imagekit.io/demo/tr:h-300:e-bgremove:w-1080,c-at_max/sample.jpg?key=value 2x",
+      width: 450
+    });
+  })
 });
