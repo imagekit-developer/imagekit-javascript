@@ -142,4 +142,18 @@ describe('getResponsiveImageAttributes', () => {
       width: 450
     });
   })
+
+  it("fallback when no usable vw tokens", () => {
+    const out = getResponsiveImageAttributes({
+      src: 'sample.jpg',
+      urlEndpoint: 'https://ik.imagekit.io/demo',
+      sizes: "100%"
+    });
+    expect(out).to.deep.equal({
+      src: "https://ik.imagekit.io/demo/sample.jpg?tr=w-3840,c-at_max",
+      srcSet: "https://ik.imagekit.io/demo/sample.jpg?tr=w-16,c-at_max 16w, https://ik.imagekit.io/demo/sample.jpg?tr=w-32,c-at_max 32w, https://ik.imagekit.io/demo/sample.jpg?tr=w-48,c-at_max 48w, https://ik.imagekit.io/demo/sample.jpg?tr=w-64,c-at_max 64w, https://ik.imagekit.io/demo/sample.jpg?tr=w-96,c-at_max 96w, https://ik.imagekit.io/demo/sample.jpg?tr=w-128,c-at_max 128w, https://ik.imagekit.io/demo/sample.jpg?tr=w-256,c-at_max 256w, https://ik.imagekit.io/demo/sample.jpg?tr=w-384,c-at_max 384w, https://ik.imagekit.io/demo/sample.jpg?tr=w-640,c-at_max 640w, https://ik.imagekit.io/demo/sample.jpg?tr=w-750,c-at_max 750w, https://ik.imagekit.io/demo/sample.jpg?tr=w-828,c-at_max 828w, https://ik.imagekit.io/demo/sample.jpg?tr=w-1080,c-at_max 1080w, https://ik.imagekit.io/demo/sample.jpg?tr=w-1200,c-at_max 1200w, https://ik.imagekit.io/demo/sample.jpg?tr=w-1920,c-at_max 1920w, https://ik.imagekit.io/demo/sample.jpg?tr=w-2048,c-at_max 2048w, https://ik.imagekit.io/demo/sample.jpg?tr=w-3840,c-at_max 3840w",
+      sizes: "100%"
+    });
+  })
+
 });
