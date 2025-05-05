@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { getResponsiveImageAttributes } = require('../src/getResponsiveImageAttributes');
 
-describe.only('getResponsiveImageAttributes', () => {
+describe('getResponsiveImageAttributes', () => {
   it('bare minimum input', () => {
     const out = getResponsiveImageAttributes({
       src: 'sample.jpg',
