@@ -7,30 +7,42 @@ const DEFAULT_IMAGE_BREAKPOINTS = [16, 32, 48, 64, 96, 128, 256, 384] as const
 
 export interface GetImageAttributesOptions extends SrcOptions {
   /**
-   * The intended display width (in pixels) of the image on screen.
-   * Used for calculating `srcSet` with a pixel-density (DPR) strategy.
-   * If omitted, a width-based strategy using breakpoints will be applied.
-   */
+    * The intended display width of the image in pixels, 
+    * used **only when the `sizes` attribute is not provided**.
+    *
+    * Triggers a DPR-based strategy (1x and 2x variants) and generates `x` descriptors in `srcSet`.
+    * 
+    * Ignored if `sizes` is present.
+    */
   width?: number
 
   /**
-   * The `sizes` attribute for the image element. 
-   * Typically used to indicate how the image will scale across different viewport sizes (e.g., "100vw").
-   * Presence of `sizes` triggers a width-based `srcSet` strategy.
+   * The value for the HTML `sizes` attribute 
+   * (e.g., `"100vw"` or `"(min-width:768px) 50vw, 100vw"`).
+   *
+   * - If it includes one or more `vw` units, breakpoints smaller than the corresponding percentage of the smallest device width are excluded.
+   * - If it contains no `vw` units, the full breakpoint list is used.
+   *
+   * Enables a width-based strategy and generates `w` descriptors in `srcSet`.
    */
   sizes?: string
 
   /**
-   * An optional custom list of device width breakpoints (in pixels).
-   * If not specified, defaults to `[640, 750, 828, 1080, 1200, 1920, 2048, 3840]`.
-   * Recommended to align with your target audience's common screen widths.
+   * Custom list of **device-width breakpoints** in pixels.
+   * These define common screen widths for responsive image generation.
+   *
+   * Defaults to `[640, 750, 828, 1080, 1200, 1920, 2048, 3840]`.
+   * Sorted automatically.
    */
   deviceBreakpoints?: number[]
 
   /**
-   * An optional list of custom image breakpoints (in pixels).
-   * These are merged with the device breakpoints to compute the final list of candidate widths.
+   * Custom list of **image-specific breakpoints** in pixels.
+   * Useful for generating small variants (e.g., placeholders or thumbnails).
+   *
+   * Merged with `deviceBreakpoints` before calculating `srcSet`.
    * Defaults to `[16, 32, 48, 64, 96, 128, 256, 384]`.
+   * Sorted automatically.
    */
   imageBreakpoints?: number[]
 }
@@ -40,9 +52,13 @@ export interface GetImageAttributesOptions extends SrcOptions {
  * Useful for enabling responsive image loading.
  */
 export interface ResponsiveImageAttributes {
+  /** URL for the *largest* candidate (assigned to plain `src`). */
   src: string
+  /** Candidate set with `w` or `x` descriptors. */
   srcSet?: string
+  /** `sizes` returned (or synthesised as `100vw`). */
   sizes?: string
+  /** Width as a number (if `width` was provided). */
   width?: number
 }
 
