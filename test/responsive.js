@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { getResponsiveImageAttributes } = require('../src/getResponsiveImageAttributes');
+const { getResponsiveImageAttributes } = require("../src/index");
 
 describe('getResponsiveImageAttributes', () => {
   it('bare minimum input', () => {
