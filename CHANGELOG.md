@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 5.1.0
+
+1. **New helper** `getResponsiveImageAttributes()`  
+  Generates ready‑to‑use `src`, `srcSet`, and `sizes` for responsive `<img>` tags (breakpoint pruning, DPR 1×/2×, custom breakpoints, no up‑scaling).
+2. Added exports:  
+  `getResponsiveImageAttributes`, `GetImageAttributesOptions`, `ResponsiveImageAttributes`.
+
+_No breaking changes from 5.0.x._
+
 ## Version 5.0.0
 
 This version introduces major breaking changes, for usage examples, refer to the [official documentation](https://imagekit.io/docs/integration/javascript).
