@@ -124,7 +124,7 @@ function processText(str: string, enccoding: TextOverlay["encoding"]): string {
 function processOverlay(overlay: Transformation["overlay"]): string | undefined {
   const entries = [];
 
-  const { type, position = {}, timing = {}, transformation = [] } = overlay || {};
+  const { type, layerMode, position = {}, timing = {}, transformation = [] } = overlay || {};
 
   if (!type) {
     return;
@@ -190,6 +190,11 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         }
       }
       break;
+  }
+
+  // Add layer mode if specified
+  if (layerMode) {
+    entries.push(`lm-${layerMode}`);
   }
 
   const { x, y, focus } = position;

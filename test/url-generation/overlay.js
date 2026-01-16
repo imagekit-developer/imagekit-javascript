@@ -509,4 +509,75 @@ describe("Overlay encoding test cases", function () {
         });
         expect(url).equal(`https://ik.imagekit.io/demo/sample.jpg?tr=l-text,i-Minimal%20Text,l-end`);
     });
+
+    // Layer Mode Tests
+    describe("Layer Mode Tests", function () {
+        it('should generate correct URL with multiply layer mode', function () {
+            const url = buildSrc({
+                transformationPosition: "path",
+                urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+                src: "/base-image.jpg",
+                transformation: [{
+                    overlay: {
+                        type: "image",
+                        input: "overlay-image.jpg",
+                        layerMode: "multiply"
+                    }
+                }]
+            });
+            expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lm-multiply,l-end/base-image.jpg`);
+        });
+
+        it('should generate correct URL with cutter layer mode', function () {
+            const url = buildSrc({
+                transformationPosition: "path",
+                urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+                src: "/base-image.jpg",
+                transformation: [{
+                    overlay: {
+                        type: "image",
+                        input: "overlay-image.jpg",
+                        layerMode: "cutter"
+                    }
+                }]
+            });
+            expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lm-cutter,l-end/base-image.jpg`);
+        });
+
+        it('should generate correct URL with cutout layer mode', function () {
+            const url = buildSrc({
+                transformationPosition: "path",
+                urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+                src: "/base-image.jpg",
+                transformation: [{
+                    overlay: {
+                        type: "image",
+                        input: "overlay-image.jpg",
+                        layerMode: "cutout"
+                    }
+                }]
+            });
+            expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lm-cutout,l-end/base-image.jpg`);
+        });
+
+        it('should generate correct URL with displace layer mode', function () {
+            const url = buildSrc({
+                transformationPosition: "path",
+                urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+                src: "/base-image.jpg",
+                transformation: [{
+                    overlay: {
+                        type: "image",
+                        input: "overlay-image.jpg",
+                        layerMode: "displace",
+                        position: {
+                            x: 10,
+                            y: 10
+                        }
+                    }
+                }]
+            });
+            expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lm-displace,lx-10,ly-10,l-end/base-image.jpg`);
+        });
+    });
 });
