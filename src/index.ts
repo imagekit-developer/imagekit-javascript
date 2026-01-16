@@ -1,5 +1,4 @@
 import type { GetImageAttributesOptions, ResponsiveImageAttributes, SrcOptions, Transformation, UploadOptions, UploadResponse } from "./interfaces";
-import type { } from "./responsive";
 import { getResponsiveImageAttributes } from "./responsive";
 import { ImageKitAbortError, ImageKitInvalidRequestError, ImageKitServerError, ImageKitUploadNetworkError, upload } from "./upload";
 import { buildSrc, buildTransformationString } from "./url";
