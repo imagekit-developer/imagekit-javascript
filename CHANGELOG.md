@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 5.2.0
+
+1. **New transformation parameters added:**
+   - `layerMode` (`lm`): Control layer blending modes in overlay transformations
+   - `aiEdit` (`e-edit`): AI-powered image editing transformation
+   - `colorReplace` (`cr`): Replace specific colors in images
+   - `distort` (`e-distort`): Apply distortion effects to images
+
+2. **Type definitions updated:**
+   - Improved TypeScript types by synchronizing with the official Node.js SDK
+   - Enhanced type safety for transformation options, upload options, and responses
+
+3. **Documentation improvements:**
+   - Added TypeScript versioning policy section to README
+   - Clarified how type definition improvements may be released in minor/patch versions
+
+_No runtime breaking changes from 5.1.x._
+
 ## Version 5.1.0
 
 1. **New helper** `getResponsiveImageAttributes()`  
