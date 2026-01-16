@@ -1,5 +1,4 @@
-import type { SrcOptions } from "./interfaces";
-import type { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
+import type { SrcOptions, ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces";
 import transformationUtils, { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
