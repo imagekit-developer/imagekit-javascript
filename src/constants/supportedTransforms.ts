@@ -39,6 +39,7 @@ export const supportedTransforms: { [key: string]: string } = {
   aiVariation: "e-genvar",
   aiDropShadow: "e-dropshadow",
   aiChangeBackground: "e-changebg",
+  aiEdit: "e-edit",
   aiRemoveBackground: "e-bgremove",
   aiRemoveBackgroundExternal: "e-removedotbg",
   contrastStretch: "e-contrast",
@@ -46,6 +47,8 @@ export const supportedTransforms: { [key: string]: string } = {
   sharpen: "e-sharpen",
   unsharpMask: "e-usm",
   gradient: "e-gradient",
+  colorReplace: "cr",
+  distort: "e-distort",
 
   // Other flags & finishing
   progressive: "pr",
@@ -56,6 +59,7 @@ export const supportedTransforms: { [key: string]: string } = {
   trim: "t",
   zoom: "z",
   page: "pg",
+  layerMode: "lm",
 
   // Text overlay transformations which are not defined yet
   fontSize: "fs",

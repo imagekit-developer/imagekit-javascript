@@ -1,5 +1,4 @@
-import type { SrcOptions } from "./interfaces";
-import type { ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces/Transformation";
+import type { SrcOptions, ImageOverlay, SolidColorOverlay, SubtitleOverlay, TextOverlay, Transformation, VideoOverlay } from "./interfaces";
 import transformationUtils, { safeBtoa } from "./utils/transformation";
 const TRANSFORMATION_PARAMETER = "tr";
 const SIMPLE_OVERLAY_PATH_REGEX = new RegExp('^[a-zA-Z0-9-._/ ]*$')
@@ -124,7 +123,7 @@ function processText(str: string, enccoding: TextOverlay["encoding"]): string {
 function processOverlay(overlay: Transformation["overlay"]): string | undefined {
   const entries = [];
 
-  const { type, position = {}, timing = {}, transformation = [] } = overlay || {};
+  const { type, layerMode, position = {}, timing = {}, transformation = [] } = overlay || {};
 
   if (!type) {
     return;
@@ -190,6 +189,11 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
         }
       }
       break;
+  }
+
+  // Add layer mode if specified
+  if (layerMode) {
+    entries.push(`lm-${layerMode}`);
   }
 
   const { x, y, focus } = position;
