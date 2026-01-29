@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 5.2.1
+
+1. **Bug fix:**
+   - Updated subtitle overlay transformation parameter from `l-subtitle` to `l-subtitles` to align with API specification
+
 ## Version 5.2.0
 
 1. **New transformation parameters added:**
