@@ -166,7 +166,7 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
       }
       break;
     case "subtitle":
-      entries.push("l-subtitle");
+      entries.push("l-subtitles");
       {
         const subtitleOverlay = overlay as SubtitleOverlay;
         const enccoding = subtitleOverlay.encoding || "auto";
