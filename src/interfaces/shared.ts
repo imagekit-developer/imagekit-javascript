@@ -1431,7 +1431,7 @@ export interface Transformation {
    *   [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
    * - See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
    */
-  dpr?: number;
+  dpr?: number | 'auto';
 
   /**
    * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`.
