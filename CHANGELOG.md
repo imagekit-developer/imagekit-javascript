@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 5.2.2
+
+1. Updated TypeScript types to allow string values for the `dpr` parameter in transformations, enabling support for arithmetic expressions and dynamic DPR values.
+
 ## Version 5.2.1
 
 1. **Bug fix:**
