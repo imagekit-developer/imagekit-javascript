@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 5.3.0
+
+1. **Enhancement:**
+   - Added support for new overlay position parameters: `xCenter` (`lxc`), `yCenter` (`lyc`), and `anchorPoint` (`lap`) in overlay transformations
+
 ## Version 5.2.2
 
 1. Updated TypeScript types to allow string values for the `dpr` parameter in transformations, enabling support for arithmetic expressions and dynamic DPR values.

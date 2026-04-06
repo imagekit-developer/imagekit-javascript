@@ -579,5 +579,25 @@ describe("Overlay encoding test cases", function () {
             });
             expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lm-displace,lx-10,ly-10,l-end/base-image.jpg`);
         });
+
+        it('should generate correct URL with xCenter, yCenter and anchorPoint', function () {
+            const url = buildSrc({
+                transformationPosition: "path",
+                urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",
+                src: "/base-image.jpg",
+                transformation: [{
+                    overlay: {
+                        type: "image",
+                        input: "overlay-image.jpg",
+                        position: {
+                            xCenter: 100,
+                            yCenter: 50,
+                            anchorPoint: "top_left"
+                        }
+                    }
+                }]
+            });
+            expect(url).equal(`https://ik.imagekit.io/test_url_endpoint/tr:l-image,i-overlay-image.jpg,lxc-100,lyc-50,lap-top_left,l-end/base-image.jpg`);
+        });
     });
 });

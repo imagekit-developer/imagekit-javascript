@@ -196,12 +196,21 @@ function processOverlay(overlay: Transformation["overlay"]): string | undefined 
     entries.push(`lm-${layerMode}`);
   }
 
-  const { x, y, focus } = position;
+  const { x, y, xCenter, yCenter, anchorPoint, focus } = position;
   if (x) {
     entries.push(`lx-${x}`);
   }
   if (y) {
     entries.push(`ly-${y}`);
+  }
+  if (xCenter) {
+    entries.push(`lxc-${xCenter}`);
+  }
+  if (yCenter) {
+    entries.push(`lyc-${yCenter}`);
+  }
+  if (anchorPoint) {
+    entries.push(`lap-${anchorPoint}`);
   }
   if (focus) {
     entries.push(`lfo-${focus}`);
