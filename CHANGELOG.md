@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 5.4.0 
+
+1. **Enhancement:**
+   - Added support for new crop modes: `maintain_ratio_no_enlarge`, `pad_resize_no_enlarge` and `pad_extract_no_shrink`
+   - Added support for `colorize` transformation
+
 ## Version 5.3.0
 
 1. **Enhancement:**
