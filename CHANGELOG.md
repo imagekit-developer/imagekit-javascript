@@ -1,5 +1,23 @@
 # Changelog
 
+## [5.4.1](https://github.com/imagekit-developer/imagekit-javascript/compare/5.4.0...v5.4.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* **ci:** use fine-grained PAT for creating PR ([d32b6ed](https://github.com/imagekit-developer/imagekit-javascript/commit/d32b6ed379b561636f612e6fe7db051460c99ea4))
+* make safeBtoa browser-safe with UTF-8 handling ([cca89cf](https://github.com/imagekit-developer/imagekit-javascript/commit/cca89cfe9961606f871f1de23091f2e2a56c8370))
+* **transformation:** improve safeBtoa for UTF-8 handling and add tests for Hindi characters ([1343333](https://github.com/imagekit-developer/imagekit-javascript/commit/134333325952329925a7711031ea9d9aa8f5ac4d))
+
+
+### Chores
+
+* add release automation workflows and configuration files ([efabbab](https://github.com/imagekit-developer/imagekit-javascript/commit/efabbab2b2e0d3852ee42f9431c7abdbfe913785))
+* **deps:** remove unused babel and rollup plugins from devDependencies ([774bedf](https://github.com/imagekit-developer/imagekit-javascript/commit/774bedf3ad2569301994eb87a40d226720b47f5a))
+* remove unused code blocks from the repository ([82a556b](https://github.com/imagekit-developer/imagekit-javascript/commit/82a556beabfb002701cc2b6a79f7fa7a03fb121c))
+
+## Changelog
+
 ## Version 5.4.0 
 
 1. **Enhancement:**
