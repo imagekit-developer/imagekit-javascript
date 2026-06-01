@@ -1,5 +1,4 @@
-name: release-please
-
+name: Release Please
 on:
   push:
     branches:
@@ -11,9 +10,11 @@ permissions:
 
 jobs:
   release-please:
+    if: github.repository == 'imagekit-developer/imagekit-javascript'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
+        id: release
         with:
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
