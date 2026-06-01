@@ -2,9 +2,9 @@
 
 # ImageKit.io JavaScript SDK
 
-![Node CI](https://github.com/imagekit-developer/imagekit-javascript/workflows/Node%20CI/badge.svg)
+![CI](https://github.com/imagekit-developer/imagekit-javascript/workflows/CI/badge.svg)
 [![npm version](https://img.shields.io/npm/v/@imagekit/javascript)](https://www.npmjs.com/package/@imagekit/javascript) 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
 
 This lightweight, dependency-free JavaScript SDK is designed specifically for browser use. It provides utility functions to generate image and video `src` URLs using [ImageKit transformations](https://imagekit.io/docs/transformations) and to upload files to the ImageKit media library.
