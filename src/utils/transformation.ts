@@ -28,11 +28,14 @@ export default {
 }
 
 export const safeBtoa = function (str: string): string {
-    if (typeof window !== "undefined") {
-        /* istanbul ignore next */
-        return btoa(str);
-    } else {
-        // Node fallback
-        return Buffer.from(str, "utf8").toString("base64");
+    // Prefer Buffer when available (Node.js / SSR): handles UTF-8 natively.
+    if (typeof (globalThis as any).Buffer !== "undefined") {
+        return (globalThis as any).Buffer.from(str, "utf8").toString("base64");
     }
-}
+
+    // Browser: btoa() throws on characters with code points > 0xFF, so convert
+    // the string to UTF-8 bytes first, then base64-encode them (per MDN).
+    const bytes = new TextEncoder().encode(str);
+    const binary = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join("");
+    return btoa(binary);
+};
