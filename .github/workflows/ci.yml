@@ -1,0 +1,34 @@
+name: CI
+
+on:  
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+    - name: Build SDK
+      run: |
+        npm install
+        npm run build
+    - name: Install test-app dependencies
+      run: npm install
+      working-directory: test-app
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
+      working-directory: test-app
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: test-app
+      env:
+        CI: true

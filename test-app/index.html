@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ImageKit JavaScript SDK - URL Generation Test App</title>
+  </head>
+  <body>
+    <main style="font-family: sans-serif; padding: 24px; max-width: 800px">
+      <h1>ImageKit JavaScript SDK</h1>
+      <p>URL generation playground. The SDK is loaded as the built ESM bundle and runs entirely in the browser.</p>
+
+      <label for="endpoint">URL endpoint</label><br />
+      <input id="endpoint" style="width: 100%" value="https://ik.imagekit.io/demo" /><br /><br />
+
+      <label for="src">Source path</label><br />
+      <input id="src" style="width: 100%" value="/medium_cafe_B1iTdD0C.jpg" /><br /><br />
+
+      <label for="text">Text overlay</label><br />
+      <input id="text" style="width: 100%" value="नमस्ते दुनिया" /><br /><br />
+
+      <button id="generate">Generate URL</button>
+
+      <h3>Generated URL</h3>
+      <code id="output" data-testid="output" style="word-break: break-all"></code>
+
+      <div>
+        <img id="preview" data-testid="preview" alt="preview" style="max-width: 600px; margin-top: 12px; display: block" />
+      </div>
+    </main>
+
+    <script type="module">
+      import {
+        buildSrc,
+        buildTransformationString,
+        getResponsiveImageAttributes,
+        upload,
+        ImageKitAbortError,
+        ImageKitInvalidRequestError,
+        ImageKitServerError,
+        ImageKitUploadNetworkError,
+      } from "../dist/imagekit.esm.js";
+
+      // Expose for Playwright page.evaluate based assertions.
+      window.buildSrc = buildSrc;
+      window.buildTransformationString = buildTransformationString;
+      window.getResponsiveImageAttributes = getResponsiveImageAttributes;
+      window.upload = upload;
+      window.ImageKitAbortError = ImageKitAbortError;
+      window.ImageKitInvalidRequestError = ImageKitInvalidRequestError;
+      window.ImageKitServerError = ImageKitServerError;
+      window.ImageKitUploadNetworkError = ImageKitUploadNetworkError;
+
+      const $ = (id) => document.getElementById(id);
+
+      function generate() {
+        const url = buildSrc({
+          urlEndpoint: $("endpoint").value,
+          src: $("src").value,
+          transformation: [
+            {
+              width: 600,
+              overlay: {
+                type: "text",
+                text: $("text").value,
+                transformation: [{ fontSize: 50, fontColor: "FFFFFF" }],
+              },
+            },
+          ],
+        });
+
+        $("output").textContent = url;
+        $("preview").src = url;
+      }
+
+      $("generate").addEventListener("click", generate);
+      generate();
+    </script>
+  </body>
+</html>

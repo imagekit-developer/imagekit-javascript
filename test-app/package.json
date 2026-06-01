@@ -1,0 +1,14 @@
+{
+  "name": "imagekit-javascript-test-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser test app for the ImageKit JavaScript SDK. Loads the built SDK bundle in a real browser so Playwright can cover URL-generation edge cases (e.g. Unicode base64) that the Node-based unit tests cannot.",
+  "scripts": {
+    "serve": "node server.mjs",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}
