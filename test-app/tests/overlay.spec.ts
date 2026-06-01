@@ -431,4 +431,29 @@ test.describe("Overlay encoding test cases", () => {
       );
     });
   });
+
+  test("should encode Hindi (non-ASCII) text overlay and base path", async ({ page }) => {
+    const url = await buildSrc(page, {
+      urlEndpoint: "https://ik.imagekit.io/demo/",
+      src: "sdk-testing-files/हिन्दी.png",
+      transformation: [
+        {
+          overlay: {
+            type: "text",
+            text: "हिन्दी",
+            transformation: [
+              {
+                fontColor: "red",
+                fontSize: "32",
+                fontFamily: "sdk-testing-files/Poppins-Regular_Q15GrYWmL.ttf",
+              },
+            ],
+          },
+        },
+      ],
+    });
+    expect(url).toBe(
+      "https://ik.imagekit.io/demo/sdk-testing-files/%E0%A4%B9%E0%A4%BF%E0%A4%A8%E0%A5%8D%E0%A4%A6%E0%A5%80.png?tr=l-text,ie-4KS54KS%2F4KSo4KWN4KSm4KWA,co-red,fs-32,ff-sdk-testing-files@@Poppins-Regular_Q15GrYWmL.ttf,l-end",
+    );
+  });
 });

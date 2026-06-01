@@ -28,55 +28,14 @@ export default {
 }
 
 export const safeBtoa = function (str: string): string {
+    // Prefer Buffer when available (Node.js / SSR): handles UTF-8 natively.
     if (typeof (globalThis as any).Buffer !== "undefined") {
         return (globalThis as any).Buffer.from(str, "utf8").toString("base64");
     }
 
-    const bytes =
-        typeof TextEncoder !== "undefined"
-            ? new TextEncoder().encode(str)
-            : encodeUTF8Fallback(str);
-
-    if (typeof btoa !== "undefined") {
-        let binary = "";
-        const chunkSize = 0x8000;
-        for (let i = 0; i < bytes.length; i += chunkSize) {
-            binary += String.fromCharCode.apply(
-                null,
-                Array.prototype.slice.call(bytes, i, i + chunkSize) as any,
-            );
-        }
-        return btoa(binary);
-    }
-
-    throw new Error("Cannot generate base64 string; Expected `Buffer` or `btoa` to be defined");
+    // Browser: btoa() throws on characters with code points > 0xFF, so convert
+    // the string to UTF-8 bytes first, then base64-encode them (per MDN).
+    const bytes = new TextEncoder().encode(str);
+    const binary = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join("");
+    return btoa(binary);
 };
-
-function encodeUTF8Fallback(str: string): Uint8Array {
-    const out: number[] = [];
-    for (let i = 0; i < str.length; i++) {
-        let c = str.charCodeAt(i);
-        if (c < 0x80) {
-            out.push(c);
-        } else if (c < 0x800) {
-            out.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f));
-        } else if (c >= 0xd800 && c <= 0xdbff && i + 1 < str.length) {
-            const c2 = str.charCodeAt(i + 1);
-            if (c2 >= 0xdc00 && c2 <= 0xdfff) {
-                const cp = 0x10000 + (((c & 0x3ff) << 10) | (c2 & 0x3ff));
-                out.push(
-                    0xf0 | (cp >> 18),
-                    0x80 | ((cp >> 12) & 0x3f),
-                    0x80 | ((cp >> 6) & 0x3f),
-                    0x80 | (cp & 0x3f),
-                );
-                i++;
-                continue;
-            }
-            out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
-        } else {
-            out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
-        }
-    }
-    return new Uint8Array(out);
-}

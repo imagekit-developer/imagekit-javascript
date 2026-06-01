@@ -44,6 +44,15 @@ test.describe("URL generation", () => {
         expect(url).toBe(`https://ik.imagekit.io/test_url_endpoint/test_path.jpg`);
     });
 
+    test('should encode a src path containing Hindi (non-ASCII) characters', async ({ page }) => {
+        const url = await buildSrc(page, {
+            urlEndpoint: "https://ik.imagekit.io/demo",
+            src: "/sdk-testing-files/हिन्दी.png"
+        });
+
+        expect(url).toBe(`https://ik.imagekit.io/demo/sdk-testing-files/%E0%A4%B9%E0%A4%BF%E0%A4%A8%E0%A5%8D%E0%A4%A6%E0%A5%80.png`);
+    });
+
     test('should generate a valid URL when a src is provided without transformation', async ({ page }) => {
         const url = await buildSrc(page, {
             urlEndpoint: "https://ik.imagekit.io/test_url_endpoint",

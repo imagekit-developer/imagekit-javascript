@@ -291,7 +291,7 @@ export const buildTransformationString = function (transformation: Transformatio
       } else if (key === "raw") {
         parsedTransformStep.push(transformation[i][key] as string);
       } else {
-        if (transformKey === "di") {
+        if (transformKey === "di" || transformKey === "ff") {
           value = removeTrailingSlash(removeLeadingSlash(value as string || ""));
           value = value.replace(/\//g, "@@");
         }
