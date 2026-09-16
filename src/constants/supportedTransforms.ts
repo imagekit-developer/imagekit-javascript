@@ -56,6 +56,7 @@ export const supportedTransforms: { [key: string]: string } = {
   lossless: "lo",
   colorProfile: "cp",
   metadata: "md",
+  density: "dn",
   opacity: "o",
   trim: "t",
   zoom: "z",

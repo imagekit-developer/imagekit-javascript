@@ -24,4 +24,14 @@ test.describe("buildTransformationString", () => {
     );
     expect(result).toBe("l-text,i-Hello,l-end");
   });
+
+  test("should generate a transformation string for density as a number", async ({ page }) => {
+    const result = await page.evaluate(() => (window as any).buildTransformationString([{ density: 72 }]));
+    expect(result).toBe("dn-72");
+  });
+
+  test("should generate a transformation string for density as an arithmetic expression", async ({ page }) => {
+    const result = await page.evaluate(() => (window as any).buildTransformationString([{ density: "idn_mul_2" }]));
+    expect(result).toBe("dn-idn_mul_2");
+  });
 });
