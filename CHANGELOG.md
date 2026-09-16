@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.5.0](https://github.com/imagekit-developer/imagekit-javascript/compare/v5.4.1...v5.5.0) (2026-09-16)
+
+
+### Features
+
+* add density transformation parameter ([cc9fc67](https://github.com/imagekit-developer/imagekit-javascript/commit/cc9fc67989e479c59d7d9b94e14c23f150d01892))
+* add density transformation parameter ([fa825cf](https://github.com/imagekit-developer/imagekit-javascript/commit/fa825cfd0143df02809b20409f8fbcc9435da5a1))
+
 ## [5.4.1](https://github.com/imagekit-developer/imagekit-javascript/compare/5.4.0...v5.4.1) (2026-06-01)
 
 
