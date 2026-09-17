@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.5.1](https://github.com/imagekit-developer/imagekit-javascript/compare/v5.5.0...v5.5.1) (2026-09-17)
+
+
+### Chores
+
+* verify OIDC trusted publishing to npm ([9a3a648](https://github.com/imagekit-developer/imagekit-javascript/commit/9a3a6489fa34d5b96be60700f4599988dfe46817))
+* verify OIDC trusted publishing to npm ([a47939c](https://github.com/imagekit-developer/imagekit-javascript/commit/a47939c405c4c1aad550277c2ab04cff6b602d44))
+
 ## [5.5.0](https://github.com/imagekit-developer/imagekit-javascript/compare/v5.4.1...v5.5.0) (2026-09-16)
 
 
